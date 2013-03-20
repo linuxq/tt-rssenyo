@@ -21,16 +21,18 @@ enyo.kind({
 		  user: "webosmz",
 		  password : "IchWillLesen"
 		};
+		
+
 		var request = new enyo.Ajax({
 			url: "http://rss.meissel.com/api",
 			method: "POST",
 			handleAs: "json",
-			//postBody: data //formData
+			postBody: JSON.stringify(data) //formData
 		});
 		request.response(enyo.bind(this, "wsloginResponse"));
 		//request.error(this, "processSetTimerError");
 		console.log("GO");
-		request.go(data); 		
+		request.go(); 		
 	},
 	wsloginResponse: function(inSender, inEvent){
 		console.log(inEvent);
