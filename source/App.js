@@ -35,9 +35,15 @@ enyo.kind({
 		console.log("GO");
 		request.go(data);
 		*/
-		ttlogin = ttrssLogin("http://rss.meissel.com", "webosmz", "IchWillLesen");
-		console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
+		ttlogin = ttrssLogin("http://rss.meissel.com", "webosmz", "IchWillLesen", enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
 	},
+	processLoginSuccess: function(inSender, inResponse) {
+		console.log("LOGIN SUCCESSS");
+	},
+	processLoginError: function(inSender, inResponse) {
+		console.log("LOGIN Error");
+	},	
 	wsloginResponse: function(inSender, inEvent){
 		console.log(inEvent);
 		data = inEvent;
