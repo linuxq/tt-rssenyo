@@ -1,38 +1,42 @@
+
+
 enyo.kind({
 	name: "App",
 	kind: "FittableRows",
 	fit: true,
 	components:[
-		{kind: "onyx.Toolbar", content: "Hello World"},
+		{kind: "onyx.Toolbar", content: "Tiny-Tiny Rss Reader"},
 		{kind: "enyo.Scroller", fit: true, components: [
 			{name: "main", classes: "nice-padding", allowHtml: true}
 		]},
 		{kind: "onyx.Toolbar", components: [
-			{kind: "onyx.Button", content: "Tap me", ontap: "helloWorldTap"}
+			{kind: "onyx.Button", content: "Login", ontap: "LoginTap"}
 		]},
 		{kind: "WebService", name:"wslogin", url: "http://rss.meissel.com/api", onResponse:"wsloginResponse", callbackName: "callback"},
 	],
-	helloWorldTap: function(inSender, inEvent) {
+	LoginTap: function(inSender, inEvent) {
 		//this.$.main.addContent("The button was tapped.<br/>");
 		
 
-		var data = {
+		/*
+		 *var data = {
 		  op: "login",
 		  user: "webosmz",
 		  password : "IchWillLesen"
 		};
-		
-
 		var request = new enyo.Ajax({
-			url: "http://rss.meissel.com/api",
+			url: "http://rss.meissel.com/api/",
 			method: "POST",
 			handleAs: "json",
-			postBody: JSON.stringify(data) //formData
+			postBody: JSON.stringify(data)
 		});
 		request.response(enyo.bind(this, "wsloginResponse"));
 		//request.error(this, "processSetTimerError");
 		console.log("GO");
-		request.go(); 		
+		request.go(data);
+		*/
+		ttlogin = ttrssLogin("http://rss.meissel.com", "webosmz", "IchWillLesen");
+		console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
 	},
 	wsloginResponse: function(inSender, inEvent){
 		console.log(inEvent);
