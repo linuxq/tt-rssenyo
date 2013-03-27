@@ -61,7 +61,7 @@ function ttrssGetCategories(ttrssurl, successCallback, errorCallback) {
 function ttrssGetCategoriesResponse(inEvent, successCallback, errorCallback) {
 	//console.log (successCallback);
                     response = JSON.parse(inEvent.xhrResponse.body);
-		    //console.log(response);
+		    console.log(response);
                     if (response.status == 0){
 
 				successCallback(response.content);
@@ -115,6 +115,7 @@ function ttrssGetHeadlines(ttrssurl, feedID, successCallback, errorCallback) {
 		  op: "getHeadlines",
 		  feed_id: feedID,
 		  view_mode: "unread",
+		  limit: 100,
 		  show_excerpt: true,
 		  show_content: true,
 		  enable_nested: true
