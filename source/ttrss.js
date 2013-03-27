@@ -44,7 +44,7 @@ function ttrssGetCategories(ttrssurl, successCallback, errorCallback) {
 		//console.log("GET CATEGORIES");
 		var data = {
 		  op: "getCategories",
-		  enable_nested: true
+		  enable_nested: false
 		};
 		var request = new enyo.Ajax({
 			url: ttrssurl + "/api/",
