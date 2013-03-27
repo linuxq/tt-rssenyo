@@ -134,7 +134,7 @@ function ttrssGetHeadlines(ttrssurl, feedID, successCallback, errorCallback) {
 function ttrssGetHeadlinesResponse(inEvent, successCallback, errorCallback) {
 	//console.log (successCallback);
                     response = JSON.parse(inEvent.xhrResponse.body);
-		    console.log(response);
+		    //console.log(response);
                     if (response.status == 0){
 
 				successCallback(response.content);
@@ -167,7 +167,7 @@ function ttrssGetArticle(ttrssurl, articleID, successCallback, errorCallback) {
 function ttrssGetArticleResponse(inEvent, successCallback, errorCallback) {
 	//console.log (successCallback);
                     response = JSON.parse(inEvent.xhrResponse.body);
-		    console.log(response);
+		    //console.log(response);
                     if (response.status == 0){
 
 				successCallback(response.content);
@@ -178,3 +178,44 @@ function ttrssGetArticleResponse(inEvent, successCallback, errorCallback) {
                     } ;  	
 };
 
+//**************** MarkArticleRead ********************
+function ttrssMarkArticleRead(ttrssurl, articleID, unread, successCallback, errorCallback) {
+		//console.log("GET CATEGORIES");
+		var unreadhelper = 1;
+		if (unread) {
+			unreadhelper = 1;
+		} else
+		{
+			unreadhelper = 0;
+		};
+		var data = {
+		  op: "updateArticle",
+		  article_ids: articleID,
+		  mode: unreadhelper,
+		  field: 2 //unread-Status
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data),
+		});
+		request.response(function(daten) {ttrssMarkArticleReadResponse(daten, successCallback, errorCallback)});
+		request.go(data);
+                    
+	return;
+};
+
+function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
+	//console.log (successCallback);
+                    response = JSON.parse(inEvent.xhrResponse.body);
+		    //console.log(response.content.status);
+                    if (response.status == 0){
+
+				successCallback(response.content);
+                    } else {
+				loginresult.error = response.content.error;
+				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
+				errorCallback("Error");
+                    } ;  	
+};

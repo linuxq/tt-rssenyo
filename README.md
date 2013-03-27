@@ -1,6 +1,4 @@
-bootplate
-=========
+Tiny Tiny RSS Reader Enyo Client
+===========================
 
-Application template for packaged Enyo
-
-Refer to the [Wiki](https://github.com/enyojs/enyo/wiki/Bootplate) for how to get started.
+A client for http://tt-rss.org based Feed Readers using the great JS framework www.enyojs.com!

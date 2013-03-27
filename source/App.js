@@ -1,33 +1,43 @@
-ttrss_SID = "";
 ttrssURL = null;
 ttrssUser = null;
 ttrssPassword = null;
+
+RecentArticle = ""; //Merker für ArticleID des angeigten Artikels
+
 
 enyo.kind({
 	name: "App",
 	kind: "FittableRows",
 	fit: true,
 	components:[
-		{kind: "onyx.Toolbar", content: "Tiny-Tiny Rss Reader"},
+		{kind: "onyx.Toolbar", content: "Tiny-Tiny Rss Reader",components: [
+			{content: "Tiny-Tiny-RSS Reader"},
+			{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"}
+		]},
 		{kind: "Panels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", wrap: false, components: [
 			{name: "left", style: "width: 240px", components: [
 				{kind: "enyo.Scroller", fit: true, components: [
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "middle", tyle: "width: 500px", components: [
+			{name: "middle", style: "width: 500px", components: [
 				{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 					{name: "feedlist", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "body", fit: true, components: [
-				{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
-					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
+			{name: "body", kind: "FittableRows", fit: true, components: [
+				
+				{kind: "Scroller", fit: true, touch: true, components: [
+					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: "", value: 0}
+				]},
+				{fit: true},
+				{kind: "onyx.Toolbar", components: [
+					{kind:"onyx.Checkbox", name: "chkArticleRead", onchange: "toggleArticleRead", checked: true}
 				]}
 			]}
 		]},		
 		{kind: "onyx.Toolbar", components: [
-			{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
+			//{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
 			{kind: "onyx.Button", content: "Categories", ontap: "getCategories"},
 			{kind: "onyx.Button", content: "Get feeds:", ontap: "getFeeds"},
 			{kind: "onyx.Input", name: "catID", style: "width: 50px", placeholder: "CatID", onchange:"getFeeds"},
@@ -98,7 +108,7 @@ enyo.kind({
 	processLoginSuccess: function(inResponse) {
 		//console.log(inResponse.status);
 		LoginResponse = inResponse;
-		console.log("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
+		//console.log("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
 		ttrss_SID = LoginResponse.sessionid;
 		this.$.main.setContent("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
 		this.getCategories();
@@ -121,7 +131,7 @@ enyo.kind({
 			TextHelp = TextHelp + "#" + inEvent[i].id + " " + inEvent[i].title + " - " + inEvent[i].unread + "<br>";
 		};
 		this.$.main.setContent(TextHelp);
-		console.log(inEvent);
+		//console.log(inEvent);
 	},
 	processGetCategoriesError: function(inEvent){
 		console.log(inEvent);
@@ -168,11 +178,39 @@ enyo.kind({
 	},
 	processGetArticleSuccess: function(inEvent){
 		var TextHelp = "";
-		TextHelp = TextHelp + "#" + inEvent[0].id + " " + inEvent[0].title + "<br><br>" + inEvent[0].content;
+		TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
 		this.$.articleView.setContent(TextHelp);
-		console.log(inEvent);
+		//Checkbox ReadStatus setzen
+		if (inEvent[0].unread) {
+			this.$.chkArticleRead.setChecked(false);
+		} else
+		{
+			this.$.chkArticleRead.setChecked(true);
+		};
+		//console.log("unread : " + inEvent[0].unread);
+		RecentArticle = inEvent[0].id;
+		//console.log(inEvent);
 	},
 	processGetArticleError: function(inEvent){
 		console.log(inEvent);
+	},
+	toggleArticleRead: function(inSender, inEvent) {
+		var Readstate = this.$.chkArticleRead.getValue();
+		if (Readstate) {
+			//als gelesen markieren
+			ttrssMarkArticleRead(ttrssURL, RecentArticle, false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));	
+		} else
+		{
+			//als gelesen markieren
+			ttrssMarkArticleRead(ttrssURL, RecentArticle, true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));				
+		};
+		console.log(Readstate + " " + RecentArticle);
+		//this.$.result.setContent(inSender.name + " was " + (inSender.getValue() ? " selected." : "deselected."));
+	},
+	processMarkArticleReadSuccess: function(inEvent){
+		//console.log(inEvent);
+	},
+	processMarkArticleReadError: function(inEvent){
+		//console.log(inEvent);
 	},	
 });
