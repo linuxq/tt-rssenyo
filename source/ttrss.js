@@ -44,6 +44,7 @@ function ttrssGetCategories(ttrssurl, successCallback, errorCallback) {
 		//console.log("GET CATEGORIES");
 		var data = {
 		  op: "getCategories",
+		  unread_only: true,
 		  enable_nested: false
 		};
 		var request = new enyo.Ajax({
@@ -79,6 +80,7 @@ function ttrssGetFeeds(ttrssurl, catID, successCallback, errorCallback) {
 		var data = {
 		  op: "getFeeds",
 		  cat_id: catID,
+		  unread_only: true,
 		  enable_nested: true
 		};
 		var request = new enyo.Ajax({

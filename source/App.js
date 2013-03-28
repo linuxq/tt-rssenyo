@@ -23,7 +23,8 @@ enyo.kind({
 	components:[
 		{kind: "onyx.Toolbar", content: "Tiny-Tiny Rss Reader",components: [
 			{content: "Tiny-Tiny-RSS Reader"},
-			{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"}
+			{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
+			{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"},
 		]},
 		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", wrap: false, components: [
 			{name: "left", style: "width: 240px", showing: false, components: [
@@ -32,22 +33,22 @@ enyo.kind({
 				]}
 			]},
 			{name: "left2", kind: "FittableRows", fit: true, style: "width: 240px", components: [
-				{content: "Categories"},
+				{content: "Categories", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
 				{kind: "Scroller", touch:true, fit: false, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
 						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
 							]}
 						]}
 					]},
 				]},
-				{content: "Feeds"},
+				{content: "Feeds", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
 				{kind: "Scroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
 							]}
 						]}
 					]}
@@ -60,7 +61,7 @@ enyo.kind({
 						{kind: "Repeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
 							{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
 								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-										{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+										{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
 								]}
 							]}
 						]}
@@ -80,14 +81,15 @@ enyo.kind({
 				]},
 				{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
-					{kind: "onyx.Grabber"},
-					{content: "Read "},
-					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},		
-					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+					//{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
-					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"},
+					//{content: "Read "},
 					{fit: true},
-					{name: "lblArticles", align: "right"}
+					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
+					{name: "lblArticles", align: "right"},
+					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+					{fit: true},
+					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"}
 				]}
 			]}
 		]},		
@@ -141,7 +143,7 @@ enyo.kind({
 			ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 			ttrssGetHeadlines(ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		}
-	},	
+	},
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
 	},	
@@ -173,6 +175,9 @@ enyo.kind({
 		//LoginResponse = inResponse;
 		console.log("LOGIN Error: " + LoginResponse.error);
 		this.$.main.setContent("LOGIN ERROR: " + LoginResponse.error);
+	},
+	clickRefresh: function(inSender, inEvent){
+		this.getCategories();
 	},
 	getCategories: function (inSender){
 		//console.log(this.ttrss_SID);
@@ -285,11 +290,13 @@ enyo.kind({
 		var Readstate = this.$.chkArticleRead.getValue();
 		if (Readstate) {
 			//als gelesen markieren
-			ttrssMarkArticleRead(ttrssURL, RecentArticle, false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));	
+			ttrssMarkArticleRead(ttrssURL, RecentArticle, false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+			this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#999999");
 		} else
 		{
 			//als gelesen markieren
-			ttrssMarkArticleRead(ttrssURL, RecentArticle, true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));				
+			ttrssMarkArticleRead(ttrssURL, RecentArticle, true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+			this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#333333");
 		};
 		//console.log(Readstate + " " + RecentArticle);
 		//this.$.result.setContent(inSender.name + " was " + (inSender.getValue() ? " selected." : "deselected."));
