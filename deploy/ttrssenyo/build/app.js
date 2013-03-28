@@ -4452,15 +4452,27 @@ this.setShowing(!1);
 
 // App.js
 
-ttrss_SID = "", ttrssURL = null, ttrssUser = null, ttrssPassword = null, enyo.kind({
+ttrssURL = null, ttrssUser = null, ttrssPassword = null, RecentArticle = "", RecentArticleIndex = "", Category = new Array, CategoryID = new Array, FeedTitle = new Array, FeedID = new Array, Articles = new Array, ArticleID = new Array, ArticleURL = new Array, MarkReadTimer = "", MarkReadTimeout = "2000", enyo.kind({
 name: "App",
 kind: "FittableRows",
 fit: !0,
 components: [ {
 kind: "onyx.Toolbar",
-content: "Tiny-Tiny Rss Reader"
+content: "Tiny-Tiny Rss Reader",
+components: [ {
+content: "Tiny-Tiny-RSS Reader"
+}, {
+kind: "onyx.Button",
+content: "Setup",
+ontap: "LoginTap"
+}, {
+kind: "onyx.IconButton",
+src: "assets/menu-icon-refresh.png",
+ontap: "clickRefresh"
+} ]
 }, {
 kind: "Panels",
+name: "viewPanels",
 fit: !0,
 classes: "panels-sample-sliding-panels",
 arrangerKind: "CollapsingArranger",
@@ -4468,6 +4480,7 @@ wrap: !1,
 components: [ {
 name: "left",
 style: "width: 240px",
+showing: !1,
 components: [ {
 kind: "enyo.Scroller",
 fit: !0,
@@ -4478,39 +4491,172 @@ allowHtml: !0
 } ]
 } ]
 }, {
-name: "middle",
-tyle: "width: 500px",
-components: [ {
-kind: "enyo.Scroller",
+name: "left2",
+kind: "FittableRows",
 fit: !0,
+style: "width: 240px",
+components: [ {
+content: "Categories",
+style: "font-size: 1.2em; color: #333333; font-weight: bold"
+}, {
+kind: "Scroller",
+touch: !0,
+fit: !1,
+classes: "scroller-sample-scroller",
+components: [ {
+kind: "Repeater",
+name: "categoryRepeater",
+onSetupItem: "setupCategories",
+fit: !0,
+ontap: "clickCategory",
+components: [ {
+name: "categorylist",
+classes: "repeater-sample-item",
+style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;",
+components: [ {
+kind: "FittableColumns",
+name: "Data1",
+fit: !0,
+classes: "fittable-sample-shadow",
+style: "height: auto",
+components: [ {
+tag: "span",
+name: "titel",
+style: "font-size: 1.2em; width: 100%; text-align: left"
+} ]
+} ]
+} ]
+} ]
+}, {
+content: "Feeds",
+style: "font-size: 1.2em; color: #333333; font-weight: bold"
+}, {
+kind: "Scroller",
+touch: !0,
+fit: !0,
+classes: "scroller-sample-scroller",
+components: [ {
+kind: "Repeater",
+name: "feedRepeater",
+onSetupItem: "setupFeeds",
+fit: !0,
+ontap: "clickFeed",
 components: [ {
 name: "feedlist",
-classes: "nice-padding",
-allowHtml: !0
+classes: "repeater-sample-item",
+style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;",
+components: [ {
+kind: "FittableColumns",
+name: "Data1",
+fit: !0,
+classes: "fittable-sample-shadow",
+style: "height: auto",
+components: [ {
+tag: "span",
+name: "titel",
+style: "font-size: 1.2em; width: 100%; text-align: left"
+} ]
+} ]
+} ]
+} ]
+} ]
+}, {
+name: "middle",
+kind: "FittableRows",
+fit: !0,
+style: "width: 400px",
+components: [ {
+kind: "Scroller",
+name: "articleScroller",
+touch: !0,
+fit: !0,
+classes: "scroller-sample-scroller",
+components: [ {
+kind: "Repeater",
+onSetupItem: "setupArticles",
+fit: !0,
+ontap: "clickItem",
+components: [ {
+name: "item",
+classes: "repeater-sample-item",
+style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;",
+components: [ {
+kind: "FittableColumns",
+name: "Data1",
+fit: !0,
+classes: "fittable-sample-shadow",
+style: "height: auto",
+components: [ {
+tag: "span",
+name: "titel",
+style: "font-size: 1.2em; width: 100%; text-align: left"
+} ]
+} ]
+} ]
+} ]
+}, {
+fit: !0
+}, {
+kind: "onyx.Toolbar",
+components: [ {
+kind: "onyx.Grabber"
 } ]
 } ]
 }, {
 name: "body",
+kind: "FittableRows",
 fit: !0,
 components: [ {
 kind: "Scroller",
-classes: "enyo-fit",
+name: "articleViewScroller",
+fit: !0,
 touch: !0,
 components: [ {
 name: "articleView",
 classes: "panels-sample-sliding-content",
 allowHtml: !0,
-content: ""
+content: "",
+value: 0
+} ]
+}, {
+fit: !0
+}, {
+kind: "onyx.Toolbar",
+fit: !0,
+components: [ {
+kind: "onyx.Button",
+style: "width: 40px",
+content: "<",
+ontap: "prevArticle"
+}, {
+fit: !0
+}, {
+kind: "onyx.Checkbox",
+style: "height: 29px",
+name: "chkArticleRead",
+onchange: "toggleArticleRead",
+checked: !1
+}, {
+name: "lblArticles",
+align: "right"
+}, {
+kind: "onyx.IconButton",
+src: "assets/browser2.png",
+ontap: "openArticle"
+}, {
+fit: !0
+}, {
+kind: "onyx.Button",
+style: "width: 40px",
+content: ">",
+ontap: "nextArticle"
 } ]
 } ]
 } ]
 }, {
 kind: "onyx.Toolbar",
+showing: !1,
 components: [ {
-kind: "onyx.Button",
-content: "Setup",
-ontap: "LoginTap"
-}, {
 kind: "onyx.Button",
 content: "Categories",
 ontap: "getCategories"
@@ -4598,31 +4744,34 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-ttrssURL = "http://rss.meissel.com", ttrssUser = "webosmz", ttrssPassword = "IchWillLesen", ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+ttrssURL = localStorage.getItem("ttrssurl"), ttrssPassword = localStorage.getItem("ttrsspassword"), ttrssUser = localStorage.getItem("ttrssuser"), ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")));
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
 },
 LoginSave: function(e, t) {
-ttrssURL = this.$.serverAddress.getValue(), ttrssUser = this.$.serverUser.getValue(), ttrssPassword = this.$.serverPassword.getValue(), localStorage.setItem("ttrssurl", ttrssURL), localStorage.setItem("ttrssuser", ttrssUser), localStorage.setItem("ttrsspassword", ttrssPassword), this.$.LoginPopup.hide();
+ttrssURL = this.$.serverAddress.getValue(), ttrssUser = this.$.serverUser.getValue(), ttrssPassword = this.$.serverPassword.getValue(), localStorage.setItem("ttrssurl", ttrssURL), localStorage.setItem("ttrssuser", ttrssUser), localStorage.setItem("ttrsspassword", ttrssPassword), ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
 },
 LoginTap: function(e, t) {
 this.$.LoginPopup.show();
 },
 processLoginSuccess: function(e) {
-LoginResponse = e, console.log("LOGIN SUCCESSS SID: " + LoginResponse.sessionid), ttrss_SID = LoginResponse.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + LoginResponse.sessionid), this.getCategories();
+LoginResponse = e, ttrss_SID = LoginResponse.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + LoginResponse.sessionid), this.getCategories();
 },
 processLoginError: function(e) {
 console.log("LOGIN Error: " + e.error), this.$.main.setContent("LOGIN ERROR: " + e.error);
+},
+clickRefresh: function(e, t) {
+this.getCategories();
 },
 getCategories: function(e) {
 ttrssGetCategories(ttrssURL, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 },
 processGetCategoriesSuccess: function(e) {
 var t = "", n;
-ObjLength = e.length - 1;
-for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>";
-this.$.main.setContent(t), console.log(e);
+Category = [], CategoryID = [], ObjLength = e.length - 1;
+for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>", Category[n] = e[n].title + " (" + e[n].unread + ")", CategoryID[n] = e[n].id;
+this.$.main.setContent(t), this.$.categoryRepeater.setCount(Category.length);
 },
 processGetCategoriesError: function(e) {
 console.log(e);
@@ -4632,9 +4781,9 @@ ttrssGetFeeds(ttrssURL, this.$.catID.getValue(), enyo.bind(this, "processGetFeed
 },
 processGetFeedsSuccess: function(e) {
 var t = "", n;
-ObjLength = e.length - 1;
-for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>";
-this.$.main.setContent(t), console.log(e);
+FeedID = [], FeedTitle = [], ObjLength = e.length - 1;
+for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>", FeedTitle[n] = e[n].title + " (" + e[n].unread + ")", FeedID[n] = e[n].id;
+this.$.main.setContent(t), this.$.feedRepeater.setCount(FeedTitle.length);
 },
 processGetFeedsError: function(e) {
 console.log(e);
@@ -4644,9 +4793,9 @@ ttrssGetHeadlines(ttrssURL, this.$.feedID.getValue(), enyo.bind(this, "processGe
 },
 processGetHeadlinesSuccess: function(e) {
 var t = "", n;
-ObjLength = e.length - 1;
-for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>";
-this.$.feedlist.setContent(t), console.log(e);
+Articles = [], ArticleID = [], ArticleURL = [], ObjLength = e.length - 1;
+for (n = 0; n <= ObjLength; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>", Articles[n] = e[n].title, ArticleID[n] = e[n].id, ArticleURL[n] = e[n].link;
+this.$.repeater.setCount(Articles.length), this.$.articleScroller.setScrollTop(0);
 },
 processGetHeadlinesError: function(e) {
 console.log(e);
@@ -4656,10 +4805,49 @@ ttrssGetArticle(ttrssURL, this.$.articleID.getValue(), enyo.bind(this, "processG
 },
 processGetArticleSuccess: function(e) {
 var t = "";
-t = t + "#" + e[0].id + " " + e[0].title + "<br><br>" + e[0].content, this.$.articleView.setContent(t), console.log(e);
+t = e[0].title + "<br><br>" + e[0].content, this.$.articleView.setContent(t), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearInterval(this.MarkReadTimer), this.MarkReadTimer = setInterval(this.TimedMarkRead.bind(this), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), RecentArticle = e[0].id, this.$.lblArticles.setContent(RecentArticleIndex + 1 + "/" + Articles.length);
 },
 processGetArticleError: function(e) {
 console.log(e);
+},
+TimedMarkRead: function() {
+ttrssMarkArticleRead(ttrssURL, RecentArticle, !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#999999"), clearInterval(this.MarkReadTimer);
+},
+toggleArticleRead: function(e, t) {
+var n = this.$.chkArticleRead.getValue();
+n ? (ttrssMarkArticleRead(ttrssURL, RecentArticle, !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#999999")) : (ttrssMarkArticleRead(ttrssURL, RecentArticle, !0, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#333333"));
+},
+processMarkArticleReadSuccess: function(e) {},
+processMarkArticleReadError: function(e) {},
+setupCategories: function(e, t) {
+var n = t.index, r = t.item;
+r.$.titel.setContent(Category[n]);
+},
+setupFeeds: function(e, t) {
+var n = t.index, r = t.item;
+r.$.titel.setContent(FeedTitle[n]);
+},
+setupArticles: function(e, t) {
+var n = t.index, r = t.item;
+r.$.titel.setContent(Articles[n]);
+},
+clickCategory: function(e, t) {
+console.log(CategoryID[t.index]), ttrssGetFeeds(ttrssURL, CategoryID[t.index], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1);
+},
+clickFeed: function(e, t) {
+ttrssGetHeadlines(ttrssURL, FeedID[t.index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
+},
+clickItem: function(e, t) {
+RecentArticleIndex = t.index, ttrssGetArticle(ttrssURL, ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(3);
+},
+openArticle: function(e, t) {
+window.open(ArticleURL[RecentArticleIndex]);
+},
+prevArticle: function(e, t) {
+RecentArticleIndex >= 1 && (RecentArticleIndex -= 1, ttrssGetArticle(ttrssURL, ArticleID[RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+},
+nextArticle: function(e, t) {
+RecentArticleIndex < Articles.length - 1 && (RecentArticleIndex += 1, ttrssGetArticle(ttrssURL, ArticleID[RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 }
 });
 
@@ -4694,6 +4882,7 @@ response = JSON.parse(e.xhrResponse.body), r.status = response.status, r.status 
 function ttrssGetCategories(e, t, n) {
 var r = {
 op: "getCategories",
+unread_only: !0,
 enable_nested: !1
 }, i = new enyo.Ajax({
 url: e + "/api/",
@@ -4708,13 +4897,14 @@ return;
 }
 
 function ttrssGetCategoriesResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
+response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
 }
 
 function ttrssGetFeeds(e, t, n, r) {
 var i = {
 op: "getFeeds",
 cat_id: t,
+unread_only: !0,
 enable_nested: !0
 }, s = new enyo.Ajax({
 url: e + "/api/",
@@ -4737,6 +4927,7 @@ var i = {
 op: "getHeadlines",
 feed_id: t,
 view_mode: "unread",
+limit: 100,
 show_excerpt: !0,
 show_content: !0,
 enable_nested: !0
@@ -4753,7 +4944,7 @@ return;
 }
 
 function ttrssGetHeadlinesResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
 }
 
 function ttrssGetArticle(e, t, n, r) {
@@ -4773,5 +4964,29 @@ return;
 }
 
 function ttrssGetArticleResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
+}
+
+function ttrssMarkArticleRead(e, t, n, r, i) {
+var s = 1;
+n ? s = 1 : s = 0;
+var o = {
+op: "updateArticle",
+article_ids: t,
+mode: s,
+field: 2
+}, u = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(o)
+});
+u.response(function(e) {
+ttrssMarkArticleReadResponse(e, r, i);
+}), u.go(o);
+return;
+}
+
+function ttrssMarkArticleReadResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : (loginresult.error = response.content.error, n("Error"));
 }
