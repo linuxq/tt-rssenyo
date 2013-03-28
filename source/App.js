@@ -21,19 +21,19 @@ enyo.kind({
 				{content: "Categories", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
 				{kind: "Scroller", touch:true, fit: false, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
-						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
+						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
 							]}
 						]}
-					]},
+					]}
 				]},
 				{content: "Feeds (Click to add)", ontap: "addFeedClick", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
 				{kind: "Scroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
-						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
+						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
 							]}
 						]}
 					]}
@@ -65,7 +65,7 @@ enyo.kind({
 				]},
 				{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
-					//{kind: "onyx.Grabber"},
+					{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},
 					{fit: true},
@@ -164,10 +164,14 @@ enyo.kind({
 		if (window.innerWidth < 1024) {
 			if (window.innerWidth > 400) {
 				//Bei Pre 3 ArticelView vergrößern
+				this.$.categoryRepeater.applyStyle("font-size", "1.8em");
+				this.$.feedRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
+				this.$.categoryRepeater.applyStyle("font-size", "1.2em");
+				this.$.feedRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 			}
 		}		
