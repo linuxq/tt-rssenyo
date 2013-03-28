@@ -220,3 +220,64 @@ function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
 				errorCallback("Error");
                     } ;  	
 };
+
+//**************** SubscribeToFeed ********************
+function ttrssSubscribeToFeed(ttrssurl, url, categoryID, successCallback, errorCallback) {
+		var data = {
+		  op: "subscribeToFeed",
+		  feed_url: url,
+		  category_id: categoryID
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data),
+		});
+		request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
+		request.go(data);
+                    
+	return;
+};
+
+function ttrssSubscribeToFeedResponse(inEvent, successCallback, errorCallback) {
+	//console.log (successCallback);
+	response = JSON.parse(inEvent.xhrResponse.body);
+	//console.log(response.content.status);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
+		errorCallback(response.content.error);
+	} ;
+};
+
+//**************** UnsubscribeFeed ********************
+function ttrssUnsubscribeFeed(ttrssurl, feedID, successCallback, errorCallback) {
+		var data = {
+		  op: "unsubscribeFeed",
+		  feed_id: feedID
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data),
+		});
+		request.response(function(daten) {ttrssUnsubscribeFeedResponse(daten, successCallback, errorCallback)});
+		request.go(data);
+                    
+	return;
+};
+
+function ttrssUnsubscribeFeedResponse(inEvent, successCallback, errorCallback) {
+	//console.log (successCallback);
+	response = JSON.parse(inEvent.xhrResponse.body);
+	//console.log(response.content.status);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
+		errorCallback(response.content.error);
+	} ;
+};

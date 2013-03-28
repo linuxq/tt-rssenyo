@@ -42,7 +42,7 @@ enyo.kind({
 						]}
 					]},
 				]},
-				{content: "Feeds"},
+				{content: "Feeds (Click to add)", ontap: "addFeedClick"},
 				{kind: "Scroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
@@ -51,20 +51,20 @@ enyo.kind({
 							]}
 						]}
 					]}
-				]},
-			]},			
+				]}
+			]},
 			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
-					//{name: "FeedTitle", content: "Feed"},
-					{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
-	
-						{kind: "Repeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
-							{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
-								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-										{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
-								]}
+				//{name: "FeedTitle", content: "Feed"},
+				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
+
+					{kind: "Repeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
+						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
+							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
 							]}
 						]}
-					]},
+					]}
+				]},
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"}
@@ -103,6 +103,7 @@ enyo.kind({
 			
 		]},
 		{name: "LoginPopup", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
+			{kind: "FittableRows", fit: true, components: [
 				{kind: "onyx.InputDecorator", components: [
 					{kind: "onyx.Input", placeholder: "Server", name: "serverAddress", value: "http://rss.meissel.com"}
 				]},
@@ -115,7 +116,17 @@ enyo.kind({
 				{tag: "br"},
 				{kind: "onyx.Button", content: "Save", ontap: "LoginSave"},
 				{kind: "onyx.Button", content: "Cancel", ontap: "LoginClose"}
-		]},		
+			]},
+		]},
+		{name: "AddFeedPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
+			{kind: "FittableRows", fit: true, components: [
+				{kind: "onyx.InputDecorator", components: [
+					{kind: "onyx.Input", placeholder: "FeedURL", name: "AddFeedURL", value: ""}
+				]},
+				{kind: "onyx.Button", content: "Add", ontap: "addFeedSave"},
+				{kind: "onyx.Button", content: "Cancel", ontap: "addFeedClose"}
+			]}
+		]}
 	],
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
@@ -157,6 +168,9 @@ enyo.kind({
 		this.$.LoginPopup.hide();
 	},	
 	LoginTap: function(inSender, inEvent) {
+		this.$.serverAddress.setValue(ttrssURL);
+		this.$.serverUser.setValue(ttrssUser);
+		this.$.serverPassword.setValue(ttrssPassword);
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
@@ -329,13 +343,30 @@ enyo.kind({
 		ttrssGetFeeds(ttrssURL, CategoryID[inEvent.index], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 		this.$.viewPanels.setIndex(1);
 	},
-	clickFeed: function(inSender, inEvent){
+	clickFeed: function(inSender, inEvent) {
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		ttrssGetHeadlines(ttrssURL, FeedID[inEvent.index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(2);
 		}
-	},	
+	},
+	addFeedClick: function(inSender, inEvent) {
+		this.$.AddFeedPopup.show();
+	},
+	addFeedSave: function(inSender, inEvent) {
+		ttrssSubscribeToFeed(ttrssURL, this.$.AddFeedURL.getValue(), this.$.catID.getValue(), enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError"));
+		this.$.AddFeedPopup.hide();
+	},
+	addFeedClose: function(inSender, inEvent) {
+		this.$.AddFeedPopup.hide();
+	},
+	addFeedSuccess: function(inEvent) {
+		this.getCategories();
+	},
+	addFeedError: function(inEvent) {
+		console.log(inEvent);
+		this.$.main.setContent(inEvent);
+	},
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		RecentArticleIndex = inEvent.index;
