@@ -18,22 +18,22 @@ enyo.kind({
 				]}
 			]},
 			{name: "left2", kind: "FittableRows", fit: true, style: "width: 240px", components: [
-				{content: "Categories", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
+				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
 				{kind: "Scroller", touch:true, fit: false, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
 						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
 							]}
 						]}
 					]}
 				]},
-				{content: "Feeds (Click to add)", ontap: "addFeedClick", style: "font-size: 1.2em; color: #333333; font-weight: bold"},
+				{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
 				{kind: "Scroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
 							]}
 						]}
 					]}
@@ -43,9 +43,9 @@ enyo.kind({
 				//{name: "FeedTitle", content: "Feed"},
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
-						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
+						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "font-size: 1.2em; width: 100%; text-align: left"}
+									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
 							]}
 						]}
 					]}
@@ -164,14 +164,20 @@ enyo.kind({
 		if (window.innerWidth < 1024) {
 			if (window.innerWidth > 400) {
 				//Bei Pre 3 ArticelView vergrößern
+				this.$.categoryHeader.applyStyle("font-size", "1.8em");
 				this.$.categoryRepeater.applyStyle("font-size", "1.8em");
+				this.$.feedHeader.applyStyle("font-size", "1.8em");
 				this.$.feedRepeater.applyStyle("font-size", "1.8em");
+				this.$.articleRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
+				this.$.categoryHeader.applyStyle("font-size", "1.2em");
 				this.$.categoryRepeater.applyStyle("font-size", "1.2em");
+				this.$.feedHeader.applyStyle("font-size", "1.2em");
 				this.$.feedRepeater.applyStyle("font-size", "1.2em");
+				this.$.articleRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 			}
 		}		
