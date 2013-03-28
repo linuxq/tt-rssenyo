@@ -52,7 +52,7 @@ enyo.kind({
 			]},			
 			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
 					//{name: "FeedTitle", content: "Feed"},
-					{kind: "Scroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
+					{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 	
 						{kind: "Repeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
 							{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-size: 12px; font-weight: bold;", components: [
@@ -72,7 +72,7 @@ enyo.kind({
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
 				
-				{kind: "Scroller", fit: true, touch: true, components: [
+				{kind: "Scroller", name: "articleViewScroller", fit: true, touch: true, components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: "", value: 0}
 				]},
 				{fit: true},
@@ -237,6 +237,7 @@ enyo.kind({
 			ArticleURL[i] = inEvent[i].link;
 		};
 		this.$.repeater.setCount(Articles.length);
+		this.$.articleScroller.setScrollTop(0);
 		//this.$.feedlist.setContent(TextHelp);
 		//console.log(inEvent);
 	},
@@ -251,6 +252,8 @@ enyo.kind({
 		var TextHelp = "";
 		TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
 		this.$.articleView.setContent(TextHelp);
+		this.$.articleViewScroller.setScrollTop(0);
+		this.$.articleViewScroller.setScrollLeft(0);
 		//Checkbox ReadStatus setzen
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
