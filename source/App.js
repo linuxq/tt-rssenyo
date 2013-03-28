@@ -158,9 +158,19 @@ enyo.kind({
 		}
 		else
 		{
-			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-			ttrssGetHeadlines(this.ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-		}
+			ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+			ttrssGetHeadlines(ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		};
+		if (window.innerWidth < 1024) {
+			if (window.innerWidth > 400) {
+				//Bei Pre 3 ArticelView vergrößern
+				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
+			} else
+			{
+				//Bei Pre / Veer etc ArticelView vergrößern
+				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
+			}
+		}		
 	},
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
