@@ -13,6 +13,9 @@ Articles = new Array();
 ArticleID = new Array();
 ArticleURL = new Array();
 
+MarkReadTimer = "";
+MarkReadTimeout = "2000";
+
 enyo.kind({
 	name: "App",
 	kind: "FittableRows",
@@ -79,10 +82,10 @@ enyo.kind({
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber"},
 					{content: "Read "},
-					{kind:"onyx.Checkbox", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},		
+					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},		
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
-					{kind: "onyx.Button", style: "width: 80px", content: "<", ontap: "prevArticle"},
-					{kind: "onyx.Button", style: "width: 80px", content: ">", ontap: "nextArticle"},
+					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
+					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"},
 					{fit: true},
 					{name: "lblArticles", align: "right"}
 				]}
@@ -257,10 +260,13 @@ enyo.kind({
 		//Checkbox ReadStatus setzen
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
-		} else
+			clearInterval(this.MarkReadTimer);
+			this.MarkReadTimer = setInterval(this.TimedMarkRead.bind(this), MarkReadTimeout);
+		}
+		else
 		{
 			this.$.chkArticleRead.setChecked(true);
-		};
+		}
 		//console.log("unread : " + inEvent[0].unread);
 		RecentArticle = inEvent[0].id;
 		this.$.lblArticles.setContent((RecentArticleIndex + 1) + "/" + Articles.length);
@@ -268,6 +274,12 @@ enyo.kind({
 	},
 	processGetArticleError: function(inEvent){
 		console.log(inEvent);
+	},
+	TimedMarkRead: function() {
+		ttrssMarkArticleRead(ttrssURL, RecentArticle, !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+		this.$.chkArticleRead.setChecked(!0);
+		this.$.repeater.children[RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+		clearInterval(this.MarkReadTimer);
 	},
 	toggleArticleRead: function(inSender, inEvent) {
 		var Readstate = this.$.chkArticleRead.getValue();
@@ -320,13 +332,17 @@ enyo.kind({
 	clickFeed: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		ttrssGetHeadlines(ttrssURL, FeedID[inEvent.index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-		this.$.viewPanels.setIndex(2);
+		if (window.innerWidth < 1024) {
+			this.$.viewPanels.setIndex(2);
+		}
 	},	
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		RecentArticleIndex = inEvent.index;
 		ttrssGetArticle(ttrssURL, ArticleID[inEvent.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
-		this.$.viewPanels.setIndex(3);
+		if (window.innerWidth < 1024) {
+			this.$.viewPanels.setIndex(3);
+		}
 	},
 	openArticle: function(inSender, inEvent){
 		window.open(ArticleURL[RecentArticleIndex]);
