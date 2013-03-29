@@ -1,19 +1,19 @@
 //**************** Login ********************
 function ttrssLogin(ttrssurl, ttrssuser, ttrsspassword, successCallback, errorCallback) {
-		var data = {
-		  op: "login",
-		  user: ttrssuser,
-		  password : ttrsspassword
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssLoginResponse(daten, successCallback, errorCallback)});
-		request.go(data);
-                    
+	var data = {
+		op: "login",
+		user: ttrssuser,
+		password : ttrsspassword
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssLoginResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
 	return;
 };
 
@@ -24,128 +24,111 @@ function ttrssLoginResponse(inEvent, successCallback, errorCallback) {
 		sessionid: "99",
 		error: "99"
 	};
-                    response = JSON.parse(inEvent.xhrResponse.body);
-                    loginresult.status = response.status;
-                    if (loginresult.status == 0){
-				loginresult.sessionid = response.content.session_id;
-				ttsessionID = response.content.session_id;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				successCallback(loginresult);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback(loginresult);
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	loginresult.status = response.status;
+	if (loginresult.status == 0){
+		loginresult.sessionid = response.content.session_id;
+		ttsessionID = response.content.session_id;
+		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
+		successCallback(loginresult);
+	} else {
+		loginresult.error = response.content.error;
+		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
+		errorCallback(loginresult);
+	}
 };
 
 
 //**************** getCategories********************
 function ttrssGetCategories(ttrssurl, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "getCategories",
-		  unread_only: true,
-		  enable_nested: false
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetCategoriesResponse(daten, successCallback, errorCallback)});
-		request.go(data);
-                    
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "getCategories",
+		unread_only: true,
+		enable_nested: false
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssGetCategoriesResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
 	return;
 };
 
 function ttrssGetCategoriesResponse(inEvent, successCallback, errorCallback) {
-	//console.log (successCallback);
-                    response = JSON.parse(inEvent.xhrResponse.body);
-		    console.log(response);
-                    if (response.status == 0){
-
-				successCallback(response.content);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback("Error");
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	};
 };
 
 
 //**************** getFeeds ********************
 function ttrssGetFeeds(ttrssurl, catID, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "getFeeds",
-		  cat_id: catID,
-		  unread_only: true,
-		  enable_nested: true
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetFeedsResponse(daten, successCallback, errorCallback)});
-		request.go(data);
-                    
+	var data = {
+		op: "getFeeds",
+		cat_id: catID,
+		unread_only: true,
+		enable_nested: true
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssGetFeedsResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
 	return;
 };
 
 function ttrssGetFeedsResponse(inEvent, successCallback, errorCallback) {
-	//console.log (successCallback);
-                    response = JSON.parse(inEvent.xhrResponse.body);
-		    //console.log(response);
-                    if (response.status == 0){
-
-				successCallback(response.content);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback("Error");
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	};
 };
 
 
 //**************** getHeadlines ********************
 function ttrssGetHeadlines(ttrssurl, feedID, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "getHeadlines",
-		  feed_id: feedID,
-		  view_mode: "unread",
-		  limit: 100,
-		  show_excerpt: true,
-		  show_content: true,
-		  enable_nested: true
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
-		request.go(data);
-                    
+	var data = {
+		op: "getHeadlines",
+		feed_id: feedID,
+		view_mode: "unread",
+		limit: 100,
+		show_excerpt: true,
+		show_content: true,
+		enable_nested: true
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
 	return;
 };
 
 function ttrssGetHeadlinesResponse(inEvent, successCallback, errorCallback) {
-	//console.log (successCallback);
-                    response = JSON.parse(inEvent.xhrResponse.body);
-		    //console.log(response);
-                    if (response.status == 0){
-
-				successCallback(response.content);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback("Error");
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
 };
 
 //**************** getArticle ********************
@@ -163,22 +146,17 @@ function ttrssGetArticle(ttrssurl, articleID, successCallback, errorCallback) {
 		});
 		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
 		request.go(data);
-                    
+
 	return;
 };
 
 function ttrssGetArticleResponse(inEvent, successCallback, errorCallback) {
-	//console.log (successCallback);
-                    response = JSON.parse(inEvent.xhrResponse.body);
-		    //console.log(response);
-                    if (response.status == 0){
-
-				successCallback(response.content);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback("Error");
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
 };
 
 //**************** MarkArticleRead ********************
@@ -201,26 +179,21 @@ function ttrssMarkArticleRead(ttrssurl, articleID, unread, successCallback, erro
 			url: ttrssurl + "/api/",
 			method: "POST",
 			handleAs: "json",
-			postBody: JSON.stringify(data),
+			postBody: JSON.stringify(data)
 		});
 		request.response(function(daten) {ttrssMarkArticleReadResponse(daten, successCallback, errorCallback)});
 		request.go(data);
-                    
+
 	return;
 };
 
 function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
-	//console.log (successCallback);
-                    response = JSON.parse(inEvent.xhrResponse.body);
-		    //console.log(response.content.status);
-                    if (response.status == 0){
-
-				successCallback(response.content);
-                    } else {
-				loginresult.error = response.content.error;
-				//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-				errorCallback("Error");
-                    } ;  	
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
 };
 
 //**************** SubscribeToFeed ********************
@@ -238,7 +211,7 @@ function ttrssSubscribeToFeed(ttrssurl, url, categoryID, successCallback, errorC
 		});
 		request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
 		request.go(data);
-                    
+
 	return;
 };
 
@@ -251,7 +224,7 @@ function ttrssSubscribeToFeedResponse(inEvent, successCallback, errorCallback) {
 	} else {
 		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
 		errorCallback(response.content.error);
-	} ;
+	}
 };
 
 //**************** UnsubscribeFeed ********************
@@ -268,7 +241,7 @@ function ttrssUnsubscribeFeed(ttrssurl, feedID, successCallback, errorCallback) 
 		});
 		request.response(function(daten) {ttrssUnsubscribeFeedResponse(daten, successCallback, errorCallback)});
 		request.go(data);
-                    
+
 	return;
 };
 
@@ -281,5 +254,5 @@ function ttrssUnsubscribeFeedResponse(inEvent, successCallback, errorCallback) {
 	} else {
 		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
 		errorCallback(response.content.error);
-	} ;
+	}
 };
