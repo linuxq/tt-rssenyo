@@ -4574,7 +4574,8 @@ components: [ {
 kind: "onyx.Toolbar",
 components: [ {
 name: "lblFeedTitle",
-content: "Feed"
+content: "Feed",
+style: "font-size: 1.2em; font-weight: bold"
 } ]
 }, {
 kind: "Scroller",
@@ -4621,7 +4622,11 @@ fit: !0,
 components: [ {
 name: "articleViewTitle",
 content: "",
-style: "border: 1px solid silver; padding: 5px; font-weight: bold;"
+style: "padding: 5px; font-weight: bold;"
+}, {
+name: "articleViewTitle2",
+content: "",
+style: "font-size: 0.8em; padding: 5px;"
 }, {
 kind: "Scroller",
 name: "articleViewScroller",
@@ -4834,7 +4839,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em")));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -4893,8 +4898,8 @@ getArticle: function(e, t) {
 ttrssGetArticle(this.ttrssURL, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 },
 processGetArticleSuccess: function(e) {
-var t = "";
-this.$.articleViewTitle.setContent(e[0].title), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
+var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), console.log(e);
 },
 processGetFullArticleSuccess: function(e) {
 this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), inEvent[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
