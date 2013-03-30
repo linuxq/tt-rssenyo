@@ -229,18 +229,18 @@ function ttrssSubscribeToFeedResponse(inEvent, successCallback, errorCallback) {
 
 //**************** UnsubscribeFeed ********************
 function ttrssUnsubscribeFeed(ttrssurl, feedID, successCallback, errorCallback) {
-		var data = {
-		  op: "unsubscribeFeed",
-		  feed_id: feedID
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssUnsubscribeFeedResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	var data = {
+		op: "unsubscribeFeed",
+		feed_id: feedID
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssUnsubscribeFeedResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
@@ -255,4 +255,14 @@ function ttrssUnsubscribeFeedResponse(inEvent, successCallback, errorCallback) {
 		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
 		errorCallback(response.content.error);
 	}
+};
+
+//*************** Get full article (might be optional for some feeds, like heise.de) ***************
+function ttrssGetFullArticle(articleUrl, successCallback, errorCallback) {
+	var request = new enyo.Ajax({
+		url: articleUrl,
+		method: "GET"
+	});
+	request.response(function(result) {successCallback(result.xhrResponse.body);});
+	request.go();
 };
