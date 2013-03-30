@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"vendor": "Marcel Meissel",
 	"type": "web",
-	"main": "debug.html",
+	"main": "index.html",
 	"title": "Tiny Tiny RSS",
 	"icon": "icon48.png",
 	"uiRevision": 2,

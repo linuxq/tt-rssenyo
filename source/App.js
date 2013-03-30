@@ -6,11 +6,6 @@ enyo.kind({
 	kind: "FittableRows",
 	fit: true,
 	components:[
-		{kind: "onyx.Toolbar", components: [
-			{content: "TT-RSS Reader"},
-			{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
-			{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"},
-		]},
 		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", wrap: false, components: [
 			{name: "left", style: "width: 240px", showing: false, components: [
 				{kind: "enyo.Scroller", fit: true, components: [
@@ -18,6 +13,9 @@ enyo.kind({
 				]}
 			]},
 			{name: "left2", kind: "FittableRows", fit: true, style: "width: 240px", components: [
+				{kind: "onyx.Toolbar", components: [
+					{content: "TT-RSS Reader"}
+				]},				
 				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
 				{kind: "Scroller", touch:true, fit: false, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
@@ -37,10 +35,18 @@ enyo.kind({
 							]}
 						]}
 					]}
-				]}
+				]},
+				//{fit: true},
+				{kind: "onyx.Toolbar", components: [
+					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
+					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}					
+				]}				
 			]},
 			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
 				//{name: "FeedTitle", content: "Feed"},
+				{kind: "onyx.Toolbar", components: [
+					{name: "lblFeedTitle", content: "Feed"}
+				]},				
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
@@ -59,6 +65,7 @@ enyo.kind({
 				//]}
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
+				{name: "articleViewTitle", content: ""},
 				{kind: "Scroller", name: "articleViewScroller", fit: true, touch: true, components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
@@ -169,6 +176,7 @@ enyo.kind({
 				this.$.feedRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
+				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
@@ -178,6 +186,7 @@ enyo.kind({
 				this.$.feedRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
+				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
 			}
 		}
 	},
@@ -299,8 +308,9 @@ enyo.kind({
 	},
 	processGetArticleSuccess: function(inEvent){
 		var TextHelp = "";
-		TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
-		this.$.articleView.setContent(TextHelp);
+		//TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
+		this.$.articleViewTitle.setContent(inEvent[0].title)
+		this.$.articleView.setContent(inEvent[0].content);
 		this.$.articleViewScroller.setScrollTop(0);
 		this.$.articleViewScroller.setScrollLeft(0);
 		//Checkbox ReadStatus setzen
@@ -386,6 +396,7 @@ enyo.kind({
 			feedlist.$.titel.applyStyle("color", "#999999");
 		}
 		feedlist.$.titel.setContent(this.FeedTitle[index] + " (" + this.FeedUnread[index] + ")");
+		this.$.left2.reflow();
 		////////item.$.dauer.setContent(PCastsDuration[index]);
 
 	},
@@ -418,6 +429,7 @@ enyo.kind({
 		this.currentFeedIndex = index;
 		this.$.feedRepeater.renderRow(oldFeedIdx);
 		this.$.feedRepeater.renderRow(this.currentFeedIndex);
+		this.$.lblFeedTitle.setContent(this.FeedTitle[index]);
 		ttrssGetHeadlines(this.ttrssURL, this.FeedID[index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(2);
