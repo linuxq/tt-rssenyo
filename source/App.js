@@ -45,7 +45,7 @@ enyo.kind({
 			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
 				//{name: "FeedTitle", content: "Feed"},
 				{kind: "onyx.Toolbar", components: [
-					{name: "lblFeedTitle", content: "Feed"}
+					{name: "lblFeedTitle", content: "Feed", style: "font-weight: bold"}
 				]},				
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
@@ -65,7 +65,7 @@ enyo.kind({
 				//]}
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
-				{name: "articleViewTitle", content: ""},
+				{name: "articleViewTitle", content: "", style: "border: 1px solid silver; padding: 5px; font-weight: bold;"},
 				{kind: "Scroller", name: "articleViewScroller", fit: true, touch: true, components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
@@ -174,6 +174,7 @@ enyo.kind({
 				this.$.categoryRepeater.applyStyle("font-size", "1.8em");
 				this.$.feedHeader.applyStyle("font-size", "1.8em");
 				this.$.feedRepeater.applyStyle("font-size", "1.8em");
+				this.$.lblfeedTitle.applyStyle("font-size", "1.8em");
 				this.$.articleRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
@@ -184,6 +185,7 @@ enyo.kind({
 				this.$.categoryRepeater.applyStyle("font-size", "1.2em");
 				this.$.feedHeader.applyStyle("font-size", "1.2em");
 				this.$.feedRepeater.applyStyle("font-size", "1.2em");
+				this.$.lblfeedTitle.applyStyle("font-size", "1.2em");
 				this.$.articleRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
@@ -309,7 +311,7 @@ enyo.kind({
 	processGetArticleSuccess: function(inEvent){
 		var TextHelp = "";
 		//TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
-		this.$.articleViewTitle.setContent(inEvent[0].title)
+		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
 		this.$.articleView.setContent(inEvent[0].content);
 		this.$.articleViewScroller.setScrollTop(0);
 		this.$.articleViewScroller.setScrollLeft(0);

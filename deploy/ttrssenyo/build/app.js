@@ -4620,7 +4620,8 @@ kind: "FittableRows",
 fit: !0,
 components: [ {
 name: "articleViewTitle",
-content: ""
+content: "",
+style: "border: 1px solid silver; padding: 5px; font-weight: bold;"
 }, {
 kind: "Scroller",
 name: "articleViewScroller",
