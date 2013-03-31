@@ -266,3 +266,30 @@ function ttrssGetFullArticle(articleUrl, successCallback, errorCallback) {
 	request.response(function(result) {successCallback(result.xhrResponse.body);});
 	request.go();
 };
+
+//**************** getConfig ********************
+function ttrssGetConfig(ttrssurl, successCallback, errorCallback) {
+		//console.log("GET CATEGORIES");
+		var data = {
+		  op: "getConfig"
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data),
+		});
+		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
+		request.go(data);
+
+	return;
+};
+
+function ttrssGetConfigResponse(inEvent, successCallback, errorCallback) {
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
+};
