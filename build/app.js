@@ -4489,7 +4489,7 @@ content: "TT-RSS Reader"
 }, {
 content: "Categories",
 name: "categoryHeader",
-style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"
+style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"
 }, {
 kind: "Scroller",
 touch: !0,
@@ -4524,7 +4524,7 @@ style: "width: 100%; text-align: left; margin-left: 5px;"
 content: "Feeds (Click to add)",
 name: "feedHeader",
 ontap: "addFeedClick",
-style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"
+style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"
 }, {
 kind: "Scroller",
 touch: !0,
@@ -4549,13 +4549,20 @@ classes: "fittable-sample-shadow",
 style: "height: auto",
 components: [ {
 kind: "enyo.Image",
+fit: !1,
 name: "icon",
 src: "",
 style: "height: 25px"
 }, {
 tag: "span",
+name: "unread",
+fit: !1,
+style: "width: 50px; text-align: right;  margin-left: 2px"
+}, {
+tag: "span",
 name: "titel",
-style: "width: 100%; text-align: left; margin-left: 5px;"
+fit: !0,
+style: "text-align: left; margin-left: 8px;"
 } ]
 } ]
 } ]
@@ -4831,6 +4838,32 @@ content: "Cancel",
 ontap: "addFeedClose",
 style: "width:100%;"
 } ]
+}, {
+name: "MarkFeedReadPopup",
+kind: "onyx.Popup",
+centered: !0,
+modal: !0,
+floating: !0,
+components: [ {
+content: "Really mark feed as read?"
+}, {
+tag: "div",
+style: "height:10px;"
+}, {
+kind: "onyx.Button",
+classes: "onyx-negative",
+content: "Yes",
+ontap: "MarkFeedRead",
+style: "width:100%;"
+}, {
+tag: "div",
+style: "height:2px;"
+}, {
+kind: "onyx.Button",
+content: "No",
+ontap: "MarkFeedReadClose",
+style: "width:100%;"
+} ]
 } ],
 FeedID: [],
 FeedUnread: [],
@@ -4861,7 +4894,7 @@ startapp: function(e, t) {
 this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 resize: function() {
-this.$.left2.reflow();
+this.$.left2.reflow(), this.$.feedRepeater.reflow();
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -4950,7 +4983,7 @@ n == this.currentCategoryIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.
 },
 setupFeeds: function(e, t) {
 var n = t.index, r = t.item;
-n == this.currentFeedIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.titel.applyStyle("color", "#999999"), this.FeedIcon[n] && r.$.icon.setSrc(this.ttrssIconPath + this.FeedID[n] + ".ico"), r.$.titel.setContent(this.FeedTitle[n] + " (" + this.FeedUnread[n] + ")"), this.resize();
+n == this.currentFeedIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.titel.applyStyle("color", "#999999"), this.FeedIcon[n] && r.$.icon.setSrc(this.ttrssIconPath + this.FeedID[n] + ".ico"), r.$.unread.setContent(this.FeedUnread[n]), r.$.titel.setContent(this.FeedTitle[n]), this.resize();
 },
 setupArticles: function(e, t) {
 var n = t.index, r = t.item;
@@ -4990,6 +5023,21 @@ this.getCategories();
 },
 addFeedError: function(e) {
 console.log(e), this.$.main.setContent(e);
+},
+MarkFeedReadClick: function(e) {
+this.$.MarkFeedReadPopup.show();
+},
+MarkFeedRead: function(e) {
+ttrssCatchupFeed(this.ttrssURL, this.currentFeedIndex, enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
+},
+processMarkFeedReadSuccess: function(e) {
+console.log(e), this.getCategories();
+},
+processMarkFeedReadError: function(e) {
+console.log(e);
+},
+MarkFeedReadClose: function(e) {
+this.$.MarkFeedReadPopup.hide();
 },
 clickItem: function(e, t) {
 this.RecentArticleIndex = t.index, ttrssGetArticle(this.ttrssURL, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(3);
@@ -5213,6 +5261,27 @@ return;
 
 function ttrssGetConfigResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssCatchupFeed(e, t, n, r) {
+var i = {
+op: "catchupFeed",
+feed_id: t,
+is_cat: !1
+}, s = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(i)
+});
+s.response(function(e) {
+ttrssGetHeadlinesResponse(e, n, r);
+}), s.go(i);
+return;
+}
+
+function ttrssCatchupFeedResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
 // tools.js

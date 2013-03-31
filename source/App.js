@@ -16,7 +16,7 @@ enyo.kind({
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
 				]},				
-				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
+				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
 				{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
 						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
@@ -26,13 +26,14 @@ enyo.kind({
 						]}
 					]}
 				]},
-				{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
+				{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
 				{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{kind: "enyo.Image", name: "icon", src: "", style: "height: 25px"},
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+									{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
+									{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},									
+									{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
 							]}
 						]}
 					]}
@@ -60,7 +61,8 @@ enyo.kind({
 				]},
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
-					{kind: "onyx.Grabber"}
+					{kind: "onyx.Grabber"},
+					//{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
 				]}
 				//{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
@@ -127,7 +129,14 @@ enyo.kind({
 			{kind: "onyx.Button", content: "Add", ontap: "addFeedSave", style: "width:100%;"},
 			{tag: "div", style: "height:2px;"},
 			{kind: "onyx.Button", content: "Cancel", ontap: "addFeedClose", style: "width:100%;"}
-		]}
+		]},
+		{name: "MarkFeedReadPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, components: [
+			{content: "Really mark feed as read?"},
+			{tag: "div", style: "height:10px;"},
+			{kind: "onyx.Button", classes: "onyx-negative", content: "Yes", ontap: "MarkFeedRead", style: "width:100%;"},
+			{tag: "div", style: "height:2px;"},
+			{kind: "onyx.Button", content: "No", ontap: "MarkFeedReadClose", style: "width:100%;"}
+		]}		
 	],
 	FeedID: [],
 	FeedUnread: [],
@@ -199,7 +208,9 @@ enyo.kind({
 		}
 	},
 	resize: function(){
+		//console.log("resize");
 		this.$.left2.reflow();
+		this.$.feedRepeater.reflow();
 	},
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
@@ -430,7 +441,9 @@ enyo.kind({
 		if (this.FeedIcon[index]) {
 			feedlist.$.icon.setSrc(this.ttrssIconPath + this.FeedID[index] + ".ico");
 		} 
-		feedlist.$.titel.setContent(this.FeedTitle[index] + " (" + this.FeedUnread[index] + ")");
+		//feedlist.$.titel.setContent(this.FeedTitle[index] + " (" + this.FeedUnread[index] + ")");
+		feedlist.$.unread.setContent(this.FeedUnread[index]);
+		feedlist.$.titel.setContent(this.FeedTitle[index]);
 		this.resize();
 		////////item.$.dauer.setContent(PCastsDuration[index]);
 
@@ -497,6 +510,23 @@ enyo.kind({
 		console.log(inEvent);
 		this.$.main.setContent(inEvent);
 	},
+	MarkFeedReadClick: function(inEvent){
+		this.$.MarkFeedReadPopup.show();	
+	},
+	MarkFeedRead: function(inEvent){
+		ttrssCatchupFeed(this.ttrssURL, this.currentFeedIndex, enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
+		this.$.MarkFeedReadPopup.hide();
+	},
+	processMarkFeedReadSuccess: function(inEvent) {
+		console.log(inEvent);		
+		this.getCategories();
+	},
+	processMarkFeedReadError: function(inEvent) {
+		console.log(inEvent);
+	},	
+	MarkFeedReadClose: function(inEvent){
+		this.$.MarkFeedReadPopup.hide();	
+	},	
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		this.RecentArticleIndex = inEvent.index;
