@@ -68,7 +68,7 @@ enyo.kind({
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;"},
 				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				{content: "", style: "border: 1px solid silver;"},
-				{kind: "Scroller", name: "articleViewScroller", fit: true, touch: true, components: [
+				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				{fit: true},
@@ -339,7 +339,7 @@ enyo.kind({
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
-		console.log(inEvent);
+		//console.log(inEvent);
 	},
 	processGetFullArticleSuccess: function(inContent){
 		this.$.articleView.setContent(inContent);

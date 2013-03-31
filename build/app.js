@@ -4628,8 +4628,12 @@ name: "articleViewTitle2",
 content: "",
 style: "font-size: 0.8em; padding: 5px;"
 }, {
+content: "",
+style: "border: 1px solid silver;"
+}, {
 kind: "Scroller",
 name: "articleViewScroller",
+horizontal: "hidden",
 fit: !0,
 touch: !0,
 components: [ {
@@ -4899,7 +4903,7 @@ ttrssGetArticle(this.ttrssURL, this.$.articleID.getValue(), enyo.bind(this, "pro
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), console.log(e);
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
 },
 processGetFullArticleSuccess: function(e) {
 this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), inEvent[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
