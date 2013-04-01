@@ -178,7 +178,7 @@ enyo.kind({
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
-		this.alternativeView = localStorage.getItem("alternativeView");
+		this.alternativeView = (localStorage.getItem("alternativeView") == "true");
 		if (this.ttrssURL == null)
 		{
 			this.$.LoginPopup.show();
