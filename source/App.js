@@ -64,6 +64,7 @@ enyo.kind({
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
+					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"}
 				]}
 				//{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
@@ -542,6 +543,16 @@ enyo.kind({
 	},
 	MarkFeedReadClose: function(inEvent){
 		this.$.MarkFeedReadPopup.hide();
+	},
+	UpdateFeedClick: function(inEvent) {
+		ttrssUpdateFeed(this.ttrssURL, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
+	},
+	processUpdateFeedSuccess: function(inEvent) {
+		console.log(inEvent);
+		this.selectFeed(this.currentFeedIndex);
+	},
+	processUpdateFeedError: function(inEvent) {
+		console.log(inEvent);
 	},
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);

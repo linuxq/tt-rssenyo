@@ -133,19 +133,19 @@ function ttrssGetHeadlinesResponse(inEvent, successCallback, errorCallback) {
 
 //**************** getArticle ********************
 function ttrssGetArticle(ttrssurl, articleID, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "getArticle",
-		  article_id: articleID
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "getArticle",
+		article_id: articleID
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
@@ -161,28 +161,28 @@ function ttrssGetArticleResponse(inEvent, successCallback, errorCallback) {
 
 //**************** MarkArticleRead ********************
 function ttrssMarkArticleRead(ttrssurl, articleID, unread, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var unreadhelper = 1;
-		if (unread) {
-			unreadhelper = 1;
-		} else
-		{
-			unreadhelper = 0;
-		};
-		var data = {
-		  op: "updateArticle",
-		  article_ids: articleID,
-		  mode: unreadhelper,
-		  field: 2 //unread-Status
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data)
-		});
-		request.response(function(daten) {ttrssMarkArticleReadResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	//console.log("GET CATEGORIES");
+	var unreadhelper = 1;
+	if (unread) {
+		unreadhelper = 1;
+	} else
+	{
+		unreadhelper = 0;
+	};
+	var data = {
+		op: "updateArticle",
+		article_ids: articleID,
+		mode: unreadhelper,
+		field: 2 //unread-Status
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssMarkArticleReadResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
@@ -198,19 +198,19 @@ function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
 
 //**************** SubscribeToFeed ********************
 function ttrssSubscribeToFeed(ttrssurl, url, categoryID, successCallback, errorCallback) {
-		var data = {
-		  op: "subscribeToFeed",
-		  feed_url: url,
-		  category_id: categoryID
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	var data = {
+		op: "subscribeToFeed",
+		feed_url: url,
+		category_id: categoryID
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
@@ -269,18 +269,18 @@ function ttrssGetFullArticle(articleUrl, successCallback, errorCallback) {
 
 //**************** getConfig ********************
 function ttrssGetConfig(ttrssurl, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "getConfig"
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "getConfig"
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssGetConfigResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
@@ -296,25 +296,54 @@ function ttrssGetConfigResponse(inEvent, successCallback, errorCallback) {
 
 //**************** catchupFeed ********************
 function ttrssCatchupFeed(ttrssurl, feedID, successCallback, errorCallback) {
-		//console.log("GET CATEGORIES");
-		var data = {
-		  op: "catchupFeed",
-		  feed_id: feedID,
-		  is_cat: false
-		};
-		var request = new enyo.Ajax({
-			url: ttrssurl + "/api/",
-			method: "POST",
-			handleAs: "json",
-			postBody: JSON.stringify(data),
-		});
-		request.response(function(daten) {ttrssGetHeadlinesResponse(daten, successCallback, errorCallback)});
-		request.go(data);
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "catchupFeed",
+		feed_id: feedID,
+		is_cat: false
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssCatchupFeedResponse(daten, successCallback, errorCallback)});
+	request.go(data);
 
 	return;
 };
 
 function ttrssCatchupFeedResponse(inEvent, successCallback, errorCallback) {
+	response = JSON.parse(inEvent.xhrResponse.body);
+	console.log(response);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
+};
+
+//**************** updateFeed ********************
+function ttrssUpdateFeed(ttrssurl, feedID, successCallback, errorCallback) {
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "updateFeed",
+		feed_id: feedID
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssUpdateFeedResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
+	return;
+};
+
+function ttrssUpdateFeedResponse(inEvent, successCallback, errorCallback) {
 	response = JSON.parse(inEvent.xhrResponse.body);
 	console.log(response);
 	if (response.status == 0) {
