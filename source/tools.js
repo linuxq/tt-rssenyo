@@ -210,3 +210,10 @@ function get_html_translation_table (table, quote_style) {
 
   return hash_map;
 };
+
+function stripHTML(str) {
+	// remove all string within tags
+	var tmp = str.replace(/(<.*['"])([^'"]*)(['"]>)/g, function(x, p1, p2, p3) { return  p1 + p3;});
+	// now remove the tags
+	return tmp.replace(/<\/?[^>]+>/gi, '');
+};
