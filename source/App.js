@@ -74,10 +74,10 @@ enyo.kind({
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;"},
 				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				{content: "", style: "border: 1px solid silver;"},
-				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, components: [
+				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true,  components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
-				{fit: true},
+				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
@@ -91,6 +91,8 @@ enyo.kind({
 				]}
 			]}
 		]},
+		{kind: enyo.Signals, onkeyup: "handleKeyUp"},		
+		//{ kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
 			//{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
 			{kind: "onyx.Button", content: "Categories", ontap: "getCategories"},
@@ -217,6 +219,7 @@ enyo.kind({
 		//console.log("resize");
 		this.$.left2.reflow();
 		this.$.feedRepeater.reflow();
+		this.$.body.reflow();
 	},
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
@@ -385,7 +388,8 @@ enyo.kind({
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
-		console.log(inEvent);
+		//console.log(inEvent);
+		this.resize();
 	},
 	processGetFullArticleSuccess: function(inContent){
 		this.$.articleView.setContent(inContent);
@@ -590,5 +594,8 @@ enyo.kind({
 				ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			}
 		};
-	}
+	},
+	handleKeyUp: function(inSender, inEvent){
+		console.error(inEvent.keyIdentifier);
+	}	
 });
