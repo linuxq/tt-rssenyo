@@ -15,7 +15,7 @@ enyo.kind({
 			{name: "left2", kind: "FittableRows", fit: true, style: "width: 240px", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
-				]},				
+				]},
 				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #333333; font-weight: bold; margin: 5px;"},
 				{kind: "Scroller", touch:true, fit: false, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
@@ -39,19 +39,20 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
-					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}					
-				]}				
+					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}
+				]}
 			]},
 			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
 				//{name: "FeedTitle", content: "Feed"},
 				{kind: "onyx.Toolbar", components: [
 					{name: "lblFeedTitle", content: "Feed", style: "font-size: 1.2em; font-weight: bold"}
-				]},				
+				]},
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
-							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left"}
+							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
+								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
 							]}
 						]}
 					]}
@@ -108,6 +109,7 @@ enyo.kind({
 					{kind: "onyx.Input", type:"password", name: "serverPassword", placeholder: "Enter password", value: "IchWillLesen", style: "width:100%;"}
 				]}
 			]},
+			{kind: "onyx.Checkbox", name: "alternativeView", content: "Alternative View", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{tag: "div", style: "height:10px;"},
 			{kind: "onyx.Button", content: "Save", ontap: "LoginSave", style: "width:100%;"},
 			{tag: "div", style: "height:2px;"},
@@ -138,12 +140,14 @@ enyo.kind({
 	currentFeedID: "",
 	currentFeed: "",
 	Articles: [],
+	ArticleContent: [],
 	ArticleID: [],
 	ArticleURL: [],
 	ttrssURL: null,
 	ttrssUser: null,
 	ttrssPassword: null,
 	ttrss_SID: "",
+	alternativeView: false,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
 		window.setTimeout(this.startapp(), 10);
@@ -160,6 +164,7 @@ enyo.kind({
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
+		this.alternativeView = localStorage.getItem("alternativeView");
 		if (this.ttrssURL == null)
 		{
 			this.$.LoginPopup.show();
@@ -201,10 +206,12 @@ enyo.kind({
 		this.ttrssURL = this.$.serverAddress.getValue();
 		this.ttrssUser = this.$.serverUser.getValue();
 		this.ttrssPassword = this.$.serverPassword.getValue();
+		this.alternativeView = this.$.alternativeView.getValue();
 
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
+		localStorage.setItem("alternativeView", this.alternativeView);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		this.$.LoginPopup.hide();
 	},
@@ -212,6 +219,7 @@ enyo.kind({
 		this.$.serverAddress.setValue(this.ttrssURL);
 		this.$.serverUser.setValue(this.ttrssUser);
 		this.$.serverPassword.setValue(this.ttrssPassword);
+		this.$.alternativeView.setValue(this.alternativeView);
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
@@ -289,6 +297,7 @@ enyo.kind({
 	},
 	processGetHeadlinesSuccess: function(inEvent){
 		this.Articles.length = 0; //Artikelliste leeren
+		this.ArticleContent.length = 0;
 		this.ArticleID.length = 0;
 		this.ArticleURL.length = 0;
 		for (var i=0; i<inEvent.length; i++) {
@@ -297,6 +306,14 @@ enyo.kind({
 			this.ArticleID[i] = inEvent[i].id;
 			//console.log(inEvent[i].id);
 			this.ArticleURL[i] = inEvent[i].link;
+			if (this.alternativeView) {
+				ttrssGetArticle(this.ttrssURL, inEvent[i].id,
+					enyo.bind(this, function(i, inEvent) {
+						this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
+						this.$.articleRepeater.renderRow(i);
+					}, i),
+					enyo.bind(this, function() {}));
+			}
 		};
 		this.$.articleRepeater.setCount(this.Articles.length);
 		this.$.articleScroller.setScrollTop(0);
@@ -315,11 +332,11 @@ enyo.kind({
 		//TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
 		var timestamp = inEvent[0].updated;
 		var pubDate = new Date(timestamp * 1000);
-		var weekday=new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
-		var monthname=new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
-		var formattedDate = weekday[pubDate.getDay()] + ' ' 
-				    + monthname[pubDate.getMonth()] + ' ' 
-				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();		
+		var weekday = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+		var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+		var formattedDate = weekday[pubDate.getDay()] + ' '
+				    + monthname[pubDate.getMonth()] + ' '
+				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
 		//var pubDate = new Date(timestamp);
 		//console.log(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
@@ -419,8 +436,7 @@ enyo.kind({
 		var index = inEvent.index;
 		var item = inEvent.item;
 		item.$.titel.setContent(this.Articles[index]);
-		////////item.$.dauer.setContent(PCastsDuration[index]);
-
+		item.$.preview.setContent(this.ArticleContent[index]);
 	},
 	clickCategory: function(inSender, inEvent) {
 		this.selectCategory(inEvent.index);
@@ -470,8 +486,11 @@ enyo.kind({
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		this.RecentArticleIndex = inEvent.index;
-		//ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
-		ttrssGetArticle(this.ttrssURL, this.ArticleID[inEvent.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+		if (this.alternativeView) {
+			ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+		} else {
+			ttrssGetArticle(this.ttrssURL, this.ArticleID[inEvent.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+		}
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(3);
 		}
@@ -482,7 +501,11 @@ enyo.kind({
 	prevArticle: function(inSender, inEvent){
 		if (this.RecentArticleIndex >= 1){
 			this.RecentArticleIndex = this.RecentArticleIndex - 1;
-			ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			if (this.alternativeView) {
+				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			} else {
+				ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			}
 		};
 		//console.log(RecentArticleIndex);
 	},
@@ -490,7 +513,11 @@ enyo.kind({
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
 			this.RecentArticleIndex = this.RecentArticleIndex + 1;
 			//console.log(RecentArticleIndex);
-			ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			if (this.alternativeView) {
+				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			} else {
+				ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+			}
 		};
 	}
 });
