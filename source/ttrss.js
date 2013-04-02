@@ -40,12 +40,13 @@ function ttrssLoginResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getCategories********************
-function ttrssGetCategories(ttrssurl, successCallback, errorCallback) {
+function ttrssGetCategories(ttrssurl, ttrssSID, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
 		op: "getCategories",
 		unread_only: true,
-		enable_nested: false
+		enable_nested: false,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -70,12 +71,13 @@ function ttrssGetCategoriesResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getFeeds ********************
-function ttrssGetFeeds(ttrssurl, catID, successCallback, errorCallback) {
+function ttrssGetFeeds(ttrssurl, ttrssSID, catID, successCallback, errorCallback) {
 	var data = {
 		op: "getFeeds",
 		cat_id: catID,
 		unread_only: true,
-		enable_nested: true
+		enable_nested: true,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -100,7 +102,7 @@ function ttrssGetFeedsResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getHeadlines ********************
-function ttrssGetHeadlines(ttrssurl, feedID, successCallback, errorCallback) {
+function ttrssGetHeadlines(ttrssurl, ttrssSID, feedID, successCallback, errorCallback) {
 	var data = {
 		op: "getHeadlines",
 		feed_id: feedID,
@@ -108,7 +110,8 @@ function ttrssGetHeadlines(ttrssurl, feedID, successCallback, errorCallback) {
 		limit: 100,
 		show_excerpt: true,
 		show_content: true,
-		enable_nested: true
+		enable_nested: true,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -132,11 +135,12 @@ function ttrssGetHeadlinesResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** getArticle ********************
-function ttrssGetArticle(ttrssurl, articleID, successCallback, errorCallback) {
+function ttrssGetArticle(ttrssurl, ttrssSID, articleID, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
 		op: "getArticle",
-		article_id: articleID
+		article_id: articleID,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -160,7 +164,7 @@ function ttrssGetArticleResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** MarkArticleRead ********************
-function ttrssMarkArticleRead(ttrssurl, articleID, unread, successCallback, errorCallback) {
+function ttrssMarkArticleRead(ttrssurl, ttrssSID, articleID, unread, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var unreadhelper = 1;
 	if (unread) {
@@ -173,7 +177,8 @@ function ttrssMarkArticleRead(ttrssurl, articleID, unread, successCallback, erro
 		op: "updateArticle",
 		article_ids: articleID,
 		mode: unreadhelper,
-		field: 2 //unread-Status
+		field: 2, //unread-Status
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -197,11 +202,12 @@ function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** SubscribeToFeed ********************
-function ttrssSubscribeToFeed(ttrssurl, url, categoryID, successCallback, errorCallback) {
+function ttrssSubscribeToFeed(ttrssurl, ttrssSID, url, categoryID, successCallback, errorCallback) {
 	var data = {
 		op: "subscribeToFeed",
 		feed_url: url,
-		category_id: categoryID
+		category_id: categoryID,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -228,10 +234,11 @@ function ttrssSubscribeToFeedResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** UnsubscribeFeed ********************
-function ttrssUnsubscribeFeed(ttrssurl, feedID, successCallback, errorCallback) {
+function ttrssUnsubscribeFeed(ttrssurl, ttrssSID, feedID, successCallback, errorCallback) {
 	var data = {
 		op: "unsubscribeFeed",
-		feed_id: feedID
+		feed_id: feedID,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -268,10 +275,11 @@ function ttrssGetFullArticle(articleUrl, successCallback, errorCallback) {
 };
 
 //**************** getConfig ********************
-function ttrssGetConfig(ttrssurl, successCallback, errorCallback) {
+function ttrssGetConfig(ttrssurl, ttrssSID, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
-		op: "getConfig"
+		op: "getConfig",
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -295,12 +303,13 @@ function ttrssGetConfigResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** catchupFeed ********************
-function ttrssCatchupFeed(ttrssurl, feedID, successCallback, errorCallback) {
+function ttrssCatchupFeed(ttrssurl, ttrssSID, feedID, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
 		op: "catchupFeed",
 		feed_id: feedID,
-		is_cat: false
+		is_cat: false,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",
@@ -325,11 +334,12 @@ function ttrssCatchupFeedResponse(inEvent, successCallback, errorCallback) {
 };
 
 //**************** updateFeed ********************
-function ttrssUpdateFeed(ttrssurl, feedID, successCallback, errorCallback) {
+function ttrssUpdateFeed(ttrssurl, ttrssSID, feedID, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
 		op: "updateFeed",
-		feed_id: feedID
+		feed_id: feedID,
+		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
 		url: ttrssurl + "/api/",

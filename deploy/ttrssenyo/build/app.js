@@ -4710,6 +4710,9 @@ ontap: "nextArticle"
 } ]
 } ]
 }, {
+kind: enyo.Signals,
+onkeyup: "handleKeyUp"
+}, {
 kind: "onyx.Toolbar",
 showing: !1,
 components: [ {
@@ -4765,7 +4768,7 @@ components: [ {
 kind: "onyx.Input",
 placeholder: "Server",
 name: "serverAddress",
-value: "http://rss.meissel.com",
+value: "..",
 style: "width:100%;"
 } ]
 }, {
@@ -4774,7 +4777,7 @@ components: [ {
 kind: "onyx.Input",
 name: "serverUser",
 placeholder: "Username",
-value: "webosmz",
+value: "",
 style: "width:100%;"
 } ]
 }, {
@@ -4784,7 +4787,7 @@ kind: "onyx.Input",
 type: "password",
 name: "serverPassword",
 placeholder: "Enter password",
-value: "IchWillLesen",
+value: "",
 style: "width:100%;"
 } ]
 } ]
@@ -4908,7 +4911,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 resize: function() {
 this.$.left2.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
@@ -4923,7 +4926,7 @@ LoginTap: function(e, t) {
 this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword), this.$.alternativeView.setValue(this.alternativeView), this.$.LoginPopup.show();
 },
 processLoginSuccess: function(e) {
-console.error("LOGIN SUCCESSS SID: " + e.sessionid), this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
+console.error("LOGIN SUCCESSS SID: " + e.sessionid), this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
 },
 processLoginError: function(e) {
 console.error("LOGIN Error: " + e.error), alert("LOGIN Error: " + e.error), this.$.main.setContent("LOGIN ERROR: " + e.error);
@@ -4932,7 +4935,7 @@ clickRefresh: function(e, t) {
 console.error("clickRefresh"), this.getCategories();
 },
 getCategories: function(e) {
-console.error("getCategories"), ttrssGetCategories(this.ttrssURL, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
+console.error("getCategories"), ttrssGetCategories(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 },
 processGetCategoriesSuccess: function(e) {
 console.error("processGetCategoriesSuccess");
@@ -4945,7 +4948,7 @@ processGetCategoriesError: function(e) {
 console.error("processGetCategoriesError"), console.error(e), alert(e);
 },
 getFeeds: function(e, t) {
-ttrssGetFeeds(this.ttrssURL, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 },
 processGetFeedsSuccess: function(e) {
 this.FeedID.length = 0, this.FeedUnread.length = 0, this.FeedTitle.length = 0, ObjLength = e.length - 1;
@@ -4962,11 +4965,11 @@ processGetConfigError: function(e) {
 console.log(e);
 },
 getHeadlines: function(e, t) {
-ttrssGetHeadlines(this.ttrssURL, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 },
 processGetHeadlinesSuccess: function(e) {
 this.Articles.length = 0, this.ArticleContent.length = 0, this.ArticleID.length = 0, this.ArticleURL.length = 0;
-for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.alternativeView && ttrssGetArticle(this.ttrssURL, e[t].id, enyo.bind(this, function(e, t) {
+for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.alternativeView && ttrssGetArticle(this.ttrssURL, this.ttrss_SID, e[t].id, enyo.bind(this, function(e, t) {
 this.ArticleContent[e] = stripHTML(html_entity_decode(t[0].content)), this.$.articleRepeater.renderRow(e);
 }, t), enyo.bind(this, function() {}));
 this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0);
@@ -4975,7 +4978,7 @@ processGetHeadlinesError: function(e) {
 console.log(e);
 },
 getArticle: function(e, t) {
-ttrssGetArticle(this.ttrssURL, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
@@ -4988,11 +4991,11 @@ processGetArticleError: function(e) {
 console.log(e);
 },
 TimedMarkRead: function() {
-ttrssMarkArticleRead(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999"), clearTimeout(this.MarkReadTimer);
+ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999"), clearTimeout(this.MarkReadTimer);
 },
 toggleArticleRead: function(e, t) {
 var n = this.$.chkArticleRead.getValue();
-n ? (ttrssMarkArticleRead(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999")) : (ttrssMarkArticleRead(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333"));
+n ? (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999")) : (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333"));
 },
 processMarkArticleReadSuccess: function(e) {},
 processMarkArticleReadError: function(e) {},
@@ -5014,7 +5017,7 @@ this.selectCategory(t.index);
 selectCategory: function(e) {
 console.log(this.CategoryID[e]);
 var t = this.currentCategoryIndex;
-this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex), ttrssGetFeeds(this.ttrssURL, this.CategoryID[e], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1);
+this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex), ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.CategoryID[e], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1);
 },
 clickFeed: function(e, t) {
 this.selectFeed(t.index);
@@ -5026,13 +5029,13 @@ if (this.FeedIcon[e]) {
 var n = this.ttrssIconPath + this.FeedID[e] + ".ico";
 this.$.feedTitleIcon.setShowing(!0), this.$.feedTitleIcon.setSrc(n);
 } else this.$.feedTitleIcon.setShowing(!1);
-ttrssGetHeadlines(this.ttrssURL, this.FeedID[e], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
+ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.FeedID[e], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
 },
 addFeedClick: function(e, t) {
 this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show();
 },
 addFeedSave: function(e, t) {
-ttrssSubscribeToFeed(this.ttrssURL, this.$.AddFeedURL.getValue(), this.CategoryID[this.currentCategoryIndex], enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError")), this.$.AddFeedPopup.hide();
+ttrssSubscribeToFeed(this.ttrssURL, this.ttrss_SID, this.$.AddFeedURL.getValue(), this.CategoryID[this.currentCategoryIndex], enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError")), this.$.AddFeedPopup.hide();
 },
 addFeedClose: function(e, t) {
 this.$.AddFeedPopup.hide();
@@ -5047,7 +5050,7 @@ MarkFeedReadClick: function(e) {
 this.$.MarkFeedReadPopup.show();
 },
 MarkFeedRead: function(e) {
-ttrssCatchupFeed(this.ttrssURL, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
+ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
 },
 processMarkFeedReadSuccess: function(e) {
 console.log(e), this.getCategories();
@@ -5059,7 +5062,7 @@ MarkFeedReadClose: function(e) {
 this.$.MarkFeedReadPopup.hide();
 },
 UpdateFeedClick: function(e) {
-ttrssUpdateFeed(this.ttrssURL, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
+ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 },
 processUpdateFeedSuccess: function(e) {
 console.log(e), this.selectFeed(this.currentFeedIndex);
@@ -5068,19 +5071,19 @@ processUpdateFeedError: function(e) {
 console.log(e);
 },
 clickItem: function(e, t) {
-this.RecentArticleIndex = t.index, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(3);
+this.RecentArticleIndex = t.index, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(3);
 },
 openArticle: function(e, t) {
 window.open(this.ArticleURL[this.RecentArticleIndex]);
 },
 prevArticle: function(e, t) {
-this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 nextArticle: function(e, t) {
-this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
-ArticleLoaded: function(e, t) {
-console.log("Article Loaded");
+handleKeyUp: function(e, t) {
+console.error(t.keyIdentifier);
 }
 });
 
@@ -5112,20 +5115,21 @@ error: "99"
 response = JSON.parse(e.xhrResponse.body), r.status = response.status, r.status == 0 ? (r.sessionid = response.content.session_id, ttsessionID = response.content.session_id, t(r)) : (r.error = response.content.error, n(r));
 }
 
-function ttrssGetCategories(e, t, n) {
-var r = {
+function ttrssGetCategories(e, t, n, r) {
+var i = {
 op: "getCategories",
 unread_only: !0,
-enable_nested: !1
-}, i = new enyo.Ajax({
+enable_nested: !1,
+sid: t
+}, s = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(r)
+postBody: JSON.stringify(i)
 });
-i.response(function(e) {
-ttrssGetCategoriesResponse(e, t, n);
-}), i.go(r);
+s.response(function(e) {
+ttrssGetCategoriesResponse(e, n, r);
+}), s.go(i);
 return;
 }
 
@@ -5133,102 +5137,13 @@ function ttrssGetCategoriesResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssGetFeeds(e, t, n, r) {
-var i = {
-op: "getFeeds",
-cat_id: t,
-unread_only: !0,
-enable_nested: !0
-}, s = new enyo.Ajax({
-url: e + "/api/",
-method: "POST",
-handleAs: "json",
-postBody: JSON.stringify(i)
-});
-s.response(function(e) {
-ttrssGetFeedsResponse(e, n, r);
-}), s.go(i);
-return;
-}
-
-function ttrssGetFeedsResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
-}
-
-function ttrssGetHeadlines(e, t, n, r) {
-var i = {
-op: "getHeadlines",
-feed_id: t,
-view_mode: "unread",
-limit: 100,
-show_excerpt: !0,
-show_content: !0,
-enable_nested: !0
-}, s = new enyo.Ajax({
-url: e + "/api/",
-method: "POST",
-handleAs: "json",
-postBody: JSON.stringify(i)
-});
-s.response(function(e) {
-ttrssGetHeadlinesResponse(e, n, r);
-}), s.go(i);
-return;
-}
-
-function ttrssGetHeadlinesResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
-}
-
-function ttrssGetArticle(e, t, n, r) {
-var i = {
-op: "getArticle",
-article_id: t
-}, s = new enyo.Ajax({
-url: e + "/api/",
-method: "POST",
-handleAs: "json",
-postBody: JSON.stringify(i)
-});
-s.response(function(e) {
-ttrssGetHeadlinesResponse(e, n, r);
-}), s.go(i);
-return;
-}
-
-function ttrssGetArticleResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
-}
-
-function ttrssMarkArticleRead(e, t, n, r, i) {
-var s = 1;
-n ? s = 1 : s = 0;
-var o = {
-op: "updateArticle",
-article_ids: t,
-mode: s,
-field: 2
-}, u = new enyo.Ajax({
-url: e + "/api/",
-method: "POST",
-handleAs: "json",
-postBody: JSON.stringify(o)
-});
-u.response(function(e) {
-ttrssMarkArticleReadResponse(e, r, i);
-}), u.go(o);
-return;
-}
-
-function ttrssMarkArticleReadResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
-}
-
-function ttrssSubscribeToFeed(e, t, n, r, i) {
+function ttrssGetFeeds(e, t, n, r, i) {
 var s = {
-op: "subscribeToFeed",
-feed_url: t,
-category_id: n
+op: "getFeeds",
+cat_id: n,
+unread_only: !0,
+enable_nested: !0,
+sid: t
 }, o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
@@ -5236,8 +5151,102 @@ handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssSubscribeToFeedResponse(e, r, i);
+ttrssGetFeedsResponse(e, r, i);
 }), o.go(s);
+return;
+}
+
+function ttrssGetFeedsResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssGetHeadlines(e, t, n, r, i) {
+var s = {
+op: "getHeadlines",
+feed_id: n,
+view_mode: "unread",
+limit: 100,
+show_excerpt: !0,
+show_content: !0,
+enable_nested: !0,
+sid: t
+}, o = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(s)
+});
+o.response(function(e) {
+ttrssGetHeadlinesResponse(e, r, i);
+}), o.go(s);
+return;
+}
+
+function ttrssGetHeadlinesResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssGetArticle(e, t, n, r, i) {
+var s = {
+op: "getArticle",
+article_id: n,
+sid: t
+}, o = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(s)
+});
+o.response(function(e) {
+ttrssGetHeadlinesResponse(e, r, i);
+}), o.go(s);
+return;
+}
+
+function ttrssGetArticleResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssMarkArticleRead(e, t, n, r, i, s) {
+var o = 1;
+r ? o = 1 : o = 0;
+var u = {
+op: "updateArticle",
+article_ids: n,
+mode: o,
+field: 2,
+sid: t
+}, a = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(u)
+});
+a.response(function(e) {
+ttrssMarkArticleReadResponse(e, i, s);
+}), a.go(u);
+return;
+}
+
+function ttrssMarkArticleReadResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssSubscribeToFeed(e, t, n, r, i, s) {
+var o = {
+op: "subscribeToFeed",
+feed_url: n,
+category_id: r,
+sid: t
+}, u = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(o)
+});
+u.response(function(e) {
+ttrssSubscribeToFeedResponse(e, i, s);
+}), u.go(o);
 return;
 }
 
@@ -5245,19 +5254,20 @@ function ttrssSubscribeToFeedResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssUnsubscribeFeed(e, t, n, r) {
-var i = {
+function ttrssUnsubscribeFeed(e, t, n, r, i) {
+var s = {
 op: "unsubscribeFeed",
-feed_id: t
-}, s = new enyo.Ajax({
+feed_id: n,
+sid: t
+}, o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(i)
+postBody: JSON.stringify(s)
 });
-s.response(function(e) {
-ttrssUnsubscribeFeedResponse(e, n, r);
-}), s.go(i);
+o.response(function(e) {
+ttrssUnsubscribeFeedResponse(e, r, i);
+}), o.go(s);
 return;
 }
 
@@ -5275,18 +5285,19 @@ t(e.xhrResponse.body);
 }), r.go();
 }
 
-function ttrssGetConfig(e, t, n) {
-var r = {
-op: "getConfig"
-}, i = new enyo.Ajax({
+function ttrssGetConfig(e, t, n, r) {
+var i = {
+op: "getConfig",
+sid: t
+}, s = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(r)
+postBody: JSON.stringify(i)
 });
-i.response(function(e) {
-ttrssGetConfigResponse(e, t, n);
-}), i.go(r);
+s.response(function(e) {
+ttrssGetConfigResponse(e, n, r);
+}), s.go(i);
 return;
 }
 
@@ -5294,20 +5305,21 @@ function ttrssGetConfigResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssCatchupFeed(e, t, n, r) {
-var i = {
+function ttrssCatchupFeed(e, t, n, r, i) {
+var s = {
 op: "catchupFeed",
-feed_id: t,
-is_cat: !1
-}, s = new enyo.Ajax({
+feed_id: n,
+is_cat: !1,
+sid: t
+}, o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(i)
+postBody: JSON.stringify(s)
 });
-s.response(function(e) {
-ttrssCatchupFeedResponse(e, n, r);
-}), s.go(i);
+o.response(function(e) {
+ttrssCatchupFeedResponse(e, r, i);
+}), o.go(s);
 return;
 }
 
@@ -5315,19 +5327,20 @@ function ttrssCatchupFeedResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssUpdateFeed(e, t, n, r) {
-var i = {
+function ttrssUpdateFeed(e, t, n, r, i) {
+var s = {
 op: "updateFeed",
-feed_id: t
-}, s = new enyo.Ajax({
+feed_id: n,
+sid: t
+}, o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(i)
+postBody: JSON.stringify(s)
 });
-s.response(function(e) {
-ttrssUpdateFeedResponse(e, n, r);
-}), s.go(i);
+o.response(function(e) {
+ttrssUpdateFeedResponse(e, r, i);
+}), o.go(s);
 return;
 }
 
