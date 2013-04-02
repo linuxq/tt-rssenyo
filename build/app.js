@@ -4480,17 +4480,19 @@ allowHtml: !0
 name: "left2",
 kind: "FittableRows",
 fit: !0,
-style: "width: 240px",
+style: "width: 260px",
 components: [ {
 kind: "onyx.Toolbar",
 components: [ {
 content: "TT-RSS Reader"
 } ]
 }, {
-content: "Categories",
+kind: "gts.DividerDrawer",
 name: "categoryHeader",
-style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"
-}, {
+caption: "Categories",
+open: !0,
+onChange: "resize",
+components: [ {
 kind: "Scroller",
 touch: !0,
 fit: !1,
@@ -4520,12 +4522,14 @@ style: "width: 100%; text-align: left; margin-left: 5px;"
 } ]
 } ]
 } ]
+} ]
 }, {
-content: "Feeds (Click to add)",
+kind: "gts.DividerDrawer",
 name: "feedHeader",
-ontap: "addFeedClick",
-style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"
-}, {
+caption: "Feeds",
+open: !0,
+onChange: "resize",
+components: [ {
 kind: "Scroller",
 touch: !0,
 fit: !0,
@@ -4567,12 +4571,20 @@ style: "text-align: left; margin-left: 8px;"
 } ]
 } ]
 } ]
+} ]
+}, {
+name: "left2blank",
+fit: !0
 }, {
 kind: "onyx.Toolbar",
 components: [ {
 kind: "onyx.Button",
 content: "Setup",
 ontap: "LoginTap"
+}, {
+kind: "onyx.Button",
+content: "Add Feed",
+ontap: "addFeedClick"
 }, {
 kind: "onyx.IconButton",
 src: "assets/menu-icon-refresh.png",
@@ -4669,11 +4681,11 @@ name: "articleViewScroller",
 horizontal: "hidden",
 fit: !0,
 touch: !0,
+ondragfinish: "titleDragFinish",
 components: [ {
 name: "articleView",
 classes: "panels-sample-sliding-content",
 allowHtml: !0,
-ondragfinish: "titleDragFinish",
 content: ""
 } ]
 }, {
@@ -4701,6 +4713,11 @@ align: "right"
 kind: "onyx.IconButton",
 src: "assets/browser2.png",
 ontap: "openArticle"
+}, {
+kind: "onyx.Button",
+name: "btnFullArticle",
+content: "Full",
+ontap: "showFullArticle"
 }, {
 fit: !0
 }, {
@@ -4913,10 +4930,10 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (window.innerWidth > 400 ? (this.$.categoryHeader.applyStyle("font-size", "1.8em"), this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedHeader.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryHeader.applyStyle("font-size", "1.2em"), this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedHeader.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 resize: function() {
-this.$.left2.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
+console.log("resize"), this.$.left2.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -5073,10 +5090,13 @@ processUpdateFeedError: function(e) {
 console.log(e);
 },
 clickItem: function(e, t) {
-this.RecentArticleIndex = t.index, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(3);
+this.RecentArticleIndex = t.index, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
 },
 openArticle: function(e, t) {
 window.open(this.ArticleURL[this.RecentArticleIndex]);
+},
+showFullArticle: function(e, t) {
+ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
 },
 prevArticle: function(e, t) {
 this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
@@ -5384,3 +5404,60 @@ Array.prototype.remove = function(e, t) {
 var n = this.slice((t || e) + 1 || this.length);
 return this.length = e < 0 ? this.length + e : e, this.push.apply(this, n);
 };
+
+// DividerDrawer.js
+
+enyo.kind({
+name: "gts.DividerDrawer",
+classes: "gts-DividerDrawer",
+published: {
+caption: "",
+open: !0
+},
+events: {
+onChange: ""
+},
+components: [ {
+name: "base",
+kind: "enyo.FittableColumns",
+noStretch: !0,
+classes: "base-bar",
+ontap: "toggleOpen",
+components: [ {
+classes: "end-cap"
+}, {
+name: "caption",
+classes: "caption"
+}, {
+classes: "bar",
+fit: !0
+}, {
+name: "switch",
+classes: "toggle",
+value: !1
+}, {
+classes: "end-cap bar"
+} ]
+}, {
+name: "client",
+kind: "onyx.Drawer"
+} ],
+rendered: function() {
+this.inherited(arguments), this.captionChanged(), this.openChanged();
+},
+reflow: function() {
+this.$.base.reflow();
+},
+openChanged: function() {
+this.$["switch"].value = this.open, this.$.client.setOpen(this.$["switch"].value), this.$["switch"].addRemoveClass("checked", this.$["switch"].value), this.reflow();
+},
+captionChanged: function() {
+this.$.caption.setContent(this.caption), this.$.caption.applyStyle("display", this.caption ? "" : "none"), this.reflow();
+},
+toggleOpen: function(e, t) {
+return this.open = !this.$["switch"].value, this.$["switch"].value = this.open, this.openChanged(), this.doChange(this, {
+caption: this.getCaption(),
+open: this.getOpen()
+}), !0;
+}
+});

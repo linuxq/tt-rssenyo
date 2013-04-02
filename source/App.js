@@ -12,35 +12,40 @@ enyo.kind({
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "left2", kind: "FittableRows", fit: true, style: "width: 240px", components: [
+			{name: "left2", kind: "FittableRows", fit: true, style: "width: 260px", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
 				]},
-				{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-				{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
-					{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
-						{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
-							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+				{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
+					{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+						{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
+							{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+										{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+								]}
 							]}
 						]}
-					]}
+					]},					
 				]},
-				{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-				{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
-					{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
-						{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
-							{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
-									{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
-									{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
+				//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
+				{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
+				//{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
+					{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+						{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
+							{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+										{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
+										{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
+										{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
+								]}
 							]}
 						]}
-					]}
+					]},
 				]},
-				//{fit: true},
+				{name: "left2blank", fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
+					{kind: "onyx.Button", content: "Add Feed", ontap: "addFeedClick"},
 					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}
 				]}
 			]},
@@ -74,8 +79,8 @@ enyo.kind({
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish"},
 				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				{content: "", style: "border: 1px solid silver;"},
-				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, components: [
-					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, ondragfinish: "titleDragFinish", content: ""}
+				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", components: [
+					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
@@ -86,6 +91,7 @@ enyo.kind({
 					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
 					{name: "lblArticles", align: "right"},
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"}
 				]}
@@ -186,11 +192,12 @@ enyo.kind({
 			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		};
 		if (window.innerWidth < 1024) {
+			this.$.btnFullArticle.setShowing(false);
 			if (window.innerWidth > 400) {
 				//Bei Pre 3 ArticelView vergrößern
-				this.$.categoryHeader.applyStyle("font-size", "1.8em");
+				//this.$.categoryHeader.applyStyle("font-size", "1.8em");
 				this.$.categoryRepeater.applyStyle("font-size", "1.8em");
-				this.$.feedHeader.applyStyle("font-size", "1.8em");
+				//this.$.feedHeader.applyStyle("font-size", "1.8em");
 				this.$.feedRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
@@ -199,9 +206,9 @@ enyo.kind({
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
-				this.$.categoryHeader.applyStyle("font-size", "1.2em");
+				//this.$.categoryHeader.applyStyle("font-size", "1.2em");
 				this.$.categoryRepeater.applyStyle("font-size", "1.2em");
-				this.$.feedHeader.applyStyle("font-size", "1.2em");
+				//this.$.feedHeader.applyStyle("font-size", "1.2em");
 				this.$.feedRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
@@ -211,8 +218,9 @@ enyo.kind({
 		}
 	},
 	resize: function(){
-		//console.log("resize");
+		console.log("resize");
 		this.$.left2.reflow();
+		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
 		this.$.body.reflow();
 	},
@@ -563,10 +571,17 @@ enyo.kind({
 		}
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(3);
+		} else
+		{
+			this.$.viewPanels.setIndex(2);
 		}
 	},
 	openArticle: function(inSender, inEvent){
 		window.open(this.ArticleURL[this.RecentArticleIndex]);
+	},
+	showFullArticle: function(inSender, inEvent) {
+		ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+		this.$.viewPanels.setIndex(3);
 	},
 	prevArticle: function(inSender, inEvent){
 		if (this.RecentArticleIndex >= 1){

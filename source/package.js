@@ -5,5 +5,7 @@ enyo.depends(
         "App.css",
 	"App.js",
 	"ttrss.js",
-	"tools.js"
+	"tools.js",
+        "DividerDrawer.js",
+        "DividerDrawer.css"        
 );
