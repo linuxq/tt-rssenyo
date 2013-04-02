@@ -4487,6 +4487,11 @@ components: [ {
 content: "TT-RSS Reader"
 } ]
 }, {
+name: "left3",
+kind: "FittableRows",
+fit: !0,
+style: "width: 260px",
+components: [ {
 kind: "gts.DividerDrawer",
 name: "categoryHeader",
 caption: "Categories",
@@ -4575,6 +4580,7 @@ style: "text-align: left; margin-left: 8px;"
 }, {
 name: "left2blank",
 fit: !0
+} ]
 }, {
 kind: "onyx.Toolbar",
 components: [ {

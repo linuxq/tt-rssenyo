@@ -16,33 +16,35 @@ enyo.kind({
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
 				]},
-				{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
-					{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
-						{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
-							{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
-								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-										{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+				{name: "left3", kind: "FittableRows", fit: true, style: "width: 260px", components: [
+					{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
+						{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+							{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
+								{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+									{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+											{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+									]}
 								]}
 							]}
-						]}
-					]},					
-				]},
-				//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-				{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
-				//{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-					{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
-						{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
-							{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
-								{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-										{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
-										{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
-										{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
-								]}
-							]}
-						]}
+						]},					
 					]},
+					//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
+					{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
+					//{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
+						{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+							{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
+								{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+									{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+											{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
+											{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
+											{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
+									]}
+								]}
+							]}
+						]},
+					]},
+					{name: "left2blank", fit: true}
 				]},
-				{name: "left2blank", fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
 					{kind: "onyx.Button", content: "Add Feed", ontap: "addFeedClick"},
