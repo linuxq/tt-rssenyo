@@ -4654,7 +4654,8 @@ fit: !0,
 components: [ {
 name: "articleViewTitle",
 content: "",
-style: "padding: 5px; font-weight: bold;"
+style: "padding: 5px; font-weight: bold;",
+ondragfinish: "titleDragFinish"
 }, {
 name: "articleViewTitle2",
 content: "",
@@ -4672,6 +4673,7 @@ components: [ {
 name: "articleView",
 classes: "panels-sample-sliding-content",
 allowHtml: !0,
+ondragfinish: "titleDragFinish",
 content: ""
 } ]
 }, {
@@ -4711,7 +4713,7 @@ ontap: "nextArticle"
 } ]
 }, {
 kind: enyo.Signals,
-onkeyup: "handleKeyUp"
+onkeyup: "handleKeyPress"
 }, {
 kind: "onyx.Toolbar",
 showing: !1,
@@ -5082,8 +5084,11 @@ this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleInd
 nextArticle: function(e, t) {
 this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
-handleKeyUp: function(e, t) {
-console.error(t.keyIdentifier);
+handleKeyDown: function(e, t) {
+console.error(t.keyIdentifier + " KEY " + t.keyCode);
+},
+titleDragFinish: function(e, t) {
++t.dx < -100 && (console.log("NEXT"), this.nextArticle()), +t.dy < 50;
 }
 });
 

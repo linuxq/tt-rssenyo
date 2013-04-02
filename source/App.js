@@ -71,11 +71,11 @@ enyo.kind({
 				//]}
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
-				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;"},
+				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish"},
 				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				{content: "", style: "border: 1px solid silver;"},
-				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true,  components: [
-					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
+				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, components: [
+					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, ondragfinish: "titleDragFinish", content: ""}
 				]},
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
@@ -91,7 +91,7 @@ enyo.kind({
 				]}
 			]}
 		]},
-		{kind: enyo.Signals, onkeyup: "handleKeyUp"},		
+		{kind: enyo.Signals, onkeyup: "handleKeyPress"},		
 		//{ kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
 			//{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
@@ -590,7 +590,19 @@ enyo.kind({
 			}
 		};
 	},
-	handleKeyUp: function(inSender, inEvent){
-		console.error(inEvent.keyIdentifier);
-	}	
+	handleKeyDown: function(inSender, inEvent){
+		console.error(inEvent.keyIdentifier + " KEY " + inEvent.keyCode);
+	},
+	titleDragFinish: function(inSender, inEvent){
+		//console.error("DRAG FINISH : " + inEvent.dx);
+		//if (Helper.phone && !this.running) {
+		  if (+inEvent.dx < -100) {
+			console.log("NEXT");
+		    this.nextArticle();
+		  }
+		  if (+inEvent.dy < 50) {
+		    //this.$.titleDrawer.setOpen(false);
+		  }
+		//}		
+	}		
 });
