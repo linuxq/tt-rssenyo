@@ -29,6 +29,7 @@ while [ "$1" != "" ]; do
 
 														cp "$SRC"appinfo.json $DEST -v
 														cp "$SRC"cordova*.js $DEST -v
+														cp "$SRC"config.xml $DEST -v
 
 														# package it up
 														mkdir -p "$DEST/bin"

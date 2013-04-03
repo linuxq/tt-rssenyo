@@ -4671,7 +4671,8 @@ components: [ {
 name: "articleViewTitle",
 content: "",
 style: "padding: 5px; font-weight: bold;",
-ondragfinish: "titleDragFinish"
+ondragfinish: "titleDragFinish",
+ondragstart: "titleDragStart"
 }, {
 name: "articleViewTitle2",
 content: "",
@@ -4686,6 +4687,7 @@ horizontal: "hidden",
 fit: !0,
 touch: !0,
 ondragfinish: "titleDragFinish",
+ondragstart: "titleDragStart",
 components: [ {
 name: "articleView",
 classes: "panels-sample-sliding-content",
@@ -4932,6 +4934,7 @@ ttrssPassword: null,
 ttrssIconPath: null,
 ttrss_SID: "",
 alternativeView: !1,
+dragStartPanelIndex: null,
 rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(this.startapp(), 10);
 },
@@ -5120,10 +5123,10 @@ console.error(" BACK ");
 var r = this.$.viewPanels.getIndex();
 switch (r) {
 case 3:
-this.$.viewPanels.setIndex(2), t.stopPropagation();
+this.$.viewPanels.setIndex(2);
 break;
 case 2:
-this.$.viewPanels.setIndex(1), t.stopPropagation();
+this.$.viewPanels.setIndex(1);
 }
 return t.preventDefault(), !0;
 }
@@ -5133,8 +5136,11 @@ handleKeyPress: function(e, t) {},
 goBack: function(e, t) {
 console.error(" BACK ");
 },
+titleDragStart: function(e, t) {
+this.dragStartPanelIndex = this.$.viewPanels.getIndex();
+},
 titleDragFinish: function(e, t) {
-+t.dx < -100 && (console.log("NEXT"), this.nextArticle()), +t.dy < 50;
++t.dx < -50 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 50;
 }
 });
 

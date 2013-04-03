@@ -78,10 +78,10 @@ enyo.kind({
 				//]}
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
-				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish"},
+				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
 				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				{content: "", style: "border: 1px solid silver;"},
-				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", components: [
+				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				//{fit: true},
@@ -172,6 +172,7 @@ enyo.kind({
 	ttrssIconPath: null,
 	ttrss_SID: "",
 	alternativeView: false,
+	dragStartPanelIndex: null,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
 		window.setTimeout(this.startapp(), 10);
@@ -592,7 +593,7 @@ enyo.kind({
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			} else {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
-			}
+			}			
 		};
 		//console.log(RecentArticleIndex);
 	},
@@ -635,17 +636,25 @@ enyo.kind({
 	},	
 	goBack: function(inSender, inEvent){
 		console.error(" BACK ");
+	},
+	titleDragStart: function(inSender, inEvent){
+		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
+		this.dragStartPanelIndex = this.$.viewPanels.getIndex();		
 	},	
 	titleDragFinish: function(inSender, inEvent){
-		//console.error("DRAG FINISH : " + inEvent.dx);
-		//if (Helper.phone && !this.running) {
-		  if (+inEvent.dx < -100) {
-			console.log("NEXT");
-		    this.nextArticle();
-		  }
-		  if (+inEvent.dy < 50) {
-		    //this.$.titleDrawer.setOpen(false);
-		  }
-		//}		
+		  if (+inEvent.dx < -50) {
+			if (this.dragStartPanelIndex == 3) {
+				//console.log("NEXT");
+				if (this.$.viewPanels.getIndex() == 3) {
+					//Only if Article Panel is shown alone! To prevent switching with dragging panel!	
+					this.nextArticle();	
+				}
+			}
+		  };
+		  if (+inEvent.dx > 50) {
+				//console.log("PREV");
+				//this.prevArticle();
+				//this.$.viewPanels.setIndex(3);
+		  }						
 	}		
 });
