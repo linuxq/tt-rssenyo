@@ -288,21 +288,45 @@ enyo.kind({
 	},
 	processGetCategoriesSuccess: function(inEvent){
 		console.error("processGetCategoriesSuccess");
+		//console.log(inEvent);
 		var TextHelp = "";
 		this.CategoryTitle.length = 0;
 		this.CategoryUnread.length = 0;
 		this.CategoryID.length = 0;
+		//Check if userdefined categories exist
+		var userCategories = 0;
+		var undefinedCategory = null;
 		for (var i=0; i<inEvent.length; i++) {
 			//console.log(inEvent[i].title + " - " + inEvent[i].unread);
 			TextHelp = TextHelp + "#" + inEvent[i].id + " " + inEvent[i].title + " - " + inEvent[i].unread + "<br>";
 			this.CategoryTitle[i] = html_entity_decode(inEvent[i].title);
 			this.CategoryUnread[i] = inEvent[i].unread;
 			this.CategoryID[i] = inEvent[i].id;
+			//User defined categories have positive IDs
+			if (inEvent[i].id > 0){
+				userCategories++;
+			};
+			if (inEvent[i].id == 0) {
+				undefinedCategory = i; //All feeds of undefined category
+			};
 		};
-		this.$.categoryRepeater.setCount(this.CategoryTitle.length);
+		this.$.categoryRepeater.setCount(this.CategoryTitle.length);		
 		if (this.CategoryTitle.length > 0) {
-			this.selectCategory(0);
+			if (userCategories) {
+				//open first user defined category
+				this.selectCategory(0);	
+			} else
+			{
+				//open "undefined" category = all feeds if no categories defined
+				this.$.categoryHeader.toggleOpen(false);
+				this.selectCategory(undefinedCategory);					
+			}
 		}
+		
+		//open "undefined" category 
+		if ((this.CategoryTitle.length > 0) && (userCategories)) {
+			this.selectCategory(0);
+		}		
 		//console.log(inEvent);
 	},
 	processGetCategoriesError: function(inEvent){

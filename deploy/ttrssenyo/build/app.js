@@ -4490,6 +4490,12 @@ name: "left3",
 kind: "FittableRows",
 fit: !0,
 components: [ {
+kind: "Scroller",
+touch: !0,
+fit: !0,
+horizontal: "hidden",
+classes: "scroller-sample-scroller",
+components: [ {
 kind: "gts.DividerDrawer",
 name: "categoryHeader",
 caption: "Categories",
@@ -4578,6 +4584,7 @@ style: "text-align: left; margin-left: 8px;"
 }, {
 name: "left2blank",
 fit: !0
+} ]
 } ]
 }, {
 kind: "onyx.Toolbar",
@@ -4824,7 +4831,12 @@ style: "width:100%;"
 }, {
 kind: "onyx.Checkbox",
 name: "alternativeView",
-content: "Alternative View",
+content: "Alternative View (beta)",
+style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
+}, {
+kind: "onyx.Checkbox",
+name: "autoLoadFirstFeed",
+content: "Autoload 1st feed",
 style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
 }, {
 tag: "div",
@@ -4934,6 +4946,7 @@ ttrssPassword: null,
 ttrssIconPath: null,
 ttrss_SID: "",
 alternativeView: !1,
+AutoLoadFirstFeed: !1,
 dragStartPanelIndex: null,
 rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(this.startapp(), 10);
@@ -4942,7 +4955,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 resize: function() {
 this.$.left2.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
@@ -4951,10 +4964,10 @@ LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.alternativeView = this.$.alternativeView.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("alternativeView", this.alternativeView), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.alternativeView = this.$.alternativeView.getValue(), this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("alternativeView", this.alternativeView), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
 },
 LoginTap: function(e, t) {
-this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword), this.$.alternativeView.setValue(this.alternativeView), this.$.LoginPopup.show();
+this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword), this.$.alternativeView.setValue(this.alternativeView), this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed), this.$.LoginPopup.show();
 },
 processLoginSuccess: function(e) {
 console.error("LOGIN SUCCESSS SID: " + e.sessionid), this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
@@ -4972,8 +4985,9 @@ processGetCategoriesSuccess: function(e) {
 console.error("processGetCategoriesSuccess");
 var t = "";
 this.CategoryTitle.length = 0, this.CategoryUnread.length = 0, this.CategoryID.length = 0;
-for (var n = 0; n < e.length; n++) t = t + "#" + e[n].id + " " + e[n].title + " - " + e[n].unread + "<br>", this.CategoryTitle[n] = html_entity_decode(e[n].title), this.CategoryUnread[n] = e[n].unread, this.CategoryID[n] = e[n].id;
-this.$.categoryRepeater.setCount(this.CategoryTitle.length), this.CategoryTitle.length > 0 && this.selectCategory(0);
+var n = 0, r = null;
+for (var i = 0; i < e.length; i++) t = t + "#" + e[i].id + " " + e[i].title + " - " + e[i].unread + "<br>", this.CategoryTitle[i] = html_entity_decode(e[i].title), this.CategoryUnread[i] = e[i].unread, this.CategoryID[i] = e[i].id, e[i].id > 0 && n++, e[i].id == 0 && (r = i);
+this.$.categoryRepeater.setCount(this.CategoryTitle.length), this.CategoryTitle.length > 0 && (n ? this.selectCategory(0) : (this.$.categoryHeader.toggleOpen(!1), this.selectCategory(r))), this.CategoryTitle.length > 0 && n && this.selectCategory(0);
 },
 processGetCategoriesError: function(e) {
 console.error("processGetCategoriesError"), console.error(e), alert(e);
@@ -4984,7 +4998,7 @@ ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.$.catID.getValue(), enyo.bind(
 processGetFeedsSuccess: function(e) {
 this.FeedID.length = 0, this.FeedUnread.length = 0, this.FeedTitle.length = 0, ObjLength = e.length - 1;
 for (var t = 0; t < e.length; t++) this.FeedTitle[t] = html_entity_decode(e[t].title), this.FeedUnread[t] = e[t].unread, this.FeedID[t] = e[t].id, this.FeedIcon[t] = e[t].has_icon;
-this.$.feedRepeater.setCount(this.FeedTitle.length), this.selectFeed(0);
+this.$.feedRepeater.setCount(this.FeedTitle.length), this.AutoLoadFirstFeed && this.selectFeed(0);
 },
 processGetFeedsError: function(e) {
 console.log(e);
