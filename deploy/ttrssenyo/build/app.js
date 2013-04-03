@@ -4479,8 +4479,7 @@ allowHtml: !0
 }, {
 name: "left2",
 kind: "FittableRows",
-fit: !0,
-style: "width: 260px",
+style: "width: 240px",
 components: [ {
 kind: "onyx.Toolbar",
 components: [ {
@@ -4490,7 +4489,6 @@ content: "TT-RSS Reader"
 name: "left3",
 kind: "FittableRows",
 fit: !0,
-style: "width: 260px",
 components: [ {
 kind: "gts.DividerDrawer",
 name: "categoryHeader",

@@ -12,11 +12,11 @@ enyo.kind({
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "left2", kind: "FittableRows", fit: true, style: "width: 260px", components: [
+			{name: "left2", kind: "FittableRows", style: "width: 240px", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
 				]},
-				{name: "left3", kind: "FittableRows", fit: true, style: "width: 260px", components: [
+				{name: "left3", kind: "FittableRows", fit: true, components: [
 					{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
 						{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 							{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
