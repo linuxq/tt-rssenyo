@@ -12,7 +12,7 @@ enyo.kind({
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "left2", kind: "FittableRows", style: "width: 240px", components: [
+			{name: "left2", kind: "FittableRows", style: "width: 260px", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"}
 				]},
@@ -99,8 +99,8 @@ enyo.kind({
 				]}
 			]}
 		]},
-		{kind: enyo.Signals, onkeyup: "handleKeyPress"},		
-		//{ kind: "enyo.ApplicationEvents", onBack: "goBack" },
+		{kind: enyo.Signals, onkeyup: "handleKeyUp", onkeydown: "handleKeyDown", onkeypress: "handleKeyPress"},
+		{kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
 			//{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
 			{kind: "onyx.Button", content: "Categories", ontap: "getCategories"},
@@ -220,7 +220,7 @@ enyo.kind({
 		}
 	},
 	resize: function(){
-		console.log("resize");
+		//console.log("resize");
 		this.$.left2.reflow();
 		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
@@ -608,8 +608,34 @@ enyo.kind({
 		};
 	},
 	handleKeyDown: function(inSender, inEvent){
-		console.error(inEvent.keyIdentifier + " KEY " + inEvent.keyCode);
+		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
+		var KeyCode = inEvent.keyCode;
+	
+		// Backgesture abfangen
+		if (KeyCode == 27) {
+			console.error(" BACK ");
+			var WhichPanel = this.$.viewPanels.getIndex();
+			switch (WhichPanel) {
+				case 3:
+					this.$.viewPanels.setIndex(2);
+					break;
+				case 2:
+					this.$.viewPanels.setIndex(1);
+					break;		
+			};
+			inEvent.preventDefault();
+			return true;
+		};
 	},
+	handleKeyUp: function(inSender, inEvent){
+		//console.error("Key Up: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
+	},
+	handleKeyPress: function(inSender, inEvent){
+		//console.error("Key Press: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
+	},	
+	goBack: function(inSender, inEvent){
+		console.error(" BACK ");
+	},	
 	titleDragFinish: function(inSender, inEvent){
 		//console.error("DRAG FINISH : " + inEvent.dx);
 		//if (Helper.phone && !this.running) {
