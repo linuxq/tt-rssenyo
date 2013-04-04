@@ -4963,7 +4963,13 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.ttrssURL == null ? this.$.LoginPopup.show() : (ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"))), window.innerWidth < 1024 && (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true";
+if (this.ttrssURL == null) this.$.LoginPopup.show(); else {
+ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+var n = this.$.toggleUnread.getValue();
+ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+}
+window.innerWidth < 1024 && (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em")));
 },
 resize: function() {
 this.$.left2.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
@@ -5003,7 +5009,8 @@ processGetCategoriesError: function(e) {
 console.error("processGetCategoriesError"), console.error(e), alert(e);
 },
 getFeeds: function(e, t) {
-ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+var n = this.$.toggleUnread.getValue();
+ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, n, his.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 },
 processGetFeedsSuccess: function(e) {
 this.FeedID.length = 0, this.FeedUnread.length = 0, this.FeedTitle.length = 0, ObjLength = e.length - 1;
@@ -5020,7 +5027,8 @@ processGetConfigError: function(e) {
 console.log(e);
 },
 getHeadlines: function(e, t) {
-ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+var n = this.$.toggleUnread.getValue();
+ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 },
 processGetHeadlinesSuccess: function(e) {
 this.Articles.length = 0, this.ArticleContent.length = 0, this.ArticleID.length = 0, this.ArticleURL.length = 0;
@@ -5072,7 +5080,9 @@ this.selectCategory(t.index);
 selectCategory: function(e) {
 console.log(this.CategoryID[e]);
 var t = this.currentCategoryIndex;
-this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex), ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.CategoryID[e], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1);
+this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex);
+var n = this.$.toggleUnread.getValue();
+ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, n, this.CategoryID[e], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1);
 },
 clickFeed: function(e, t) {
 this.selectFeed(t.index);
@@ -5084,7 +5094,8 @@ if (this.FeedIcon[e]) {
 var n = this.ttrssIconPath + this.FeedID[e] + ".ico";
 this.$.feedTitleIcon.setShowing(!0), this.$.feedTitleIcon.setSrc(n);
 } else this.$.feedTitleIcon.setShowing(!1);
-ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.FeedID[e], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
+var r = this.$.toggleUnread.getValue();
+ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, r, this.FeedID[e], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
 },
 addFeedClick: function(e, t) {
 this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show();
@@ -5218,22 +5229,22 @@ function ttrssGetCategoriesResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssGetFeeds(e, t, n, r, i) {
-var s = {
+function ttrssGetFeeds(e, t, n, r, i, s) {
+var o = {
 op: "getFeeds",
-cat_id: n,
-unread_only: !0,
+cat_id: r,
+unread_only: n,
 enable_nested: !0,
 sid: t
-}, o = new enyo.Ajax({
+}, u = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(s)
+postBody: JSON.stringify(o)
 });
-o.response(function(e) {
-ttrssGetFeedsResponse(e, r, i);
-}), o.go(s);
+u.response(function(e) {
+ttrssGetFeedsResponse(e, i, s);
+}), u.go(o);
 return;
 }
 
@@ -5241,25 +5252,27 @@ function ttrssGetFeedsResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
-function ttrssGetHeadlines(e, t, n, r, i) {
-var s = {
+function ttrssGetHeadlines(e, t, n, r, i, s) {
+var o = "unread";
+n ? o = "unread" : o = "all_articles";
+var u = {
 op: "getHeadlines",
-feed_id: n,
-view_mode: "unread",
+feed_id: r,
+view_mode: o,
 limit: 100,
 show_excerpt: !0,
 show_content: !0,
 enable_nested: !0,
 sid: t
-}, o = new enyo.Ajax({
+}, a = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(s)
+postBody: JSON.stringify(u)
 });
-o.response(function(e) {
-ttrssGetHeadlinesResponse(e, r, i);
-}), o.go(s);
+a.response(function(e) {
+ttrssGetHeadlinesResponse(e, i, s);
+}), a.go(u);
 return;
 }
 

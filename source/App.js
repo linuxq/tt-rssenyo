@@ -203,7 +203,8 @@ enyo.kind({
 		else
 		{
 			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			var getUnreadOnly = this.$.toggleUnread.getValue();
+			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		};
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
@@ -373,7 +374,8 @@ enyo.kind({
 	},
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
-		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
 	processGetHeadlinesSuccess: function(inEvent){
 		this.Articles.length = 0; //Artikelliste leeren
@@ -557,7 +559,8 @@ enyo.kind({
 			this.$.feedTitleIcon.setShowing(false);
 			//this.$.feedTitleIcon.setSrc("");
 		};
-		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, this.FeedID[index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.FeedID[index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(2);
 		}

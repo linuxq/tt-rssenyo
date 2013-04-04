@@ -102,11 +102,17 @@ function ttrssGetFeedsResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getHeadlines ********************
-function ttrssGetHeadlines(ttrssurl, ttrssSID, feedID, successCallback, errorCallback) {
+function ttrssGetHeadlines(ttrssurl, ttrssSID, unreadOnly, feedID, successCallback, errorCallback) {
+	var viewmode = "unread";
+	if (unreadOnly) {
+		viewmode = "unread";
+	} else {
+		viewmode = "all_articles";
+	};
 	var data = {
 		op: "getHeadlines",
 		feed_id: feedID,
-		view_mode: "unread",
+		view_mode: viewmode,
 		limit: 100,
 		show_excerpt: true,
 		show_content: true,
