@@ -91,12 +91,18 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber"},
+					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
-					//{content: "Read "},
+					//{content: "Read "},rr
 					{fit: true},
 					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
+					{fit: true},
 					{name: "lblArticles", align: "right"},
+					{fit: true},
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+					{fit: true},
+					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer-on.png", ontap: "toggleArticleStarred"},
+					{fit: true},
 					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"}
@@ -410,6 +416,7 @@ enyo.kind({
 		ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 	},
 	processGetArticleSuccess: function(inEvent){
+		//console.log(inEvent);
 		var TextHelp = "";
 		//TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
 		var timestamp = inEvent[0].updated;
@@ -435,6 +442,13 @@ enyo.kind({
 		else
 		{
 			this.$.chkArticleRead.setChecked(true);
+		}
+		//Favorite-Stern setzen
+		if(inEvent[0].marked) {
+			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+		} else
+		{
+			this.$.iconStarred.setSrc("assets/starred-footer.png");
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
@@ -488,6 +502,24 @@ enyo.kind({
 	processMarkArticleReadError: function(inEvent){
 		//console.log(inEvent);
 	},
+	toggleArticleStarred: function(inSender, inEvent) {
+		if (this.$.iconStarred.src == "assets/starred-footer.png") {
+			//STARREN
+			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
+			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+		} else
+		{
+			//STAR entfernen
+			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
+			this.$.iconStarred.setSrc("assets/starred-footer.png");
+		}
+	},
+	processMarkArticleStarredSuccess: function(inEvent){
+		//console.log(inEvent);
+	},
+	processMarkArticleStarredError: function(inEvent){
+		//console.log(inEvent);
+	},	
 	setupCategories: function(inSender, inEvent) {
 		//console.log(inEvent.item);
 		var index = inEvent.index;
@@ -531,7 +563,7 @@ enyo.kind({
 		this.selectCategory(inEvent.index);
 	},
 	selectCategory: function(index) {
-		console.log(this.CategoryID[index]);
+		//console.log(this.CategoryID[index]);
 		var oldCatIdx = this.currentCategoryIndex;
 		this.currentCategoryIndex = index;
 		this.$.categoryRepeater.renderRow(oldCatIdx);

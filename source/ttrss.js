@@ -207,6 +207,44 @@ function ttrssMarkArticleReadResponse(inEvent, successCallback, errorCallback) {
 	}
 };
 
+//**************** MarkArticleStarred ********************
+function ttrssMarkArticleStarred(ttrssurl, ttrssSID, articleID, starred, successCallback, errorCallback) {
+	//console.log("GET CATEGORIES");
+	var starredhelper = 1;
+	if (starred) {
+		starredhelper = 1;
+	} else
+	{
+		starredhelper = 0;
+	};
+	var data = {
+		op: "updateArticle",
+		article_ids: articleID,
+		mode: starred,
+		field: 0, //unread-Status
+		sid: ttrssSID
+	};
+	var request = new enyo.Ajax({
+		url: ttrssurl + "/api/",
+		method: "POST",
+		handleAs: "json",
+		postBody: JSON.stringify(data)
+	});
+	request.response(function(daten) {ttrssMarkArticleStarredResponse(daten, successCallback, errorCallback)});
+	request.go(data);
+
+	return;
+};
+
+function ttrssMarkArticleStarredResponse(inEvent, successCallback, errorCallback) {
+	response = JSON.parse(inEvent.xhrResponse.body);
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
+};
+
 //**************** SubscribeToFeed ********************
 function ttrssSubscribeToFeed(ttrssurl, ttrssSID, url, categoryID, successCallback, errorCallback) {
 	var data = {

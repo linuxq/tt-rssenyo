@@ -4715,6 +4715,8 @@ fit: !0,
 components: [ {
 kind: "onyx.Grabber"
 }, {
+fit: !0
+}, {
 kind: "onyx.Button",
 style: "width: 40px",
 content: "<",
@@ -4728,12 +4730,25 @@ name: "chkArticleRead",
 onchange: "toggleArticleRead",
 checked: !1
 }, {
+fit: !0
+}, {
 name: "lblArticles",
 align: "right"
+}, {
+fit: !0
 }, {
 kind: "onyx.IconButton",
 src: "assets/browser2.png",
 ontap: "openArticle"
+}, {
+fit: !0
+}, {
+kind: "onyx.IconButton",
+name: "iconStarred",
+src: "assets/starred-footer-on.png",
+ontap: "toggleArticleStarred"
+}, {
+fit: !0
 }, {
 kind: "onyx.Button",
 name: "btnFullArticle",
@@ -5045,7 +5060,7 @@ ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.resize();
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.resize();
 },
 processGetFullArticleSuccess: function(e) {
 this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), inEvent[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
@@ -5062,6 +5077,11 @@ n ? (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.Rec
 },
 processMarkArticleReadSuccess: function(e) {},
 processMarkArticleReadError: function(e) {},
+toggleArticleStarred: function(e, t) {
+this.$.iconStarred.src == "assets/starred-footer.png" ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer-on.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer.png"));
+},
+processMarkArticleStarredSuccess: function(e) {},
+processMarkArticleStarredError: function(e) {},
 setupCategories: function(e, t) {
 var n = t.index, r = t.item;
 n == this.currentCategoryIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.titel.applyStyle("color", "#999999"), r.$.titel.setContent(this.CategoryTitle[n] + " (" + this.CategoryUnread[n] + ")"), this.resize();
@@ -5078,7 +5098,6 @@ clickCategory: function(e, t) {
 this.selectCategory(t.index);
 },
 selectCategory: function(e) {
-console.log(this.CategoryID[e]);
 var t = this.currentCategoryIndex;
 this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex);
 var n = this.$.toggleUnread.getValue();
@@ -5323,6 +5342,31 @@ return;
 }
 
 function ttrssMarkArticleReadResponse(e, t, n) {
+response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+}
+
+function ttrssMarkArticleStarred(e, t, n, r, i, s) {
+var o = 1;
+r ? o = 1 : o = 0;
+var u = {
+op: "updateArticle",
+article_ids: n,
+mode: r,
+field: 0,
+sid: t
+}, a = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(u)
+});
+a.response(function(e) {
+ttrssMarkArticleStarredResponse(e, i, s);
+}), a.go(u);
+return;
+}
+
+function ttrssMarkArticleStarredResponse(e, t, n) {
 response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
 }
 
