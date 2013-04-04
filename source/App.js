@@ -339,7 +339,8 @@ enyo.kind({
 	},
 	getFeeds: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
-		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, his.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 	},
 	processGetFeedsSuccess: function(inEvent){
 		this.FeedID.length = 0;
@@ -533,7 +534,8 @@ enyo.kind({
 		this.currentCategoryIndex = index;
 		this.$.categoryRepeater.renderRow(oldCatIdx);
 		this.$.categoryRepeater.renderRow(this.currentCategoryIndex);
-		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, this.CategoryID[index], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.CategoryID[index], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 		this.$.viewPanels.setIndex(1);
 	},
 	clickFeed: function(inSender, inEvent) {

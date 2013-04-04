@@ -71,11 +71,11 @@ function ttrssGetCategoriesResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getFeeds ********************
-function ttrssGetFeeds(ttrssurl, ttrssSID, catID, successCallback, errorCallback) {
+function ttrssGetFeeds(ttrssurl, ttrssSID, unreadOnly, catID, successCallback, errorCallback) {
 	var data = {
 		op: "getFeeds",
 		cat_id: catID,
-		unread_only: true,
+		unread_only: unreadOnly,
 		enable_nested: true,
 		sid: ttrssSID
 	};
