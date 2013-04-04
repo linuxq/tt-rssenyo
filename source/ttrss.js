@@ -40,11 +40,11 @@ function ttrssLoginResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getCategories********************
-function ttrssGetCategories(ttrssurl, ttrssSID, successCallback, errorCallback) {
+function ttrssGetCategories(ttrssurl, ttrssSID, unreadOnly, successCallback, errorCallback) {
 	//console.log("GET CATEGORIES");
 	var data = {
 		op: "getCategories",
-		unread_only: true,
+		unread_only: unreadOnly,
 		enable_nested: false,
 		sid: ttrssSID
 	};

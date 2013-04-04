@@ -14,7 +14,9 @@ enyo.kind({
 			]},
 			{name: "left2", kind: "FittableRows", style: "width: 260px", components: [
 				{kind: "onyx.Toolbar", components: [
-					{content: "TT-RSS Reader"}
+					{content: "TT-RSS Reader"},
+					{fit: true},
+					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
 				{name: "left3", kind: "FittableRows", fit: true, components: [
 					{kind: "Scroller", touch:true, fit: true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
@@ -284,7 +286,8 @@ enyo.kind({
 	getCategories: function (inSender){
 		console.error("getCategories");
 		//console.log(this.ttrss_SID);
-		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, getUnreadOnly, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 	},
 	processGetCategoriesSuccess: function(inEvent){
 		console.error("processGetCategoriesSuccess");
@@ -680,7 +683,7 @@ enyo.kind({
 		this.dragStartPanelIndex = this.$.viewPanels.getIndex();		
 	},	
 	titleDragFinish: function(inSender, inEvent){
-		  if (+inEvent.dx < -50) {
+		  if (+inEvent.dx < -80) {
 			if (this.dragStartPanelIndex == 3) {
 				//console.log("NEXT");
 				if (this.$.viewPanels.getIndex() == 3) {
@@ -689,7 +692,7 @@ enyo.kind({
 				}
 			}
 		  };
-		  if (+inEvent.dx > 50) {
+		  if (+inEvent.dx > 80) {
 				//console.log("PREV");
 				//this.prevArticle();
 				//this.$.viewPanels.setIndex(3);

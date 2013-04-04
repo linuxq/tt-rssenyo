@@ -4484,6 +4484,14 @@ components: [ {
 kind: "onyx.Toolbar",
 components: [ {
 content: "TT-RSS Reader"
+}, {
+fit: !0
+}, {
+kind: "onyx.ToggleIconButton",
+name: "toggleUnread",
+onChange: "clickRefresh",
+value: !0,
+src: "assets/menu-icon-bookmark.png"
 } ]
 }, {
 name: "left3",
@@ -4979,7 +4987,9 @@ clickRefresh: function(e, t) {
 console.error("clickRefresh"), this.getCategories();
 },
 getCategories: function(e) {
-console.error("getCategories"), ttrssGetCategories(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
+console.error("getCategories");
+var t = this.$.toggleUnread.getValue();
+ttrssGetCategories(this.ttrssURL, this.ttrss_SID, t, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 },
 processGetCategoriesSuccess: function(e) {
 console.error("processGetCategoriesSuccess");
@@ -5154,7 +5164,7 @@ titleDragStart: function(e, t) {
 this.dragStartPanelIndex = this.$.viewPanels.getIndex();
 },
 titleDragFinish: function(e, t) {
-+t.dx < -50 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 50;
++t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80;
 }
 });
 
@@ -5186,21 +5196,21 @@ error: "99"
 response = JSON.parse(e.xhrResponse.body), r.status = response.status, r.status == 0 ? (r.sessionid = response.content.session_id, ttsessionID = response.content.session_id, t(r)) : (r.error = response.content.error, n(r));
 }
 
-function ttrssGetCategories(e, t, n, r) {
-var i = {
+function ttrssGetCategories(e, t, n, r, i) {
+var s = {
 op: "getCategories",
-unread_only: !0,
+unread_only: n,
 enable_nested: !1,
 sid: t
-}, s = new enyo.Ajax({
+}, o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
-postBody: JSON.stringify(i)
+postBody: JSON.stringify(s)
 });
-s.response(function(e) {
-ttrssGetCategoriesResponse(e, n, r);
-}), s.go(i);
+o.response(function(e) {
+ttrssGetCategoriesResponse(e, r, i);
+}), o.go(s);
 return;
 }
 
