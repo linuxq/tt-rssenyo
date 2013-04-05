@@ -6,3 +6,4 @@ zip -r /home/marcel/Dropbox/webOS-Apps/Enyo2/ttrssenyo/ttrssenyo.zip *
 cd /home/marcel/Dropbox/webOS-Apps/Enyo2/ttrssenyo
 palm-package deploy/ttrssenyo
 palm-install com.meissel.tt*
+palm-launch com.meissel.ttrssreader

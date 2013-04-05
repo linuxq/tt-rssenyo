@@ -5030,7 +5030,7 @@ ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, n, this.$.catID.getValue(), enyo.bi
 processGetFeedsSuccess: function(e) {
 this.FeedID.length = 0, this.FeedUnread.length = 0, this.FeedTitle.length = 0, ObjLength = e.length - 1;
 var t = 0;
-this.FeedTitle[0] = "All articles", this.FeedIcon[0] = !1, this.FeedID[0] = this.CategoryID[this.currentCategoryIndex];
+this.FeedTitle[0] = this.CategoryTitle[this.currentCategoryIndex], this.FeedIcon[0] = !1, this.FeedID[0] = this.CategoryID[this.currentCategoryIndex];
 for (var n = 0; n < e.length; n++) this.FeedTitle[n + 1] = html_entity_decode(e[n].title), this.FeedUnread[n + 1] = e[n].unread, this.FeedID[n + 1] = e[n].id, this.FeedIcon[n + 1] = e[n].has_icon, t += e[n].unread;
 this.FeedUnread[0] = t, this.$.feedRepeater.setCount(this.FeedTitle.length), this.AutoLoadFirstFeed && this.selectFeed(0);
 },
@@ -5184,7 +5184,7 @@ break;
 case 2:
 this.$.viewPanels.setIndex(1);
 }
-return t.preventDefault(), !0;
+return t.preventDefault(), !1;
 }
 },
 handleKeyUp: function(e, t) {},

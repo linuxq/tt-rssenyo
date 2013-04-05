@@ -355,7 +355,7 @@ enyo.kind({
 		this.FeedTitle.length = 0;
 		ObjLength = inEvent.length  - 1;
 		var totalUnread = 0;
-		this.FeedTitle[0] = "All articles";
+		this.FeedTitle[0] = this.CategoryTitle[this.currentCategoryIndex];
 		this.FeedIcon[0] = false;
 		this.FeedID[0] = this.CategoryID[this.currentCategoryIndex];
 
@@ -716,7 +716,7 @@ enyo.kind({
 					break;		
 			};
 			inEvent.preventDefault();
-			return true;
+			return false;
 		};
 	},
 	handleKeyUp: function(inSender, inEvent){
