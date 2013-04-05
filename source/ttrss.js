@@ -102,7 +102,8 @@ function ttrssGetFeedsResponse(inEvent, successCallback, errorCallback) {
 
 
 //**************** getHeadlines ********************
-function ttrssGetHeadlines(ttrssurl, ttrssSID, unreadOnly, feedID, successCallback, errorCallback) {
+function ttrssGetHeadlines(ttrssurl, ttrssSID, unreadOnly, feedID, isCategory, successCallback, errorCallback) {
+	//console.log(feedID);
 	var viewmode = "unread";
 	if (unreadOnly) {
 		viewmode = "unread";
@@ -112,6 +113,7 @@ function ttrssGetHeadlines(ttrssurl, ttrssSID, unreadOnly, feedID, successCallba
 	var data = {
 		op: "getHeadlines",
 		feed_id: feedID,
+		is_cat: isCategory,
 		view_mode: viewmode,
 		limit: 100,
 		show_excerpt: true,
@@ -132,6 +134,7 @@ function ttrssGetHeadlines(ttrssurl, ttrssSID, unreadOnly, feedID, successCallba
 };
 
 function ttrssGetHeadlinesResponse(inEvent, successCallback, errorCallback) {
+	//console.log(inEvent);
 	response = JSON.parse(inEvent.xhrResponse.body);
 	if (response.status == 0) {
 		successCallback(response.content);

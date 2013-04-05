@@ -38,7 +38,7 @@ enyo.kind({
 								{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 									{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{kind: "enyo.Image", fit: false, name: "icon", src: "", style: "height: 25px"},
+												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px"},
 												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
 												{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
 										]}
@@ -210,7 +210,7 @@ enyo.kind({
 		{
 			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 			var getUnreadOnly = this.$.toggleUnread.getValue();
-			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		};
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
@@ -347,20 +347,28 @@ enyo.kind({
 	getFeeds: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
 		var getUnreadOnly = this.$.toggleUnread.getValue();
-		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, his.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 	},
 	processGetFeedsSuccess: function(inEvent){
 		this.FeedID.length = 0;
 		this.FeedUnread.length = 0;
 		this.FeedTitle.length = 0;
 		ObjLength = inEvent.length  - 1;
+		var totalUnread = 0;
+		this.FeedTitle[0] = "All articles";
+		this.FeedIcon[0] = false;
+		this.FeedID[0] = this.CategoryID[this.currentCategoryIndex];
+
 		for (var i=0; i<inEvent.length; i++) {
 			//console.log(inEvent[i].title + " - " + inEvent[i].unread);
-			this.FeedTitle[i] = html_entity_decode(inEvent[i].title);
-			this.FeedUnread[i] = inEvent[i].unread;
-			this.FeedID[i] = inEvent[i].id;
-			this.FeedIcon[i] = inEvent[i].has_icon;
+			this.FeedTitle[i + 1] = html_entity_decode(inEvent[i].title);
+			this.FeedUnread[i + 1] = inEvent[i].unread;
+			this.FeedID[i + 1] = inEvent[i].id;
+			this.FeedIcon[i + 1] = inEvent[i].has_icon;
+			totalUnread = totalUnread + inEvent[i].unread; 
 		};
+		this.FeedUnread[0] = totalUnread;
+		
 		this.$.feedRepeater.setCount(this.FeedTitle.length);
 		if (this.AutoLoadFirstFeed) {
 			this.selectFeed(0);	
@@ -381,7 +389,7 @@ enyo.kind({
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
 		var getUnreadOnly = this.$.toggleUnread.getValue();
-		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
 	processGetHeadlinesSuccess: function(inEvent){
 		this.Articles.length = 0; //Artikelliste leeren
@@ -592,7 +600,12 @@ enyo.kind({
 			//this.$.feedTitleIcon.setSrc("");
 		};
 		var getUnreadOnly = this.$.toggleUnread.getValue();
-		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.FeedID[index], enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		var isCategory = false;
+		//If "All articles" submit isCategory=true
+		if (index == "0") {
+			isCategory = true;
+		};
+		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.FeedID[index], isCategory, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(2);
 		}
