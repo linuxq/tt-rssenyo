@@ -4452,7 +4452,7 @@ this.setShowing(!1);
 
 // App.js
 
-MarkReadTimer = "", MarkReadTimeout = "2000", enyo.kind({
+MarkReadTimer = "", enyo.kind({
 name: "App",
 kind: "FittableRows",
 fit: !0,
@@ -4659,13 +4659,14 @@ components: [ {
 kind: "onyx.IconButton",
 fit: !1,
 name: "starredList",
-src: "assets/starred-footer20.png",
-style: "height: 20px",
+src: "assets/starred-footer32.png",
+style: "height: 32px;",
 ontap: "toggleArticleStarredList"
 }, {
 tag: "div",
 name: "titel",
-style: "width:100%; text-align:left;",
+fit: !0,
+style: "text-align:left;",
 ontap: "clickItem"
 } ]
 }, {
@@ -4877,6 +4878,42 @@ name: "autoLoadFirstFeed",
 content: "Autoload 1st feed",
 style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
 }, {
+kind: "FittableColumns",
+style: "height: auto",
+components: [ {
+kind: "onyx.PickerDecorator",
+components: [ {}, {
+kind: "onyx.Picker",
+name: "pickMarkReadTimeout",
+onSelect: "changeMarkReadTimeout",
+components: [ {
+content: "1s",
+value: 1e3,
+name: "T1s"
+}, {
+content: "2s",
+value: 2e3,
+name: "T2s",
+active: !0
+}, {
+content: "3s",
+value: 3e3,
+name: "T3s"
+}, {
+content: "5s",
+value: 5e3,
+name: "T5s"
+}, {
+content: "off",
+value: 0,
+name: "Toff"
+} ]
+} ]
+}, {
+content: "Auto mark read timer",
+style: "padding-left: 10px; vertical-align: middle"
+} ]
+}, {
 tag: "div",
 style: "height:10px;"
 }, {
@@ -4984,6 +5021,7 @@ ttrssUser: null,
 ttrssPassword: null,
 ttrssIconPath: null,
 ttrss_SID: "",
+ttrssAutoMarkRead: "2000",
 alternativeView: !1,
 AutoLoadFirstFeed: !1,
 dragStartPanelIndex: null,
@@ -4994,7 +5032,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true";
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.alternativeView = localStorage.getItem("alternativeView") == "true", this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true";
 if (this.ttrssURL == null) this.$.LoginPopup.show(); else {
 ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 var n = this.$.toggleUnread.getValue();
@@ -5009,10 +5047,30 @@ LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.alternativeView = this.$.alternativeView.getValue(), this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("alternativeView", this.alternativeView), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.alternativeView = this.$.alternativeView.getValue(), this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("alternativeView", this.alternativeView), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
 },
 LoginTap: function(e, t) {
-this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword), this.$.alternativeView.setValue(this.alternativeView), this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed), this.$.LoginPopup.show();
+this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword), this.$.alternativeView.setValue(this.alternativeView), this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
+switch (this.ttrssAutoMarkRead) {
+case "1000":
+this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
+break;
+case "2000":
+this.$.pickMarkReadTimeout.setSelected(this.$.T2s);
+break;
+case "3000":
+this.$.pickMarkReadTimeout.setSelected(this.$.T3s);
+break;
+case "5000":
+this.$.pickMarkReadTimeout.setSelected(this.$.T5s);
+break;
+case "0":
+this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
+}
+this.$.LoginPopup.show();
+},
+changeMarkReadTimeout: function(e, t) {
+this.ttrssAutoMarkRead = t.selected.value;
 },
 processLoginSuccess: function(e) {
 console.error("LOGIN SUCCESSS SID: " + e.sessionid), this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
@@ -5078,10 +5136,10 @@ ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.resize();
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.resize();
 },
 processGetFullArticleSuccess: function(e) {
-this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), inEvent[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout)) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
+this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), inEvent[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length);
 },
 processGetArticleError: function(e) {
 console.log(e);
@@ -5099,7 +5157,7 @@ toggleArticleStarred: function(e, t) {
 this.$.iconStarred.src == "assets/starred-footer.png" ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer-on.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer.png"));
 },
 toggleArticleStarredList: function(e, t) {
-this.ArticleStarred[t.index] ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !1, e.setSrc("assets/starred-footer20.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !0, e.setSrc("assets/starred-footer20-on.png"));
+this.ArticleStarred[t.index] ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !1, e.setSrc("assets/starred-footer32.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !0, e.setSrc("assets/starred-footer32-on.png"));
 },
 processMarkArticleStarredSuccess: function(e) {},
 processMarkArticleStarredError: function(e) {},
@@ -5113,7 +5171,7 @@ n == this.currentFeedIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.tite
 },
 setupArticles: function(e, t) {
 var n = t.index, r = t.item;
-r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]), this.ArticleStarred[n] ? r.$.starredList.setSrc("assets/starred-footer20-on.png") : r.$.starredList.setSrc("assets/starred-footer20.png");
+r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]), this.ArticleStarred[n] ? r.$.starredList.setSrc("assets/starred-footer32-on.png") : r.$.starredList.setSrc("assets/starred-footer32.png");
 },
 clickCategory: function(e, t) {
 this.selectCategory(t.index);
