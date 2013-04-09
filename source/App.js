@@ -697,10 +697,18 @@ enyo.kind({
 		}
 	},
 	openArticle: function(inSender, inEvent){
-		window.open(this.ArticleURL[this.RecentArticleIndex]);
+		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
+		//if (this.ttrssURL == "..") {
+		//	FullArticelURL = "proxy.php?proxy_url=" + FullArticelURL;
+		//}		
+		window.open(FullArticelURL);
 	},
 	showFullArticle: function(inSender, inEvent) {
-		ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
+		if (this.ttrssURL == "..") {
+			FullArticelURL = "proxy.php?proxy_url=" + FullArticelURL;
+		}
+		ttrssGetFullArticle(FullArticelURL, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		this.$.viewPanels.setIndex(3);
 	},
 	prevArticle: function(inSender, inEvent){

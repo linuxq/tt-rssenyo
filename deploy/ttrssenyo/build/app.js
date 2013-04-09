@@ -5180,10 +5180,12 @@ clickItem: function(e, t) {
 this.RecentArticleIndex = t.index, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
 },
 openArticle: function(e, t) {
-window.open(this.ArticleURL[this.RecentArticleIndex]);
+var n = this.ArticleURL[this.RecentArticleIndex];
+window.open(n);
 },
 showFullArticle: function(e, t) {
-ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
+var n = this.ArticleURL[this.RecentArticleIndex];
+this.ttrssURL == ".." && (n = "proxy.php?proxy_url=" + n), ttrssGetFullArticle(n, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
 },
 prevArticle: function(e, t) {
 this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.alternativeView ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
