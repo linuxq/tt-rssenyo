@@ -4633,13 +4633,13 @@ kind: "Scroller",
 name: "articleScroller",
 touch: !0,
 fit: !0,
+horizontal: "hidden",
 classes: "scroller-sample-scroller",
 components: [ {
 kind: "Repeater",
 name: "articleRepeater",
 onSetupItem: "setupArticles",
 fit: !0,
-ontap: "clickItem",
 components: [ {
 name: "item",
 classes: "repeater-sample-item",
@@ -4651,13 +4651,28 @@ fit: !0,
 classes: "fittable-sample-shadow",
 style: "height: auto",
 components: [ {
+kind: "FittableColumns",
+fit: !0,
+classes: "fittable-sample-shadow",
+style: "height: auto",
+components: [ {
+kind: "onyx.IconButton",
+fit: !1,
+name: "starredList",
+src: "assets/starred-footer20.png",
+style: "height: 20px",
+ontap: "toggleArticleStarredList"
+}, {
 tag: "div",
 name: "titel",
-style: "width:100%; text-align:left;"
+style: "width:100%; text-align:left;",
+ontap: "clickItem"
+} ]
 }, {
 tag: "div",
 name: "preview",
-style: "width:100%; text-align:left; font-weight:normal;"
+style: "width:100%; text-align:left; font-weight:normal;",
+ontap: "clickItem"
 } ]
 } ]
 } ]
@@ -4963,6 +4978,7 @@ Articles: [],
 ArticleContent: [],
 ArticleID: [],
 ArticleURL: [],
+ArticleStarred: [],
 ttrssURL: null,
 ttrssUser: null,
 ttrssPassword: null,
@@ -5049,7 +5065,7 @@ ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, this.$.feedID.getValue(), !1
 },
 processGetHeadlinesSuccess: function(e) {
 this.Articles.length = 0, this.ArticleContent.length = 0, this.ArticleID.length = 0, this.ArticleURL.length = 0;
-for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.alternativeView && ttrssGetArticle(this.ttrssURL, this.ttrss_SID, e[t].id, enyo.bind(this, function(e, t) {
+for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.ArticleStarred[t] = e[t].marked, this.alternativeView && ttrssGetArticle(this.ttrssURL, this.ttrss_SID, e[t].id, enyo.bind(this, function(e, t) {
 this.ArticleContent[e] = stripHTML(html_entity_decode(t[0].content)), this.$.articleRepeater.renderRow(e);
 }, t), enyo.bind(this, function() {}));
 this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0);
@@ -5082,6 +5098,9 @@ processMarkArticleReadError: function(e) {},
 toggleArticleStarred: function(e, t) {
 this.$.iconStarred.src == "assets/starred-footer.png" ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer-on.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer.png"));
 },
+toggleArticleStarredList: function(e, t) {
+this.ArticleStarred[t.index] ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !1, e.setSrc("assets/starred-footer20.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !0, e.setSrc("assets/starred-footer20-on.png"));
+},
 processMarkArticleStarredSuccess: function(e) {},
 processMarkArticleStarredError: function(e) {},
 setupCategories: function(e, t) {
@@ -5094,7 +5113,7 @@ n == this.currentFeedIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.tite
 },
 setupArticles: function(e, t) {
 var n = t.index, r = t.item;
-r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]);
+r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]), this.ArticleStarred[n] ? r.$.starredList.setSrc("assets/starred-footer20-on.png") : r.$.starredList.setSrc("assets/starred-footer20.png");
 },
 clickCategory: function(e, t) {
 this.selectCategory(t.index);
@@ -5184,7 +5203,7 @@ break;
 case 2:
 this.$.viewPanels.setIndex(1);
 }
-return t.preventDefault(), !1;
+return t.preventDefault(), t.stopPropagation(), tre;
 }
 },
 handleKeyUp: function(e, t) {},

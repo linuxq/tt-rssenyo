@@ -61,12 +61,15 @@ enyo.kind({
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height: 30px"}, //height: 54px"},
 					{name: "lblFeedTitle", content: "Feed", style: "font-size: 1.2em; font-weight: bold"}
 				]},
-				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, classes: "scroller-sample-scroller", components: [
-					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
+				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
-								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
+								{kind: "FittableColumns", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+									{kind: "onyx.IconButton", fit: false, name: "starredList", src: "assets/starred-footer20.png", style: "height: 20px", ontap: "toggleArticleStarredList"},
+									{tag: "div", name: "titel", style: "width:100%; text-align:left;", ontap: "clickItem"}
+								]},
+								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;", ontap: "clickItem"}
 							]}
 						]}
 					]}
@@ -177,6 +180,7 @@ enyo.kind({
 	ArticleContent: [],
 	ArticleID: [],
 	ArticleURL: [],
+	ArticleStarred: [],
 	ttrssURL: null,
 	ttrssUser: null,
 	ttrssPassword: null,
@@ -400,8 +404,9 @@ enyo.kind({
 			//console.log(inEvent[i].title + " - " + inEvent[i].unread);
 			this.Articles[i] = html_entity_decode(inEvent[i].title);
 			this.ArticleID[i] = inEvent[i].id;
-			//console.log(inEvent[i].id);
+			//console.log(inEvent[i].marked);
 			this.ArticleURL[i] = inEvent[i].link;
+			this.ArticleStarred[i] = inEvent[i].marked; 
 			if (this.alternativeView) {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
 					enyo.bind(this, function(i, inEvent) {
@@ -522,6 +527,22 @@ enyo.kind({
 			this.$.iconStarred.setSrc("assets/starred-footer.png");
 		}
 	},
+	toggleArticleStarredList: function(inSender, inEvent) {
+		//console.log(inSender);
+
+		if (this.ArticleStarred[inEvent.index]){
+			//STAR entfernen
+			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], false,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
+			this.ArticleStarred[inEvent.index] = false;
+			inSender.setSrc("assets/starred-footer20.png");
+		} else
+		{
+			//STARREN
+			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));			
+			this.ArticleStarred[inEvent.index] = true;
+			inSender.setSrc("assets/starred-footer20-on.png");
+		}		
+	},
 	processMarkArticleStarredSuccess: function(inEvent){
 		//console.log(inEvent);
 	},
@@ -566,6 +587,11 @@ enyo.kind({
 		var item = inEvent.item;
 		item.$.titel.setContent(this.Articles[index]);
 		item.$.preview.setContent(this.ArticleContent[index]);
+		if (this.ArticleStarred[index]) {
+			item.$.starredList.setSrc("assets/starred-footer20-on.png");
+		} else {
+			item.$.starredList.setSrc("assets/starred-footer20.png");
+		}		
 	},
 	clickCategory: function(inSender, inEvent) {
 		this.selectCategory(inEvent.index);
@@ -716,7 +742,8 @@ enyo.kind({
 					break;		
 			};
 			inEvent.preventDefault();
-			return false;
+			inEvent.stopPropagation();
+			return tre;
 		};
 	},
 	handleKeyUp: function(inSender, inEvent){
