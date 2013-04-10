@@ -195,7 +195,7 @@ enyo.kind({
 	dragStartPanelIndex: null,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
-		window.setTimeout(this.startapp(), 10);
+		window.setTimeout(enyo.bind(this, "startapp"), 10);
 	},
 	create: function(){
 		this.inherited(arguments);
