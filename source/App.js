@@ -273,6 +273,8 @@ enyo.kind({
 				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.0em");
 			}
+		} else {
+			this.$.viewPanels.layout.peekWidth = 40;
 		}
 	},
 	resize: function(){
