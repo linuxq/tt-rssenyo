@@ -146,7 +146,7 @@ enyo.kind({
 		{name: "LoginPopup", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
 			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
 				{kind: "onyx.InputDecorator", components: [
-					{kind: "onyx.Input", placeholder: "Server", name: "serverAddress", value: "..", style: "width:100%;"}
+					{kind: "onyx.Input", placeholder: "Server (with http:// or https://)", name: "serverAddress", value: "..", style: "width:100%;"}
 				]},
 				{kind: "onyx.InputDecorator", components: [
 					{kind: "onyx.Input", name: "serverUser", placeholder: "Username", value: "", style: "width:100%;"}
