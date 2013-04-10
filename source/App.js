@@ -1,5 +1,5 @@
 MarkReadTimer = "";
-MarkReadTimeout = "2000";
+
 
 enyo.kind({
 	name: "App",
@@ -61,19 +61,34 @@ enyo.kind({
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height: 30px"}, //height: 54px"},
 					{name: "lblFeedTitle", content: "Feed", style: "font-size: 1.2em; font-weight: bold"}
 				]},
+				
+				/* With "star/unstar" ->  too slow :(
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 								{kind: "FittableColumns", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-									{kind: "onyx.IconButton", fit: false, name: "starredList", src: "assets/starred-footer20.png", style: "height: 20px", ontap: "toggleArticleStarredList"},
-									{tag: "div", name: "titel", style: "width:100%; text-align:left;", ontap: "clickItem"}
+									{kind: "onyx.IconButton", fit: false, name: "starredList", src: "assets/starred-footer32.png", style: "height: 32px;", ontap: "toggleArticleStarredList"},
+									{tag: "div", name: "titel", fit: true, style: "text-align:left;", ontap: "clickItem"},
 								]},
 								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;", ontap: "clickItem"}
 							]}
 						]}
 					]}
 				]},
+				*/
+				
+				{kind: "Scroller", name: "articleScroller", touch:true, fit:true,  horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
+						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
+								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
+							]}
+						]}
+					]}
+				]},				
+				
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
@@ -86,7 +101,10 @@ enyo.kind({
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
-				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
+				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", components: [
+					{kind: "enyo.Image", name: "articleTitleIcon", fit: false, src: "", style: "height: 30px; width: 30px"}, //height: 54px"},
+					{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
+				]},
 				{content: "", style: "border: 1px solid silver;"},
 				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
@@ -139,6 +157,19 @@ enyo.kind({
 			]},
 			{kind: "onyx.Checkbox", name: "alternativeView", content: "Alternative View (beta)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+			{kind: "FittableColumns", style: "height: auto", components: [
+				{kind: "onyx.PickerDecorator", components: [
+					{},
+					{kind: "onyx.Picker", name: "pickMarkReadTimeout", onSelect: "changeMarkReadTimeout", components: [
+						{content: "1s", value: 1000, name: "T1s"},
+						{content: "2s", value: 2000, name: "T2s", active: true},
+						{content: "3s", value: 3000, name: "T3s"},
+						{content: "5s", value: 5000, name: "T5s"},
+						{content: "off", value: 0, name: "Toff"}
+					]}
+				]},
+				{content: "Auto mark read timer", style: "padding-left: 10px; vertical-align: middle"}
+			]},
 			{tag: "div", style: "height:10px;"},
 			{kind: "onyx.Button", content: "Save", ontap: "LoginSave", style: "width:100%;"},
 			{tag: "div", style: "height:2px;"},
@@ -186,6 +217,7 @@ enyo.kind({
 	ttrssPassword: null,
 	ttrssIconPath: null,
 	ttrss_SID: "",
+	ttrssAutoMarkRead: "2000",
 	
 	//Settings
 	alternativeView: false,
@@ -204,6 +236,7 @@ enyo.kind({
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
+		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
 		this.alternativeView = (localStorage.getItem("alternativeView") == "true");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
 		if (this.ttrssURL == null)
@@ -257,13 +290,13 @@ enyo.kind({
 		this.ttrssUser = this.$.serverUser.getValue();
 		this.ttrssPassword = this.$.serverPassword.getValue();
 		this.alternativeView = this.$.alternativeView.getValue();
-		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
-
+		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();		
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
 		localStorage.setItem("alternativeView", this.alternativeView);
 		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
+		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		this.$.LoginPopup.hide();
 	},
@@ -273,9 +306,29 @@ enyo.kind({
 		this.$.serverPassword.setValue(this.ttrssPassword);
 		this.$.alternativeView.setValue(this.alternativeView)
 		this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
+		switch (this.ttrssAutoMarkRead) {
+		case '1000':
+			this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
+			break;
+		case '2000':
+			this.$.pickMarkReadTimeout.setSelected(this.$.T2s);			
+			break;
+		case '3000':
+			this.$.pickMarkReadTimeout.setSelected(this.$.T3s);			
+			break;			
+		case '5000':
+			this.$.pickMarkReadTimeout.setSelected(this.$.T5s);			
+			break;
+		case '0':
+			this.$.pickMarkReadTimeout.setSelected(this.$.Toff);			
+			break;				
+		};		
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
+	},
+	changeMarkReadTimeout: function(inSender, inEvent){
+		this.ttrssAutoMarkRead = inEvent.selected.value;		
 	},
 	processLoginSuccess: function(LoginResponse) {
 		console.error("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
@@ -450,7 +503,9 @@ enyo.kind({
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
 			clearTimeout(this.MarkReadTimer);
-			this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout);
+			if (this.ttrssAutoMarkRead != '0') {
+				this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead);
+			}
 		}
 		else
 		{
@@ -465,6 +520,7 @@ enyo.kind({
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
 	},
@@ -476,7 +532,9 @@ enyo.kind({
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
 			clearTimeout(this.MarkReadTimer);
-			this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), MarkReadTimeout);
+			if (this.ttrssAutoMarkRead != '0') {
+				this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead);
+			};
 		}
 		else
 		{
@@ -534,13 +592,13 @@ enyo.kind({
 			//STAR entfernen
 			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], false,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
 			this.ArticleStarred[inEvent.index] = false;
-			inSender.setSrc("assets/starred-footer20.png");
+			inSender.setSrc("assets/starred-footer32.png");
 		} else
 		{
 			//STARREN
 			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));			
 			this.ArticleStarred[inEvent.index] = true;
-			inSender.setSrc("assets/starred-footer20-on.png");
+			inSender.setSrc("assets/starred-footer32-on.png");
 		}		
 	},
 	processMarkArticleStarredSuccess: function(inEvent){
@@ -587,11 +645,13 @@ enyo.kind({
 		var item = inEvent.item;
 		item.$.titel.setContent(this.Articles[index]);
 		item.$.preview.setContent(this.ArticleContent[index]);
+		/* Too slow :(
 		if (this.ArticleStarred[index]) {
-			item.$.starredList.setSrc("assets/starred-footer20-on.png");
+			item.$.starredList.setSrc("assets/starred-footer32-on.png");
 		} else {
-			item.$.starredList.setSrc("assets/starred-footer20.png");
-		}		
+			item.$.starredList.setSrc("assets/starred-footer32.png");
+		}
+		*/
 	},
 	clickCategory: function(inSender, inEvent) {
 		this.selectCategory(inEvent.index);
@@ -694,7 +754,7 @@ enyo.kind({
 		} else
 		{
 			this.$.viewPanels.setIndex(2);
-		}
+		}	
 	},
 	openArticle: function(inSender, inEvent){
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
