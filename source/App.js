@@ -61,6 +61,8 @@ enyo.kind({
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height: 30px"}, //height: 54px"},
 					{name: "lblFeedTitle", content: "Feed", style: "font-size: 1.2em; font-weight: bold"}
 				]},
+				
+				/* With "star/unstar" ->  too slow :(
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
@@ -74,6 +76,19 @@ enyo.kind({
 						]}
 					]}
 				]},
+				*/
+				
+				{kind: "Scroller", name: "articleScroller", touch:true, fit:true,  horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
+						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
+								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
+								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
+							]}
+						]}
+					]}
+				]},				
+				
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
@@ -626,11 +641,13 @@ enyo.kind({
 		var item = inEvent.item;
 		item.$.titel.setContent(this.Articles[index]);
 		item.$.preview.setContent(this.ArticleContent[index]);
+		/* Too slow :(
 		if (this.ArticleStarred[index]) {
 			item.$.starredList.setSrc("assets/starred-footer32-on.png");
 		} else {
 			item.$.starredList.setSrc("assets/starred-footer32.png");
-		}		
+		}
+		*/
 	},
 	clickCategory: function(inSender, inEvent) {
 		this.selectCategory(inEvent.index);

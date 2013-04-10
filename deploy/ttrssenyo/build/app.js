@@ -4640,6 +4640,7 @@ kind: "Repeater",
 name: "articleRepeater",
 onSetupItem: "setupArticles",
 fit: !0,
+ontap: "clickItem",
 components: [ {
 name: "item",
 classes: "repeater-sample-item",
@@ -4651,29 +4652,13 @@ fit: !0,
 classes: "fittable-sample-shadow",
 style: "height: auto",
 components: [ {
-kind: "FittableColumns",
-fit: !0,
-classes: "fittable-sample-shadow",
-style: "height: auto",
-components: [ {
-kind: "onyx.IconButton",
-fit: !1,
-name: "starredList",
-src: "assets/starred-footer32.png",
-style: "height: 32px;",
-ontap: "toggleArticleStarredList"
-}, {
 tag: "div",
 name: "titel",
-fit: !0,
-style: "text-align:left;",
-ontap: "clickItem"
-} ]
+style: "width:100%; text-align:left;"
 }, {
 tag: "div",
 name: "preview",
-style: "width:100%; text-align:left; font-weight:normal;",
-ontap: "clickItem"
+style: "width:100%; text-align:left; font-weight:normal;"
 } ]
 } ]
 } ]
@@ -5171,7 +5156,7 @@ n == this.currentFeedIndex ? r.$.titel.applyStyle("color", "#333333") : r.$.tite
 },
 setupArticles: function(e, t) {
 var n = t.index, r = t.item;
-r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]), this.ArticleStarred[n] ? r.$.starredList.setSrc("assets/starred-footer32-on.png") : r.$.starredList.setSrc("assets/starred-footer32.png");
+r.$.titel.setContent(this.Articles[n]), r.$.preview.setContent(this.ArticleContent[n]);
 },
 clickCategory: function(e, t) {
 this.selectCategory(t.index);
