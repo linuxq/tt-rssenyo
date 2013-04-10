@@ -101,7 +101,10 @@ enyo.kind({
 			]},
 			{name: "body", kind: "FittableRows", fit: true, components: [
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
-				{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
+				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", components: [
+					{kind: "enyo.Image", name: "articleTitleIcon", fit: false, src: "", style: "height: 30px; width: 30px"}, //height: 54px"},
+					{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
+				]},
 				{content: "", style: "border: 1px solid silver;"},
 				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
 					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
@@ -517,6 +520,7 @@ enyo.kind({
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
 	},
@@ -750,7 +754,7 @@ enyo.kind({
 		} else
 		{
 			this.$.viewPanels.setIndex(2);
-		}
+		}	
 	},
 	openArticle: function(inSender, inEvent){
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
