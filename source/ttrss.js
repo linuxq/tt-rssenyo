@@ -257,27 +257,34 @@ function ttrssSubscribeToFeed(ttrssurl, ttrssSID, url, categoryID, successCallba
 		sid: ttrssSID
 	};
 	var request = new enyo.Ajax({
-		url: ttrssurl + "/api/",
-		method: "POST",
-		handleAs: "json",
-		postBody: JSON.stringify(data)
+		url: ttrssurl + "/public.php?op=subscribe&feed_url=" + url,
+		method: "GET",
+		//url: ttrssurl + "/api/",
+		//method: "POST",
+		//handleAs: "json",
+		//postBody: JSON.stringify(data)
 	});
 	request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
-	request.go(data);
+	request.go();
+	//request.go(data);
 
 	return;
 };
 
 function ttrssSubscribeToFeedResponse(inEvent, successCallback, errorCallback) {
 	//console.log (successCallback);
-	response = JSON.parse(inEvent.xhrResponse.body);
+	//response = JSON.parse(inEvent.xhrResponse.body);
 	//console.log(response.content.status);
+	successCallback(response.content);
+	/*
+	successCallback(response.content);
 	if (response.status == 0) {
 		successCallback(response.content);
 	} else {
 		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
 		errorCallback(response.content.error);
 	}
+	*/
 };
 
 //**************** UnsubscribeFeed ********************
