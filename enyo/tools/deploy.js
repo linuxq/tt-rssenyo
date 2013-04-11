@@ -184,7 +184,7 @@ process.chdir(sourceDir);
 // Deploy / Copy
 
 shell.mkdir('-p', path.join(outDir, 'lib'));
-shell.cp(path.join(sourceDir, 'index.html'), path.join(sourceDir, 'icon48.png'), path.join(sourceDir, 'appinfo.json'), path.join(sourceDir, 'framework_config.json'), outDir);
+shell.cp(path.join(sourceDir, 'index.html'), path.join(sourceDir, 'icon48.png'), path.join(sourceDir, 'appinfo.json'), path.join(sourceDir, 'framework_config.json'), path.join(sourceDir, 'helper.js'), outDir);
 shell.cp('-r', buildDir, outDir);
 
 var assetsSrcDir = path.join(sourceDir, 'assets');
