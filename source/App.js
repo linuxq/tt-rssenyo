@@ -844,22 +844,59 @@ enyo.kind({
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
-
-		// Backgesture abfangen
+		
+		switch (KeyCode) {
+			case 27:// Backgesture abfangen
+				console.error(" BACK ");
+				var WhichPanel = this.$.viewPanels.getIndex();
+				switch (WhichPanel) {
+					case 3:
+						this.$.viewPanels.setIndex(2);
+						break;
+					case 2:
+						this.$.viewPanels.setIndex(1);
+						break;
+				};
+				inEvent.preventDefault();
+				inEvent.stopPropagation();
+				break;
+			case 37: // Left
+				if (this.$.viewPanels.getIndex(1)) {
+					this.prevArticle();	
+				};			    ;
+				break;
+			case 38: // Up
+				if (this.$.viewPanels.getIndex(1)) {
+					//console.log(this.$.articleViewScroller.getScrollBounds().top);
+					this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  - 60);
+				};			    ;
+				break;						
+			case 39: // Right - next
+				if (this.$.viewPanels.getIndex(1)) {
+					this.nextArticle();	
+				};			    ;
+				break;
+			case 40: // Down
+				if (this.$.viewPanels.getIndex(1)) {
+					//console.log(this.$.articleViewScroller.getScrollBounds().top);
+					this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  + 60);
+					//this.$.articleViewScroller.scrollToBottom(0);
+				};			    ;
+				break;			
+			case 74: // J
+				if (this.$.viewPanels.getIndex(1)) {
+					this.prevArticle();	
+				};			    ;
+				break;
+			case 75: // K - next
+				if (this.$.viewPanels.getIndex(1)) {
+					this.nextArticle();	
+				};			    ;
+				break;			
+		};
+		return ;
 		if (KeyCode == 27) {
-			console.error(" BACK ");
-			var WhichPanel = this.$.viewPanels.getIndex();
-			switch (WhichPanel) {
-				case 3:
-					this.$.viewPanels.setIndex(2);
-					break;
-				case 2:
-					this.$.viewPanels.setIndex(1);
-					break;
-			};
-			inEvent.preventDefault();
-			inEvent.stopPropagation();
-			return tre;
+
 		};
 	},
 	handleKeyUp: function(inSender, inEvent){

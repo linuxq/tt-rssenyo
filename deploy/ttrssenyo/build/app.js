@@ -5263,7 +5263,8 @@ this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex =
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
-if (n == 27) {
+switch (n) {
+case 27:
 console.error(" BACK ");
 var r = this.$.viewPanels.getIndex();
 switch (r) {
@@ -5273,8 +5274,27 @@ break;
 case 2:
 this.$.viewPanels.setIndex(1);
 }
-return t.preventDefault(), t.stopPropagation(), tre;
+t.preventDefault(), t.stopPropagation();
+break;
+case 37:
+this.$.viewPanels.getIndex(1) && this.prevArticle();
+break;
+case 38:
+this.$.viewPanels.getIndex(1) && this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top - 30);
+break;
+case 39:
+this.$.viewPanels.getIndex(1) && this.nextArticle();
+break;
+case 40:
+this.$.viewPanels.getIndex(1) && this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top + 30);
+break;
+case 74:
+this.$.viewPanels.getIndex(1) && this.prevArticle();
+break;
+case 75:
+this.$.viewPanels.getIndex(1) && this.nextArticle();
 }
+return;
 },
 handleKeyUp: function(e, t) {},
 handleKeyPress: function(e, t) {},
@@ -5469,19 +5489,17 @@ feed_url: n,
 category_id: r,
 sid: t
 }, u = new enyo.Ajax({
-url: e + "/api/",
-method: "POST",
-handleAs: "json",
-postBody: JSON.stringify(o)
+url: e + "/public.php?op=subscribe&feed_url=" + n,
+method: "GET"
 });
 u.response(function(e) {
 ttrssSubscribeToFeedResponse(e, i, s);
-}), u.go(o);
+}), u.go();
 return;
 }
 
 function ttrssSubscribeToFeedResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+t(response.content);
 }
 
 function ttrssUnsubscribeFeed(e, t, n, r, i) {
