@@ -29,7 +29,7 @@ enyo.kind({
 										]}
 									]}
 								]}
-							]},					
+							]},
 						]},
 						//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
 						{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
@@ -47,7 +47,7 @@ enyo.kind({
 							]},
 						]},
 						{name: "left2blank", fit: true}
-					]}	
+					]}
 				]},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
@@ -61,7 +61,7 @@ enyo.kind({
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height: 30px"}, //height: 54px"},
 					{name: "lblFeedTitle", content: "Feed", style: "font-size: 1.2em; font-weight: bold"}
 				]},
-				
+
 				/* With "star/unstar" ->  too slow :(
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, components: [
@@ -77,7 +77,7 @@ enyo.kind({
 					]}
 				]},
 				*/
-				
+
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true,  horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
@@ -87,8 +87,8 @@ enyo.kind({
 							]}
 						]}
 					]}
-				]},				
-				
+				]},
+
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
@@ -208,7 +208,8 @@ enyo.kind({
 	currentFeedID: "",
 	currentFeed: "",
 	Articles: [],
-	ArticleContent: [],
+	//ArticleContent: [],
+	ArticleData: [],
 	ArticleID: [],
 	ArticleURL: [],
 	ArticleStarred: [],
@@ -218,11 +219,11 @@ enyo.kind({
 	ttrssIconPath: null,
 	ttrss_SID: "",
 	ttrssAutoMarkRead: "2000",
-	
+
 	//Settings
 	alternativeView: false,
 	AutoLoadFirstFeed: false,
-	
+
 	// Merkvariablen
 	dragStartPanelIndex: null,
 	rendered: function(inSender, inEvent) {
@@ -292,7 +293,7 @@ enyo.kind({
 		this.ttrssUser = this.$.serverUser.getValue();
 		this.ttrssPassword = this.$.serverPassword.getValue();
 		this.alternativeView = this.$.alternativeView.getValue();
-		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();		
+		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
@@ -313,24 +314,24 @@ enyo.kind({
 			this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
 			break;
 		case '2000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T2s);			
+			this.$.pickMarkReadTimeout.setSelected(this.$.T2s);
 			break;
 		case '3000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T3s);			
-			break;			
+			this.$.pickMarkReadTimeout.setSelected(this.$.T3s);
+			break;
 		case '5000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T5s);			
+			this.$.pickMarkReadTimeout.setSelected(this.$.T5s);
 			break;
 		case '0':
-			this.$.pickMarkReadTimeout.setSelected(this.$.Toff);			
-			break;				
-		};		
+			this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
+			break;
+		};
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
 	},
 	changeMarkReadTimeout: function(inSender, inEvent){
-		this.ttrssAutoMarkRead = inEvent.selected.value;		
+		this.ttrssAutoMarkRead = inEvent.selected.value;
 	},
 	processLoginSuccess: function(LoginResponse) {
 		console.error("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
@@ -379,23 +380,23 @@ enyo.kind({
 				undefinedCategory = i; //All feeds of undefined category
 			};
 		};
-		this.$.categoryRepeater.setCount(this.CategoryTitle.length);		
+		this.$.categoryRepeater.setCount(this.CategoryTitle.length);
 		if (this.CategoryTitle.length > 0) {
 			if (userCategories) {
 				//open first user defined category
-				this.selectCategory(0);	
+				this.selectCategory(0);
 			} else
 			{
 				//open "undefined" category = all feeds if no categories defined
 				this.$.categoryHeader.toggleOpen(false);
-				this.selectCategory(undefinedCategory);					
+				this.selectCategory(undefinedCategory);
 			}
 		}
-		
-		//open "undefined" category 
+
+		//open "undefined" category
 		if ((this.CategoryTitle.length > 0) && (userCategories)) {
 			this.selectCategory(0);
-		}		
+		}
 		//console.log(inEvent);
 	},
 	processGetCategoriesError: function(inEvent){
@@ -424,13 +425,13 @@ enyo.kind({
 			this.FeedUnread[i + 1] = inEvent[i].unread;
 			this.FeedID[i + 1] = inEvent[i].id;
 			this.FeedIcon[i + 1] = inEvent[i].has_icon;
-			totalUnread = totalUnread + inEvent[i].unread; 
+			totalUnread = totalUnread + inEvent[i].unread;
 		};
 		this.FeedUnread[0] = totalUnread;
-		
+
 		this.$.feedRepeater.setCount(this.FeedTitle.length);
 		if (this.AutoLoadFirstFeed) {
-			this.selectFeed(0);	
+			this.selectFeed(0);
 		}
 		//console.log(inEvent);
 	},
@@ -452,7 +453,8 @@ enyo.kind({
 	},
 	processGetHeadlinesSuccess: function(inEvent){
 		this.Articles.length = 0; //Artikelliste leeren
-		this.ArticleContent.length = 0;
+		//this.ArticleContent.length = 0;
+		this.ArticleData.length = 0;
 		this.ArticleID.length = 0;
 		this.ArticleURL.length = 0;
 		for (var i=0; i<inEvent.length; i++) {
@@ -461,11 +463,12 @@ enyo.kind({
 			this.ArticleID[i] = inEvent[i].id;
 			//console.log(inEvent[i].marked);
 			this.ArticleURL[i] = inEvent[i].link;
-			this.ArticleStarred[i] = inEvent[i].marked; 
+			this.ArticleStarred[i] = inEvent[i].marked;
 			if (this.alternativeView) {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
 					enyo.bind(this, function(i, inEvent) {
-						this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
+						//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
+						this.ArticleData[i] = inEvent;
 						this.$.articleRepeater.renderRow(i);
 					}, i),
 					enyo.bind(this, function() {}));
@@ -526,10 +529,26 @@ enyo.kind({
 		//console.log(inEvent);
 		this.resize();
 	},
-	processGetFullArticleSuccess: function(inContent){
+	processGetFullArticleSuccess: function(inContent) {
+		var inEvent = this.ArticleData[this.RecentArticleIndex];
+		//console.log(inEvent);
+		var TextHelp = "";
+		//TextHelp = inEvent[0].title + "<br><br>" + inEvent[0].content;
+		var timestamp = inEvent[0].updated;
+		var pubDate = new Date(timestamp * 1000);
+		var weekday = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+		var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+		var formattedDate = weekday[pubDate.getDay()] + ' '
+				    + monthname[pubDate.getMonth()] + ' '
+				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
+		//var pubDate = new Date(timestamp);
+		//console.log(pubDate);
+		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
+		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
 		this.$.articleView.setContent(inContent);
 		this.$.articleViewScroller.setScrollTop(0);
 		this.$.articleViewScroller.setScrollLeft(0);
+
 		//Checkbox ReadStatus setzen
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
@@ -537,13 +556,21 @@ enyo.kind({
 			if (this.ttrssAutoMarkRead != '0') {
 				this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead);
 			};
-		}
-		else
-		{
+		} else {
 			this.$.chkArticleRead.setChecked(true);
+		}
+
+		//Favorite-Stern setzen
+		if(inEvent[0].marked) {
+			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+		} else {
+			this.$.iconStarred.setSrc("assets/starred-footer.png");
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
+		//console.log(inEvent);
+		this.resize();
 	},
 	processGetArticleError: function(inEvent){
 		console.log(inEvent);
@@ -598,17 +625,17 @@ enyo.kind({
 		} else
 		{
 			//STARREN
-			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));			
+			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
 			this.ArticleStarred[inEvent.index] = true;
 			inSender.setSrc("assets/starred-footer32-on.png");
-		}		
+		}
 	},
 	processMarkArticleStarredSuccess: function(inEvent){
 		//console.log(inEvent);
 	},
 	processMarkArticleStarredError: function(inEvent){
 		//console.log(inEvent);
-	},	
+	},
 	setupCategories: function(inSender, inEvent) {
 		//console.log(inEvent.item);
 		var index = inEvent.index;
@@ -646,7 +673,10 @@ enyo.kind({
 		var index = inEvent.index;
 		var item = inEvent.item;
 		item.$.titel.setContent(this.Articles[index]);
-		item.$.preview.setContent(this.ArticleContent[index]);
+		if (this.ArticleData.length > index) {
+			var data = this.ArticleData[index];
+			item.$.preview.setContent(stripHTML(html_entity_decode(data[0].content)));
+		}
 		/* Too slow :(
 		if (this.ArticleStarred[index]) {
 			item.$.starredList.setSrc("assets/starred-footer32-on.png");
@@ -756,13 +786,13 @@ enyo.kind({
 		} else
 		{
 			this.$.viewPanels.setIndex(2);
-		}	
+		}
 	},
 	openArticle: function(inSender, inEvent){
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
 		//if (this.ttrssURL == "..") {
 		//	FullArticelURL = "proxy.php?proxy_url=" + FullArticelURL;
-		//}		
+		//}
 		window.open(FullArticelURL);
 	},
 	showFullArticle: function(inSender, inEvent) {
@@ -780,7 +810,7 @@ enyo.kind({
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			} else {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
-			}			
+			}
 		};
 		//console.log(RecentArticleIndex);
 	},
@@ -798,7 +828,7 @@ enyo.kind({
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
-	
+
 		// Backgesture abfangen
 		if (KeyCode == 27) {
 			console.error(" BACK ");
@@ -809,7 +839,7 @@ enyo.kind({
 					break;
 				case 2:
 					this.$.viewPanels.setIndex(1);
-					break;		
+					break;
 			};
 			inEvent.preventDefault();
 			inEvent.stopPropagation();
@@ -821,21 +851,21 @@ enyo.kind({
 	},
 	handleKeyPress: function(inSender, inEvent){
 		//console.error("Key Press: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
-	},	
+	},
 	goBack: function(inSender, inEvent){
 		console.error(" BACK ");
 	},
 	titleDragStart: function(inSender, inEvent){
 		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
-		this.dragStartPanelIndex = this.$.viewPanels.getIndex();		
-	},	
+		this.dragStartPanelIndex = this.$.viewPanels.getIndex();
+	},
 	titleDragFinish: function(inSender, inEvent){
 		  if (+inEvent.dx < -80) {
 			if (this.dragStartPanelIndex == 3) {
 				//console.log("NEXT");
 				if (this.$.viewPanels.getIndex() == 3) {
-					//Only if Article Panel is shown alone! To prevent switching with dragging panel!	
-					this.nextArticle();	
+					//Only if Article Panel is shown alone! To prevent switching with dragging panel!
+					this.nextArticle();
 				}
 			}
 		  };
@@ -843,6 +873,6 @@ enyo.kind({
 				//console.log("PREV");
 				//this.prevArticle();
 				//this.$.viewPanels.setIndex(3);
-		  }						
-	}		
+		  }
+	}
 });
