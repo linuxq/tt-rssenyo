@@ -5280,13 +5280,25 @@ case 37:
 this.$.viewPanels.getIndex(1) && this.prevArticle();
 break;
 case 38:
-this.$.viewPanels.getIndex(1) && this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top - 30);
+switch (this.$.viewPanels.getIndex()) {
+case 2:
+this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top - 100);
+break;
+case 3:
+this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top - 100);
+}
 break;
 case 39:
 this.$.viewPanels.getIndex(1) && this.nextArticle();
 break;
 case 40:
-this.$.viewPanels.getIndex(1) && this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top + 30);
+switch (this.$.viewPanels.getIndex()) {
+case 2:
+this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top + 100);
+break;
+case 3:
+this.$.articleViewScroller.scrollTo(0, this.$.articleViewScroller.getScrollBounds().top + 100);
+}
 break;
 case 74:
 this.$.viewPanels.getIndex(1) && this.prevArticle();

@@ -866,10 +866,15 @@ enyo.kind({
 				};			    ;
 				break;
 			case 38: // Up
-				if (this.$.viewPanels.getIndex(1)) {
-					//console.log(this.$.articleViewScroller.getScrollBounds().top);
-					this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  - 60);
-				};			    ;
+				switch (this.$.viewPanels.getIndex()) {
+					case 2:
+						//this.$.articleScroller.scrollTo(0, (this.$.articleScroller.getScrollBounds().top)  - 100);
+						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  - 100);
+						break;
+					case 3:
+						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  - 100);
+						break;
+				};		    ;
 				break;						
 			case 39: // Right - next
 				if (this.$.viewPanels.getIndex(1)) {
@@ -877,11 +882,15 @@ enyo.kind({
 				};			    ;
 				break;
 			case 40: // Down
-				if (this.$.viewPanels.getIndex(1)) {
-					//console.log(this.$.articleViewScroller.getScrollBounds().top);
-					this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  + 60);
-					//this.$.articleViewScroller.scrollToBottom(0);
-				};			    ;
+				switch (this.$.viewPanels.getIndex()) {
+					case 2:
+						//this.$.articleScroller.scrollTo(0, (this.$.articleScroller.getScrollBounds().top)  + 100);
+						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  + 100);
+						break;
+					case 3:
+						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  + 100);
+						break;
+				};					
 				break;			
 			case 74: // J
 				if (this.$.viewPanels.getIndex(1)) {
