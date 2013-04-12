@@ -1,5 +1,5 @@
 MarkReadTimer = "";
-
+gblUseJsonpRequest = false;
 
 enyo.kind({
 	name: "App",
@@ -167,7 +167,7 @@ enyo.kind({
 					]}
 				]}
 			]},
-			//{kind: "onyx.Checkbox", name: "alternativeView", content: "Alternative View (beta)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+			{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "FittableColumns", style: "height: auto", components: [
 				{kind: "onyx.PickerDecorator", components: [
@@ -252,6 +252,7 @@ enyo.kind({
 		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
 		this.ViewMode = localStorage.getItem("ViewMode");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
+		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
 		if (this.ViewMode == "1") {
 			this.$.body.setShowing(false);
 		}
@@ -306,11 +307,13 @@ enyo.kind({
 		this.ttrssPassword = this.$.serverPassword.getValue();
 		this.ViewMode = this.$.pickViewMode.getSelected().value;
 		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
+		gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
 		localStorage.setItem("ViewMode", this.ViewMode);
 		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
+		localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		this.$.LoginPopup.hide();
