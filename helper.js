@@ -69,10 +69,20 @@ window.onload = function () {
 	if (navigator.userAgent.indexOf("Android") > -1) {
 		gblAndroid = true;
 	}
-	if ((navigator.userAgent.indexOf("Linux") > -1) && (navigator.userAgent.indexOf("Chrome") > -1)) {
-		gblDesktop = true;
-		// call onDeviceReady on windows desktop (chrome)
-		onDeviceReady();
+	if (navigator.userAgent.indexOf("Chrome") > -1) {
+		if (navigator.userAgent.indexOf("Linux") > -1) {
+			gblDesktop = true;
+			// call onDeviceReady on windows desktop (chrome)
+			onDeviceReady();
+		} else if (navigator.userAgent.indexOf("Windows") > -1) {
+			gblDesktop = true;
+			// call onDeviceReady on windows desktop (chrome)
+			onDeviceReady();
+		} else if (navigator.userAgent.indexOf("Macintosh") > -1) {
+			gblDesktop = true;
+			// call onDeviceReady on windows desktop (chrome)
+			onDeviceReady();
+		}
 	}
 	if (navigator.userAgent.indexOf("Firefox") > -1) {
 		if (navigator.userAgent.indexOf("Windows") > -1) {

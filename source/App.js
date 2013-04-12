@@ -145,7 +145,7 @@ enyo.kind({
 			{kind: "onyx.Input", name: "articleID", style: "width: 50px", placeholder: "ID", onchange: "getArticle"}
 
 		]},
-		{name: "LoginPopup", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
+		{name: "LoginPopup", style: "width:320px;", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
 			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
 				{kind: "onyx.InputDecorator", components: [
 					{kind: "onyx.Input", placeholder: "Server (with http:// or https://)", name: "serverAddress", value: "..", style: "width:100%;"}
@@ -157,7 +157,17 @@ enyo.kind({
 					{kind: "onyx.Input", type:"password", name: "serverPassword", placeholder: "Enter password", value: "", style: "width:100%;"}
 				]}
 			]},
-			{kind: "onyx.Checkbox", name: "alternativeView", content: "Alternative View (beta)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+			{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
+				{kind: "onyx.PickerDecorator", style: "width:100%;", components: [
+					{style: "width:100%;", classes: "onyx-blue"}, // A content-less PickerButton
+					{kind: "onyx.Picker", name: "pickViewMode", onSelect: "changeViewMode", components: [
+						{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
+						{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
+						{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
+					]}
+				]}
+			]},
+			//{kind: "onyx.Checkbox", name: "alternativeView", content: "Alternative View (beta)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "FittableColumns", style: "height: auto", components: [
 				{kind: "onyx.PickerDecorator", components: [
@@ -223,7 +233,7 @@ enyo.kind({
 	ttrssAutoMarkRead: "2000",
 
 	//Settings
-	alternativeView: false,
+	ViewMode: "0",
 	AutoLoadFirstFeed: false,
 
 	// Merkvariablen
@@ -240,7 +250,7 @@ enyo.kind({
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
 		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
-		this.alternativeView = (localStorage.getItem("alternativeView") == "true");
+		this.ViewMode = localStorage.getItem("ViewMode");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
 		if (this.ttrssURL == null)
 		{
@@ -294,12 +304,12 @@ enyo.kind({
 		this.ttrssURL = this.$.serverAddress.getValue();
 		this.ttrssUser = this.$.serverUser.getValue();
 		this.ttrssPassword = this.$.serverPassword.getValue();
-		this.alternativeView = this.$.alternativeView.getValue();
+		this.ViewMode = this.$.pickViewMode.getSelected().value;
 		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
-		localStorage.setItem("alternativeView", this.alternativeView);
+		localStorage.setItem("ViewMode", this.ViewMode);
 		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
@@ -309,28 +319,42 @@ enyo.kind({
 		this.$.serverAddress.setValue(this.ttrssURL);
 		this.$.serverUser.setValue(this.ttrssUser);
 		this.$.serverPassword.setValue(this.ttrssPassword);
-		this.$.alternativeView.setValue(this.alternativeView)
+		switch (this.ViewMode) {
+			case '0':
+				this.$.pickViewMode.setSelected(this.$.VM0);
+				break;
+			case '1':
+				this.$.pickViewMode.setSelected(this.$.VM1);
+				break;
+			case '2':
+				this.$.pickViewMode.setSelected(this.$.VM2);
+				break;
+		}
 		this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
 		switch (this.ttrssAutoMarkRead) {
-		case '1000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
-			break;
-		case '2000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T2s);
-			break;
-		case '3000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T3s);
-			break;
-		case '5000':
-			this.$.pickMarkReadTimeout.setSelected(this.$.T5s);
-			break;
-		case '0':
-			this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
-			break;
+			case '1000':
+				this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
+				break;
+			case '2000':
+				this.$.pickMarkReadTimeout.setSelected(this.$.T2s);
+				break;
+			case '3000':
+				this.$.pickMarkReadTimeout.setSelected(this.$.T3s);
+				break;
+			case '5000':
+				this.$.pickMarkReadTimeout.setSelected(this.$.T5s);
+				break;
+			case '0':
+				this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
+				break;
 		};
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
+	},
+	changeViewMode: function(inSender, inEvent){
+		this.ViewMode = inEvent.selected.value;
+		this.selectFeed(this.currentFeedIndex);
 	},
 	changeMarkReadTimeout: function(inSender, inEvent){
 		this.ttrssAutoMarkRead = inEvent.selected.value;
@@ -469,7 +493,7 @@ enyo.kind({
 			this.ArticleURL[i] = inEvent[i].link;
 			this.ArticleUnread[i] = inEvent[i].unread;
 			this.ArticleStarred[i] = inEvent[i].marked;
-			if (this.alternativeView) {
+			if ((this.ViewMode == "1") || (this.ViewMode == "2")) {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
 					enyo.bind(this, function(i, inEvent) {
 						//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
@@ -792,15 +816,21 @@ enyo.kind({
 	clickItem: function(inSender, inEvent){
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		this.RecentArticleIndex = inEvent.index;
-		if (this.alternativeView) {
+		if (this.ViewMode == "1") {
+			// no content preview
+			var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
+			window.open(FullArticelURL);
+			return;
+		} else if (this.ViewMode == "2") {
+			// content preview
 			ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		} else {
+			// classic feed title / feed content structure
 			ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		}
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(3);
-		} else
-		{
+		} else {
 			this.$.viewPanels.setIndex(2);
 		}
 	},
@@ -822,7 +852,7 @@ enyo.kind({
 	prevArticle: function(inSender, inEvent){
 		if (this.RecentArticleIndex >= 1){
 			this.RecentArticleIndex = this.RecentArticleIndex - 1;
-			if (this.alternativeView) {
+			if (this.ViewMode != "0") {
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			} else {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
@@ -834,7 +864,7 @@ enyo.kind({
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
 			this.RecentArticleIndex = this.RecentArticleIndex + 1;
 			//console.log(RecentArticleIndex);
-			if (this.alternativeView) {
+			if (this.ViewMode != "0") {
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			} else {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
@@ -844,7 +874,7 @@ enyo.kind({
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
-		
+
 		switch (KeyCode) {
 			case 27:// Backgesture abfangen
 				console.error(" BACK ");
@@ -862,7 +892,7 @@ enyo.kind({
 				break;
 			case 37: // Left
 				if (this.$.viewPanels.getIndex(1)) {
-					this.prevArticle();	
+					this.prevArticle();
 				};			    ;
 				break;
 			case 38: // Up
@@ -875,10 +905,10 @@ enyo.kind({
 						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  - 100);
 						break;
 				};		    ;
-				break;						
+				break;
 			case 39: // Right - next
 				if (this.$.viewPanels.getIndex(1)) {
-					this.nextArticle();	
+					this.nextArticle();
 				};			    ;
 				break;
 			case 40: // Down
@@ -890,18 +920,18 @@ enyo.kind({
 					case 3:
 						this.$.articleViewScroller.scrollTo(0, (this.$.articleViewScroller.getScrollBounds().top)  + 100);
 						break;
-				};					
-				break;			
+				};
+				break;
 			case 74: // J
 				if (this.$.viewPanels.getIndex(1)) {
-					this.prevArticle();	
+					this.prevArticle();
 				};			    ;
 				break;
 			case 75: // K - next
 				if (this.$.viewPanels.getIndex(1)) {
-					this.nextArticle();	
+					this.nextArticle();
 				};			    ;
-				break;			
+				break;
 		};
 		return ;
 		if (KeyCode == 27) {
