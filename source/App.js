@@ -252,12 +252,12 @@ enyo.kind({
 		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
 		this.ViewMode = localStorage.getItem("ViewMode");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
-		if (this.ttrssURL == null)
-		{
-			this.$.LoginPopup.show();
+		if (this.ViewMode == "1") {
+			this.$.body.setShowing(false);
 		}
-		else
-		{
+		if (this.ttrssURL == null) {
+			this.$.LoginPopup.show();
+		} else {
 			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 			var getUnreadOnly = this.$.toggleUnread.getValue();
 			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
@@ -355,6 +355,11 @@ enyo.kind({
 	changeViewMode: function(inSender, inEvent){
 		this.ViewMode = inEvent.selected.value;
 		this.selectFeed(this.currentFeedIndex);
+		if (this.ViewMode == "1") {
+			this.$.body.setShowing(false);
+		} else {
+			this.$.body.setShowing(true);
+		}
 	},
 	changeMarkReadTimeout: function(inSender, inEvent){
 		this.ttrssAutoMarkRead = inEvent.selected.value;
