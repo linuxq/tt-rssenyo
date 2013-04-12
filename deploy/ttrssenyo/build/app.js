@@ -4452,7 +4452,7 @@ this.setShowing(!1);
 
 // App.js
 
-MarkReadTimer = "", enyo.kind({
+MarkReadTimer = "", gblUseJsonpRequest = !1, enyo.kind({
 name: "App",
 kind: "FittableRows",
 fit: !0,
@@ -4479,6 +4479,7 @@ allowHtml: !0
 }, {
 name: "left2",
 kind: "FittableRows",
+classes: ".panels-theme-light",
 style: "width: 260px",
 components: [ {
 kind: "onyx.Toolbar",
@@ -4525,7 +4526,7 @@ ontap: "clickCategory",
 components: [ {
 name: "categorylist",
 classes: "repeater-sample-item",
-style: "border: 1px solid silver; padding: 5px; font-weight: bold;",
+style: "padding: 5px;nowr font-weight: bold;",
 components: [ {
 kind: "FittableColumns",
 name: "Data1",
@@ -4535,7 +4536,13 @@ style: "height: auto",
 components: [ {
 tag: "span",
 name: "titel",
-style: "width: 100%; text-align: left; margin-left: 5px;"
+fit: !0,
+style: "white-space:nowrap; text-align: left; margin-left: 5px;"
+}, {
+tag: "span",
+name: "unread",
+fit: !1,
+style: "width: 50px; text-align: right;  margin-left: 2px"
 } ]
 } ]
 } ]
@@ -4550,7 +4557,7 @@ onChange: "resize",
 components: [ {
 kind: "Scroller",
 touch: !0,
-fit: !0,
+fit: !1,
 horizontal: "hidden",
 classes: "scroller-sample-scroller",
 components: [ {
@@ -4562,7 +4569,7 @@ ontap: "clickFeed",
 components: [ {
 name: "feedlist",
 classes: "repeater-sample-item",
-style: "border: 1px solid silver; padding: 5px; font-weight: bold;",
+style: "padding: 5px; font-weight: bold;",
 components: [ {
 kind: "FittableColumns",
 name: "Data1",
@@ -4577,14 +4584,14 @@ src: "assets/blankfeedicon.ico",
 style: "height: 25px"
 }, {
 tag: "span",
+name: "titel",
+fit: !0,
+style: "white-space:nowrap; text-align: left; margin-left: 8px;"
+}, {
+tag: "span",
 name: "unread",
 fit: !1,
 style: "width: 50px; text-align: right;  margin-left: 2px"
-}, {
-tag: "span",
-name: "titel",
-fit: !0,
-style: "text-align: left; margin-left: 8px;"
 } ]
 } ]
 } ]
@@ -4906,6 +4913,11 @@ name: "VM2"
 } ]
 }, {
 kind: "onyx.Checkbox",
+name: "useJsonpRequest",
+content: "Use JsonpRequest",
+style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
+}, {
+kind: "onyx.Checkbox",
 name: "autoLoadFirstFeed",
 content: "Autoload 1st feed",
 style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
@@ -5065,7 +5077,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.ViewMode == "1" && this.$.body.setShowing(!1);
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.ViewMode == "1" && this.$.body.setShowing(!1);
 if (this.ttrssURL == null) this.$.LoginPopup.show(); else {
 ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 var n = this.$.toggleUnread.getValue();
@@ -5080,7 +5092,7 @@ LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
 },
 LoginTap: function(e, t) {
 this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
@@ -5210,7 +5222,7 @@ processMarkArticleStarredSuccess: function(e) {},
 processMarkArticleStarredError: function(e) {},
 setupCategories: function(e, t) {
 var n = t.index, r = t.item;
-typeof r != "undefined" && (n == this.currentCategoryIndex ? r.$.titel.applyStyle("font-weight", "bold") : r.$.titel.applyStyle("font-weight", "normal"), r.$.titel.setContent(this.CategoryTitle[n] + " (" + this.CategoryUnread[n] + ")")), this.resize();
+typeof r != "undefined" && (n == this.currentCategoryIndex ? r.$.titel.applyStyle("font-weight", "bold") : r.$.titel.applyStyle("font-weight", "normal"), r.$.titel.setContent(this.CategoryTitle[n]), r.$.unread.setContent(this.CategoryUnread[n])), this.resize();
 },
 setupFeeds: function(e, t) {
 var n = t.index, r = t.item;
@@ -5376,15 +5388,26 @@ var s = {
 op: "login",
 user: t,
 password: n
-}, o = new enyo.Ajax({
-url: e + "/api/",
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssLoginResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
+url: e + "/api/index.php",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssLoginResponse(e, r, i);
-}), o.go(s);
+ttrssLoginResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
@@ -5394,7 +5417,7 @@ status: "99",
 sessionid: "99",
 error: "99"
 };
-response = JSON.parse(e.xhrResponse.body), r.status = response.status, r.status == 0 ? (r.sessionid = response.content.session_id, ttsessionID = response.content.session_id, t(r)) : (r.error = response.content.error, n(r));
+r.status = e.status, r.status == 0 ? (r.sessionid = e.content.session_id, ttsessionID = e.content.session_id, t(r)) : (r.error = e.content.error, n(r));
 }
 
 function ttrssGetCategories(e, t, n, r, i) {
@@ -5403,20 +5426,31 @@ op: "getCategories",
 unread_only: n,
 enable_nested: !1,
 sid: t
-}, o = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssGetCategoriesResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssGetCategoriesResponse(e, r, i);
-}), o.go(s);
+ttrssGetCategoriesResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
 function ttrssGetCategoriesResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssGetFeeds(e, t, n, r, i, s) {
@@ -5426,20 +5460,31 @@ cat_id: r,
 unread_only: n,
 enable_nested: !0,
 sid: t
-}, u = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var u = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+u.response(function(e, t) {
+ttrssGetFeedsResponse(t, i, s);
+});
+} else {
+var u = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(o)
 });
 u.response(function(e) {
-ttrssGetFeedsResponse(e, i, s);
-}), u.go(o);
+ttrssGetFeedsResponse(JSON.parse(e.xhrResponse.body), i, s);
+});
+}
+u.go(o);
 return;
 }
 
 function ttrssGetFeedsResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssGetHeadlines(e, t, n, r, i, s, o) {
@@ -5455,20 +5500,31 @@ show_excerpt: !0,
 show_content: !0,
 enable_nested: !0,
 sid: t
-}, f = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var f = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+f.response(function(e, t) {
+ttrssGetHeadlinesResponse(t, s, o);
+});
+} else {
+var f = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(a)
 });
 f.response(function(e) {
-ttrssGetHeadlinesResponse(e, s, o);
-}), f.go(a);
+ttrssGetHeadlinesResponse(JSON.parse(e.xhrResponse.body), s, o);
+});
+}
+f.go(a);
 return;
 }
 
 function ttrssGetHeadlinesResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssGetArticle(e, t, n, r, i) {
@@ -5476,20 +5532,31 @@ var s = {
 op: "getArticle",
 article_id: n,
 sid: t
-}, o = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssGetHeadlinesResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssGetHeadlinesResponse(e, r, i);
-}), o.go(s);
+ttrssGetHeadlinesResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
 function ttrssGetArticleResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssMarkArticleRead(e, t, n, r, i, s) {
@@ -5501,20 +5568,31 @@ article_ids: n,
 mode: o,
 field: 2,
 sid: t
-}, a = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var a = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+a.response(function(e, t) {
+ttrssMarkArticleReadResponse(t, i, s);
+});
+} else {
+var a = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(u)
 });
 a.response(function(e) {
-ttrssMarkArticleReadResponse(e, i, s);
-}), a.go(u);
+ttrssMarkArticleReadResponse(JSON.parse(e.xhrResponse.body), i, s);
+});
+}
+a.go(u);
 return;
 }
 
 function ttrssMarkArticleReadResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssMarkArticleStarred(e, t, n, r, i, s) {
@@ -5526,20 +5604,31 @@ article_ids: n,
 mode: r,
 field: 0,
 sid: t
-}, a = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var a = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+a.response(function(e, t) {
+ttrssMarkArticleStarredResponse(t, i, s);
+});
+} else {
+var a = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(u)
 });
 a.response(function(e) {
-ttrssMarkArticleStarredResponse(e, i, s);
-}), a.go(u);
+ttrssMarkArticleStarredResponse(JSON.parse(e.xhrResponse.body), i, s);
+});
+}
+a.go(u);
 return;
 }
 
 function ttrssMarkArticleStarredResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssSubscribeToFeed(e, t, n, r, i, s) {
@@ -5559,7 +5648,7 @@ return;
 }
 
 function ttrssSubscribeToFeedResponse(e, t, n) {
-t(response.content);
+t(e);
 }
 
 function ttrssUnsubscribeFeed(e, t, n, r, i) {
@@ -5567,20 +5656,31 @@ var s = {
 op: "unsubscribeFeed",
 feed_id: n,
 sid: t
-}, o = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssUnsubscribeFeedResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssUnsubscribeFeedResponse(e, r, i);
-}), o.go(s);
+ttrssUnsubscribeFeedResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
 function ttrssUnsubscribeFeedResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssGetFullArticle(e, t, n) {
@@ -5597,20 +5697,31 @@ function ttrssGetConfig(e, t, n, r) {
 var i = {
 op: "getConfig",
 sid: t
-}, s = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var s = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+s.response(function(e, t) {
+ttrssGetConfigResponse(t, n, r);
+});
+} else {
+var s = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(i)
 });
 s.response(function(e) {
-ttrssGetConfigResponse(e, n, r);
-}), s.go(i);
+ttrssGetConfigResponse(JSON.parse(e.xhrResponse.body), n, r);
+});
+}
+s.go(i);
 return;
 }
 
 function ttrssGetConfigResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssCatchupFeed(e, t, n, r, i) {
@@ -5619,20 +5730,31 @@ op: "catchupFeed",
 feed_id: n,
 is_cat: !1,
 sid: t
-}, o = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssCatchupFeedResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssCatchupFeedResponse(e, r, i);
-}), o.go(s);
+ttrssCatchupFeedResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
 function ttrssCatchupFeedResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssUpdateFeed(e, t, n, r, i) {
@@ -5640,20 +5762,31 @@ var s = {
 op: "updateFeed",
 feed_id: n,
 sid: t
-}, o = new enyo.Ajax({
+};
+if (gblUseJsonpRequest) {
+var o = new enyo.JsonpRequest({
+url: e + "/api/index.php"
+});
+o.response(function(e, t) {
+ttrssUpdateFeedResponse(t, r, i);
+});
+} else {
+var o = new enyo.Ajax({
 url: e + "/api/",
 method: "POST",
 handleAs: "json",
 postBody: JSON.stringify(s)
 });
 o.response(function(e) {
-ttrssUpdateFeedResponse(e, r, i);
-}), o.go(s);
+ttrssUpdateFeedResponse(JSON.parse(e.xhrResponse.body), r, i);
+});
+}
+o.go(s);
 return;
 }
 
 function ttrssUpdateFeedResponse(e, t, n) {
-response = JSON.parse(e.xhrResponse.body), console.log(response), response.status == 0 ? t(response.content) : n(response.content.error);
+e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 // tools.js

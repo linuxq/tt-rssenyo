@@ -12,7 +12,7 @@ enyo.kind({
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "left2", kind: "FittableRows", style: "width: 260px", components: [
+			{name: "left2", kind: "FittableRows", classes: ".panels-theme-light", style: "width: 260px", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"},
 					{fit: true},
@@ -23,9 +23,11 @@ enyo.kind({
 						{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
 							{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 								{kind: "Repeater", name: "categoryRepeater", onSetupItem:"setupCategories", fit: true, ontap: "clickCategory", components: [
-									{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+									//{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px;nowr font-weight: bold;", components: [
+									{name: "categorylist", classes:"repeater-sample-item", style: "padding: 5px;nowr font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{tag: "span", name: "titel", style: "width: 100%; text-align: left; margin-left: 5px;"}
+												{tag: "span", name: "titel", fit:true, style: "white-space:nowrap; text-align: left; margin-left: 5px;"},
+												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
 										]}
 									]}
 								]}
@@ -34,13 +36,14 @@ enyo.kind({
 						//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
 						{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
 						//{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-							{kind: "Scroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+							{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 								{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
-									{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+									//{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px"},
-												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px"},
-												{tag: "span", name: "titel", fit: true, style: "text-align: left; margin-left: 8px;"}
+												{tag: "span", name: "titel", fit: true, style: "white-space:nowrap; text-align: left; margin-left: 8px;"},
+												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
 										]}
 									]}
 								]}
@@ -688,7 +691,8 @@ enyo.kind({
 				//categorylist.$.titel.applyStyle("color", "#999999");
 				categorylist.$.titel.applyStyle("font-weight", "normal");
 			}
-			categorylist.$.titel.setContent(this.CategoryTitle[index] + " (" + this.CategoryUnread[index] + ")");
+			categorylist.$.titel.setContent(this.CategoryTitle[index]);
+			categorylist.$.unread.setContent(this.CategoryUnread[index]);
 		}
 		this.resize();
 		////////item.$.dauer.setContent(PCastsDuration[index]);

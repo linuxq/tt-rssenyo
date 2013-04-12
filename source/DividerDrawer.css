@@ -15,7 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 .gts-DividerDrawer .base-bar {
         cursor: pointer;
-	background: #000000;
+	background: #333333;
 }
 
 .gts-DividerDrawer .base-bar > * {
@@ -38,7 +38,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         font-size: 1.2em;
 
         color: #ffffff;
-	background: #000000;
+	/*background: #000000;*/
 }
 
 .gts-DividerDrawer .base-bar .bar {

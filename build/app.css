@@ -1459,7 +1459,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 .gts-DividerDrawer .base-bar {
         cursor: pointer;
-	background: #000000;
+	background: #333333;
 }
 
 .gts-DividerDrawer .base-bar > * {
@@ -1482,7 +1482,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
         font-size: 1.2em;
 
         color: #ffffff;
-	background: #000000;
+	/*background: #000000;*/
 }
 
 .gts-DividerDrawer .base-bar .bar {
@@ -1516,6 +1516,6 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 /* Light theme*/
 
 .panels-theme-light {
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(180,180,180,1)));
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(140,140,140,1)));
 }
 
