@@ -1510,3 +1510,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 .gts-DividerDrawer .base-bar .toggle.checked {
         background-position: 0px -32px;
 }
+
+/* source/themes.css */
+
+/* Light theme*/
+
+.panels-theme-light {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(180,180,180,1)));
+}
+
