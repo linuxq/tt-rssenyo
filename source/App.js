@@ -18,7 +18,7 @@ enyo.kind({
 					{fit: true},
 					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
-				{name: "left3", kind: "FittableRows", fit: true, components: [
+				{name: "left3", kind: "FittableRows", fit: true, classes: "panels-theme-light", components: [
 					{kind: "Scroller", touch:true, fit: true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 						{kind: "gts.DividerDrawer", name: "categoryHeader", caption: "Categories", open: true, onChange: "resize", components:[
 							{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
@@ -55,7 +55,7 @@ enyo.kind({
 					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}
 				]}
 			]},
-			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", components: [
+			{name: "middle", kind: "FittableRows", fit: true, style: "width: 400px", classes: "panels-theme-light", components: [
 				//{name: "FeedTitle", content: "Feed"},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height: 30px"}, //height: 54px"},
@@ -101,7 +101,7 @@ enyo.kind({
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
 				//]}
 			]},
-			{name: "body", kind: "FittableRows", fit: true, components: [
+			{name: "body", kind: "FittableRows", fit: true, classes: "panels-theme-light", components: [
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
 				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", components: [
 					{kind: "enyo.Image", name: "articleTitleIcon", fit: false, src: "", style: "height: 30px; width: 30px"}, //height: 54px"},
