@@ -679,9 +679,11 @@ enyo.kind({
 		var categorylist = inEvent.item;
 		if (typeof categorylist != "undefined") {
 			if (index == this.currentCategoryIndex) {
-				categorylist.$.titel.applyStyle("color", "#333333");
+				//categorylist.$.titel.applyStyle("color", "#333333");
+				categorylist.$.titel.applyStyle("font-weight", "bold");
 			} else {
-				categorylist.$.titel.applyStyle("color", "#999999");
+				//categorylist.$.titel.applyStyle("color", "#999999");
+				categorylist.$.titel.applyStyle("font-weight", "normal");
 			}
 			categorylist.$.titel.setContent(this.CategoryTitle[index] + " (" + this.CategoryUnread[index] + ")");
 		}
@@ -693,9 +695,11 @@ enyo.kind({
 		var index = inEvent.index;
 		var feedlist = inEvent.item;
 		if (index == this.currentFeedIndex) {
-			feedlist.$.titel.applyStyle("color", "#333333");
+			//feedlist.$.titel.applyStyle("color", "#333333");
+			feedlist.$.titel.applyStyle("font-weight", "bold");
 		} else {
-			feedlist.$.titel.applyStyle("color", "#999999");
+			//feedlist.$.titel.applyStyle("color", "#999999");
+			feedlist.$.titel.applyStyle("font-weight", "normal");
 		}
 		if (this.FeedIcon[index]) {
 			feedlist.$.icon.setSrc(this.ttrssIconPath + this.FeedID[index] + ".ico");
