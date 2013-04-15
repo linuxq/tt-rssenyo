@@ -41,7 +41,7 @@ enyo.kind({
 									//{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px; width: 25px"},
+												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px"},
 												{tag: "span", name: "titel", fit: true, style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"},
 												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
 										]}
@@ -84,8 +84,8 @@ enyo.kind({
 				*/
 
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true,  horizontal:"hidden", classes: "scroller-sample-scroller", components: [
-					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", components: [
-						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
+					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, ontap: "clickItem", onhold: "holdItem",  components: [
+						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid black; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
 								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
@@ -105,8 +105,8 @@ enyo.kind({
 				//]}
 			]},
 			{name: "body", kind: "FittableRows", fit: true, classes: "panels-theme-light", components: [
-				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
-				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", components: [
+				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ontap: "enablePanels", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
+				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", ontap: "enablePanels", components: [
 					{kind: "enyo.Image", name: "articleTitleIcon", fit: false, src: "", style: "height: 30px; width: 30px"}, //height: 54px"},
 					{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				]},
@@ -116,7 +116,8 @@ enyo.kind({
 				]},
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
-					{kind: "onyx.Grabber"},
+					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
+					{kind: "onyx.Button", name: "btnUnlockPanels", content: "unlock", ontap: "enablePanels", showing: false},					
 					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},rr
@@ -297,6 +298,7 @@ enyo.kind({
 	resize: function(){
 		//console.log("resize");
 		this.$.left2.reflow();
+		this.$.middle.reflow();
 		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
 		this.$.body.reflow();
@@ -839,7 +841,31 @@ enyo.kind({
 	processUpdateFeedError: function(inEvent) {
 		console.log(inEvent);
 	},
+	holdItem: function(inSender, inEvent){
+		//Show only article view to be able to use swipe for previous article
+		if (window.innerWidth < 1024) {
+			this.$.viewPanels.setIndex(3);
+			this.$.left2.setShowing(false);
+			this.$.middle.setShowing(false);
+			this.$.btnUnlockPanels.setShowing(true);
+			this.$.grabberArticleView.setShowing(false);
+			this.$.viewPanels.setDraggable(false);
+		};
+		this.clickItem(" ", inEvent);
+		this.resize();		
+	},
+	enablePanels: function(inSender, inEvent){
+		console.log("ENABLE Panels");
+		this.$.left2.setShowing(true);
+		this.$.middle.setShowing(true);
+		this.$.btnUnlockPanels.setShowing(false);
+		this.$.grabberArticleView.setShowing(true);		
+		this.$.viewPanels.setIndex(2);
+		this.resize();
+		this.$.viewPanels.setDraggable(true);
+	},
 	clickItem: function(inSender, inEvent){
+		//console.log(inEvent);
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		this.RecentArticleIndex = inEvent.index;
 		if (this.ViewMode == "1") {
@@ -978,6 +1004,7 @@ enyo.kind({
 		this.dragStartPanelIndex = this.$.viewPanels.getIndex();
 	},
 	titleDragFinish: function(inSender, inEvent){
+		this.resize();
 		  if (+inEvent.dx < -80) {
 			if (this.dragStartPanelIndex == 3) {
 				//console.log("NEXT");
@@ -988,9 +1015,11 @@ enyo.kind({
 			}
 		  };
 		  if (+inEvent.dx > 80) {
-				//console.log("PREV");
-				//this.prevArticle();
+			  if (this.$.btnUnlockPanels.getShowing()) {
+				this.prevArticle();
 				//this.$.viewPanels.setIndex(3);
+			  }
 		  }
+		  this.resize();
 	}
 });

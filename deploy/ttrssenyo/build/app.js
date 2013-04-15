@@ -4582,7 +4582,7 @@ kind: "enyo.Image",
 fit: !1,
 name: "icon",
 src: "assets/blankfeedicon.ico",
-style: "height: 25px; width: 25px"
+style: "height: 25px"
 }, {
 tag: "span",
 name: "titel",
@@ -4659,10 +4659,11 @@ name: "articleRepeater",
 onSetupItem: "setupArticles",
 fit: !0,
 ontap: "clickItem",
+onhold: "holdItem",
 components: [ {
 name: "item",
 classes: "repeater-sample-item",
-style: "border: 1px solid silver; padding: 5px; font-weight: bold;",
+style: "border: 1px solid black; padding: 5px; font-weight: bold;",
 components: [ {
 kind: "FittableRows",
 name: "Data1",
@@ -4706,12 +4707,14 @@ components: [ {
 name: "articleViewTitle",
 content: "",
 style: "padding: 5px; font-weight: bold;",
+ontap: "enablePanels",
 ondragfinish: "titleDragFinish",
 ondragstart: "titleDragStart"
 }, {
 kind: "FittableColumns",
 fit: !1,
 style: "height: 40px; padding: 5px",
+ontap: "enablePanels",
 components: [ {
 kind: "enyo.Image",
 name: "articleTitleIcon",
@@ -4744,7 +4747,15 @@ content: ""
 kind: "onyx.Toolbar",
 fit: !0,
 components: [ {
-kind: "onyx.Grabber"
+kind: "onyx.Grabber",
+name: "grabberArticleView",
+ontap: "enablePanels"
+}, {
+kind: "onyx.Button",
+name: "btnUnlockPanels",
+content: "unlock",
+ontap: "enablePanels",
+showing: !1
 }, {
 fit: !0
 }, {
@@ -5087,7 +5098,7 @@ ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, 29, !1, enyo.bind(this, "pro
 window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : this.$.viewPanels.layout.peekWidth = 40;
 },
 resize: function() {
-this.$.left2.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
+this.$.left2.reflow(), this.$.middle.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -5299,6 +5310,12 @@ console.log(e), this.selectFeed(this.currentFeedIndex);
 processUpdateFeedError: function(e) {
 console.log(e);
 },
+holdItem: function(e, t) {
+window.innerWidth < 1024 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1)), this.clickItem(" ", t), this.resize();
+},
+enablePanels: function(e, t) {
+console.log("ENABLE Panels"), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.resize(), this.$.viewPanels.setDraggable(!0);
+},
 clickItem: function(e, t) {
 this.RecentArticleIndex = t.index;
 if (this.ViewMode == "1") {
@@ -5378,7 +5395,7 @@ titleDragStart: function(e, t) {
 this.dragStartPanelIndex = this.$.viewPanels.getIndex();
 },
 titleDragFinish: function(e, t) {
-+t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80;
+this.resize(), +t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80 && this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.resize();
 }
 });
 
