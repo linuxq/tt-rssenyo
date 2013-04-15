@@ -4582,7 +4582,7 @@ kind: "enyo.Image",
 fit: !1,
 name: "icon",
 src: "assets/blankfeedicon.ico",
-style: "height: 25px"
+style: "height: 30px; width: 30px"
 }, {
 tag: "span",
 name: "titel",

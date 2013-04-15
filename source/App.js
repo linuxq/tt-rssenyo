@@ -41,7 +41,7 @@ enyo.kind({
 									//{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px"},
+												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 30px; width: 30px"},
 												{tag: "span", name: "titel", fit: true, style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"},
 												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
 										]}
