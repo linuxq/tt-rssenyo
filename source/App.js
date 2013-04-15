@@ -34,15 +34,15 @@ enyo.kind({
 							]},
 						]},
 						//{content: "Categories", name: "categoryHeader", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
-						{kind: "gts.DividerDrawer", name: "feedHeader", caption: "Feeds", open: true, onChange: "resize", components:[
+						{kind: "gts.DividerDrawer", name: "feedHeader", fit: true, caption: "Feeds", open: true, onChange: "resize", components:[
 						//{content: "Feeds (Click to add)", name: "feedHeader", ontap: "addFeedClick", style: "font-size: 1.2em; color: #ffffff; background: #000000; font-weight: bold;"},
 							{kind: "Scroller", touch:true, fit: false, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 								{kind: "Repeater", name: "feedRepeater", onSetupItem:"setupFeeds", fit: true, ontap: "clickFeed", components: [
 									//{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px"},
-												{tag: "span", name: "titel", fit: true, style: "white-space:nowrap; text-align: left; margin-left: 8px;"},
+												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 25px; width: 25px"},
+												{tag: "span", name: "titel", fit: true, style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"},
 												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
 										]}
 									]}
@@ -619,7 +619,9 @@ enyo.kind({
 		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
 		this.$.chkArticleRead.setChecked(!0);
 		this.ArticleUnread[this.RecentArticleIndex] = false;
-		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
 		clearTimeout(this.MarkReadTimer);
 	},
 	toggleArticleRead: function(inSender, inEvent) {
@@ -628,13 +630,17 @@ enyo.kind({
 			//als gelesen markieren
 			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
 			this.ArticleUnread[this.RecentArticleIndex] = false;
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+			//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
+			this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
 		} else
 		{
 			//als ungelesen markieren
 			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
 			this.ArticleUnread[this.RecentArticleIndex] = true;
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333");
+			//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333");
+			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "bold");
+			this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#333333");
 		};
 		//console.log(Readstate + " " + RecentArticle);
 		//this.$.result.setContent(inSender.name + " was " + (inSender.getValue() ? " selected." : "deselected."));
@@ -728,9 +734,13 @@ enyo.kind({
 			item.$.preview.setContent(stripHTML(html_entity_decode(data[0].content)));
 		}
 		if (this.ArticleUnread[index]) {
-			item.$.titel.applyStyle("color", "#333333");
+			//item.$.titel.applyStyle("color", "#333333");
+			item.$.titel.applyStyle("font-weight", "bold");
+			item.$.preview.applyStyle("color", "#333333");
 		} else {
-			item.$.titel.applyStyle("color", "#999999");
+			//item.$.titel.applyStyle("color", "#999999");
+			item.$.titel.applyStyle("font-weight", "normal");
+			item.$.preview.applyStyle("color", "#999999");
 		}
 		/* Too slow :(
 		if (this.ArticleStarred[index]) {

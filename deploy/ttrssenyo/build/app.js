@@ -4542,7 +4542,7 @@ style: "white-space:nowrap; text-align: left; margin-left: 5px;"
 tag: "span",
 name: "unread",
 fit: !1,
-style: "width: 50px; text-align: right;  margin-left: 2px"
+style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"
 } ]
 } ]
 } ]
@@ -4551,6 +4551,7 @@ style: "width: 50px; text-align: right;  margin-left: 2px"
 }, {
 kind: "gts.DividerDrawer",
 name: "feedHeader",
+fit: !0,
 caption: "Feeds",
 open: !0,
 onChange: "resize",
@@ -4581,17 +4582,17 @@ kind: "enyo.Image",
 fit: !1,
 name: "icon",
 src: "assets/blankfeedicon.ico",
-style: "height: 25px"
+style: "height: 25px; width: 25px"
 }, {
 tag: "span",
 name: "titel",
 fit: !0,
-style: "white-space:nowrap; text-align: left; margin-left: 8px;"
+style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"
 }, {
 tag: "span",
 name: "unread",
 fit: !1,
-style: "width: 50px; text-align: right;  margin-left: 2px"
+style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"
 } ]
 } ]
 } ]
@@ -5204,11 +5205,11 @@ processGetArticleError: function(e) {
 console.log(e);
 },
 TimedMarkRead: function() {
-ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.ArticleUnread[this.RecentArticleIndex] = !1, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999"), clearTimeout(this.MarkReadTimer);
+ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.ArticleUnread[this.RecentArticleIndex] = !1, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal"), this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999"), clearTimeout(this.MarkReadTimer);
 },
 toggleArticleRead: function(e, t) {
 var n = this.$.chkArticleRead.getValue();
-n ? (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[this.RecentArticleIndex] = !1, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999")) : (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[this.RecentArticleIndex] = !0, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333"));
+n ? (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[this.RecentArticleIndex] = !1, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal"), this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999")) : (ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[this.RecentArticleIndex] = !0, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "bold"), this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#333333"));
 },
 processMarkArticleReadSuccess: function(e) {},
 processMarkArticleReadError: function(e) {},
@@ -5235,7 +5236,7 @@ if (this.ArticleData.length > n) {
 var i = this.ArticleData[n];
 r.$.preview.setContent(stripHTML(html_entity_decode(i[0].content)));
 }
-this.ArticleUnread[n] ? r.$.titel.applyStyle("color", "#333333") : r.$.titel.applyStyle("color", "#999999");
+this.ArticleUnread[n] ? (r.$.titel.applyStyle("font-weight", "bold"), r.$.preview.applyStyle("color", "#333333")) : (r.$.titel.applyStyle("font-weight", "normal"), r.$.preview.applyStyle("color", "#999999"));
 },
 clickCategory: function(e, t) {
 this.selectCategory(t.index);
