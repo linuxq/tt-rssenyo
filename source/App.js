@@ -26,8 +26,8 @@ enyo.kind({
 									//{name: "categorylist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px;nowr font-weight: bold;", components: [
 									{name: "categorylist", classes:"repeater-sample-item", style: "padding: 5px;nowr font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{tag: "span", name: "titel", fit:true, style: "white-space:nowrap; text-align: left; margin-left: 5px;"},
-												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
+												{tag: "span", name: "titel", fit:true, style: "white-space:nowrap; text-align:left; margin-left:5px; overflow:hidden;"},
+												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"}
 										]}
 									]}
 								]}
@@ -42,8 +42,8 @@ enyo.kind({
 									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 30px; width: 30px"},
-												{tag: "span", name: "titel", fit: true, style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"},
-												{tag: "span", name: "unread", fit: false, style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"}
+												{tag: "span", name: "titel", fit: true, style: "width:auto; white-space:nowrap; text-align:left; margin-left:8px; overflow:hidden;"},
+												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"}
 										]}
 									]}
 								]}
@@ -98,7 +98,9 @@ enyo.kind({
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
-					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"}
+					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
+					{kind: "onyx.Button", content: "Up", ontap: "FeedListPageUp"},
+					{kind: "onyx.Button", content: "Dwn", ontap: "FeedListPageDown"}
 				]}
 				//{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
@@ -117,7 +119,7 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
-					{kind: "onyx.Button", name: "btnUnlockPanels", content: "unlock", ontap: "enablePanels", showing: false},					
+					{kind: "onyx.Button", name: "btnUnlockPanels", content: "unlock", ontap: "enablePanels", showing: false},
 					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},rr
@@ -834,6 +836,12 @@ enyo.kind({
 		this.selectFeed(this.currentFeedIndex);
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
+	FeedListPageUp: function(inEvent) {
+		this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() - window.innerHeight*3/4);
+	},
+	FeedListPageDown: function(inEvent) {
+		this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() + window.innerHeight*3/4);
+	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
 		this.selectFeed(this.currentFeedIndex);
@@ -852,14 +860,14 @@ enyo.kind({
 			this.$.viewPanels.setDraggable(false);
 		};
 		this.clickItem(" ", inEvent);
-		this.resize();		
+		this.resize();
 	},
 	enablePanels: function(inSender, inEvent){
 		console.log("ENABLE Panels");
 		this.$.left2.setShowing(true);
 		this.$.middle.setShowing(true);
 		this.$.btnUnlockPanels.setShowing(false);
-		this.$.grabberArticleView.setShowing(true);		
+		this.$.grabberArticleView.setShowing(true);
 		this.$.viewPanels.setIndex(2);
 		this.resize();
 		this.$.viewPanels.setDraggable(true);
