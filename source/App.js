@@ -905,6 +905,7 @@ enyo.kind({
 	clickItem: function(inSender, inEvent){
 		//console.log(inEvent);
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
+		this.setLoadbar(true);
 		this.RecentArticleIndex = inEvent.index;
 		if (this.ViewMode == "1") {
 			// no content preview
