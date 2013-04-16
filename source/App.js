@@ -837,10 +837,10 @@ enyo.kind({
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
 	FeedListPageUp: function(inEvent) {
-		this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() - window.innerHeight*3/4);
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight/3);
 	},
 	FeedListPageDown: function(inEvent) {
-		this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() + window.innerHeight*3/4);
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight/3);
 	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
