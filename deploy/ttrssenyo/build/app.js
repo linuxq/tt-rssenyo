@@ -4815,6 +4815,16 @@ ontap: "nextArticle"
 } ]
 } ]
 }, {
+name: "loadbar",
+content: "",
+classes: "squaresWaveG",
+style: "position: relative; width: auto; height:5px",
+showing: !1
+}, {
+name: "loadbarBlank",
+content: "",
+style: "position: relative; width: auto; height:5px; background: #000000"
+}, {
 kind: enyo.Signals,
 onkeyup: "handleKeyUp",
 onkeydown: "handleKeyDown",
@@ -5167,6 +5177,7 @@ clickRefresh: function(e, t) {
 console.error("clickRefresh"), this.getCategories();
 },
 getCategories: function(e) {
+this.setLoadbar(!0);
 var t = this.$.toggleUnread.getValue();
 this.$.toggleFeedUnread.setValue(t), ttrssGetCategories(this.ttrssURL, this.ttrss_SID, t, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 },
@@ -5179,9 +5190,10 @@ for (var i = 0; i < e.length; i++) t = t + "#" + e[i].id + " " + e[i].title + " 
 this.$.categoryRepeater.setCount(this.CategoryTitle.length), this.CategoryTitle.length > 0 && (n ? this.selectCategory(0) : (this.$.categoryHeader.toggleOpen(!1), this.selectCategory(r))), this.CategoryTitle.length > 0 && n && this.selectCategory(0);
 },
 processGetCategoriesError: function(e) {
-console.error("processGetCategoriesError"), console.error(e), alert(e);
+console.error("processGetCategoriesError"), console.error(e), alert(e), this.setLoadbar(!1);
 },
 getFeeds: function(e, t) {
+this.setLoadbar(!0);
 var n = this.$.toggleUnread.getValue();
 ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, n, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 },
@@ -5193,7 +5205,7 @@ for (var n = 0; n < e.length; n++) this.FeedTitle[n + 1] = html_entity_decode(e[
 this.FeedUnread[0] = t, this.$.feedRepeater.setCount(this.FeedTitle.length), this.AutoLoadFirstFeed && this.selectFeed(0);
 },
 processGetFeedsError: function(e) {
-console.log(e);
+console.log(e), this.setLoadbar(!1);
 },
 processGetConfigSuccess: function(e) {
 this.ttrssIconPath = this.ttrssURL + "/" + e.icons_url + "/";
@@ -5202,6 +5214,7 @@ processGetConfigError: function(e) {
 console.log(e);
 },
 getHeadlines: function(e, t) {
+this.setLoadbar(!0);
 var n = this.$.toggleFeedUnread.getValue();
 ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, this.$.feedID.getValue(), !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 },
@@ -5213,21 +5226,21 @@ this.ArticleData[e] = t, this.$.articleRepeater.renderRow(e);
 this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0);
 },
 processGetHeadlinesError: function(e) {
-console.log(e);
+console.log(e), this.setLoadbar(!1);
 },
 getArticle: function(e, t) {
-ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
+this.setLoadbar(!0), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + r.getMinutes();
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize();
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleView.setContent(e[0].content), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetFullArticleSuccess: function(e) {
 var t = this.ArticleData[this.RecentArticleIndex], n = "", r = t[0].updated, i = new Date(r * 1e3), s = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), o = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), u = s[i.getDay()] + " " + o[i.getMonth()] + " " + i.getDate() + ", " + i.getFullYear() + " " + i.getHours() + ":" + i.getMinutes();
-this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize();
+this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articleView.setContent(e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetArticleError: function(e) {
-console.log(e);
+console.log(e), this.setLoadbar(!1);
 },
 TimedMarkRead: function() {
 ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.$.chkArticleRead.setChecked(!0), this.ArticleUnread[this.RecentArticleIndex] = !1, this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal"), this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999"), clearTimeout(this.MarkReadTimer);
@@ -5252,7 +5265,7 @@ typeof r != "undefined" && (n == this.currentCategoryIndex ? r.$.titel.applyStyl
 },
 setupFeeds: function(e, t) {
 var n = t.index, r = t.item;
-n == this.currentFeedIndex ? r.$.titel.applyStyle("font-weight", "bold") : r.$.titel.applyStyle("font-weight", "normal"), this.FeedIcon[n] && r.$.icon.setSrc(this.ttrssIconPath + this.FeedID[n] + ".ico"), r.$.unread.setContent(this.FeedUnread[n]), r.$.titel.setContent(this.FeedTitle[n]), this.resize();
+n == this.currentFeedIndex ? r.$.titel.applyStyle("font-weight", "bold") : r.$.titel.applyStyle("font-weight", "normal"), this.FeedIcon[n] && r.$.icon.setSrc(this.ttrssIconPath + this.FeedID[n] + ".ico"), r.$.unread.setContent(this.FeedUnread[n]), r.$.titel.setContent(this.FeedTitle[n]), this.resize(), n + 1 == this.FeedID.length && this.setLoadbar(!1);
 },
 setupArticles: function(e, t) {
 var n = t.index, r = t.item;
@@ -5261,12 +5274,13 @@ if (this.ArticleData.length > n) {
 var i = this.ArticleData[n];
 r.$.preview.setContent(stripHTML(html_entity_decode(i[0].content)));
 }
-this.ArticleUnread[n] ? (r.$.titel.applyStyle("font-weight", "bold"), r.$.preview.applyStyle("color", "#333333")) : (r.$.titel.applyStyle("font-weight", "normal"), r.$.preview.applyStyle("color", "#999999"));
+this.ArticleUnread[n] ? (r.$.titel.applyStyle("font-weight", "bold"), r.$.preview.applyStyle("color", "#333333")) : (r.$.titel.applyStyle("font-weight", "normal"), r.$.preview.applyStyle("color", "#999999")), n + 1 == this.Articles.length && this.setLoadbar(!1);
 },
 clickCategory: function(e, t) {
 this.selectCategory(t.index);
 },
 selectCategory: function(e) {
+this.setLoadbar(!0);
 var t = this.currentCategoryIndex;
 this.currentCategoryIndex = e, this.$.categoryRepeater.renderRow(t), this.$.categoryRepeater.renderRow(this.currentCategoryIndex);
 var n = this.$.toggleUnread.getValue();
@@ -5276,6 +5290,7 @@ clickFeed: function(e, t) {
 this.selectFeed(t.index);
 },
 selectFeed: function(e) {
+this.setLoadbar(!0);
 var t = this.currentFeedIndex;
 this.currentFeedIndex = e, this.$.feedRepeater.renderRow(t), this.$.feedRepeater.renderRow(this.currentFeedIndex), this.$.lblFeedTitle.setContent(this.FeedTitle[e]);
 if (this.FeedIcon[e]) {
@@ -5316,7 +5331,7 @@ MarkFeedReadClose: function(e) {
 this.$.MarkFeedReadPopup.hide();
 },
 UpdateFeedClick: function(e) {
-this.selectFeed(this.currentFeedIndex);
+this.setLoadbar(!0), this.selectFeed(this.currentFeedIndex);
 },
 FeedListPageUp: function(e) {
 this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() - window.innerHeight * 3 / 4);
@@ -5354,10 +5369,10 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 this.ttrssURL == ".." && (n = "proxy.php?proxy_url=" + n), ttrssGetFullArticle(n, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
 },
 prevArticle: function(e, t) {
-this.RecentArticleIndex == 0 && this.enablePanels(), this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex == 0 && this.enablePanels(), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 nextArticle: function(e, t) {
-this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.setLoadbar(!0), this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
@@ -5416,6 +5431,9 @@ this.dragStartPanelIndex = this.$.viewPanels.getIndex();
 },
 titleDragFinish: function(e, t) {
 this.resize(), +t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80 && this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.resize();
+},
+setLoadbar: function(e) {
+e ? (this.$.loadbar.setShowing(!0), this.$.loadbarBlank.setShowing(!1), console.log("TRUE")) : (this.$.loadbar.setShowing(!1), this.$.loadbarBlank.setShowing(!0), console.log("FALSE"));
 }
 });
 

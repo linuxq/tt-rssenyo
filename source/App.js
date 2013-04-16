@@ -138,6 +138,8 @@ enyo.kind({
 				]}
 			]}
 		]},
+		{name: "loadbar", content: "", classes: "squaresWaveG", style: "position: relative; width: auto; height:5px", showing:false},
+		{name: "loadbarBlank", content: "", style: "position: relative; width: auto; height:5px; background: #000000"},
 		{kind: enyo.Signals, onkeyup: "handleKeyUp", onkeydown: "handleKeyDown", onkeypress: "handleKeyPress"},
 		{kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
@@ -400,6 +402,7 @@ enyo.kind({
 	getCategories: function (inSender){
 		//console.error("getCategories");
 		//console.log(this.ttrss_SID);
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleUnread.getValue();
 		this.$.toggleFeedUnread.setValue(getUnreadOnly);
 		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, getUnreadOnly, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
@@ -446,14 +449,17 @@ enyo.kind({
 			this.selectCategory(0);
 		}
 		//console.log(inEvent);
+		//this.setLoadbar(false);		
 	},
 	processGetCategoriesError: function(inEvent){
 		console.error("processGetCategoriesError");
 		console.error(inEvent);
 		alert(inEvent);
+		this.setLoadbar(false);
 	},
 	getFeeds: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleUnread.getValue();
 		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 	},
@@ -482,9 +488,11 @@ enyo.kind({
 			this.selectFeed(0);
 		}
 		//console.log(inEvent);
+		//this.setLoadbar(false);		
 	},
 	processGetFeedsError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	processGetConfigSuccess: function(inEvent){
 		//console.log(inEvent);
@@ -496,6 +504,7 @@ enyo.kind({
 	},
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleFeedUnread.getValue();
 		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
@@ -528,12 +537,15 @@ enyo.kind({
 		this.$.articleScroller.setScrollTop(0);
 		//this.$.feedlist.setContent(TextHelp);
 		//console.log(inEvent);
+		//this.setLoadbar(false);
 	},
 	processGetHeadlinesError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	getArticle: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 	},
 	processGetArticleSuccess: function(inEvent){
@@ -578,6 +590,7 @@ enyo.kind({
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
+		this.setLoadbar(false);
 	},
 	processGetFullArticleSuccess: function(inContent) {
 		var inEvent = this.ArticleData[this.RecentArticleIndex];
@@ -621,9 +634,11 @@ enyo.kind({
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
+		this.setLoadbar(false);
 	},
 	processGetArticleError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	TimedMarkRead: function() {
 		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
@@ -731,6 +746,9 @@ enyo.kind({
 		feedlist.$.unread.setContent(this.FeedUnread[index]);
 		feedlist.$.titel.setContent(this.FeedTitle[index]);
 		this.resize();
+		if (( index + 1) == this.FeedID.length) {
+			this.setLoadbar(false);
+		};
 		////////item.$.dauer.setContent(PCastsDuration[index]);
 
 	},
@@ -751,7 +769,10 @@ enyo.kind({
 			//item.$.titel.applyStyle("color", "#999999");
 			item.$.titel.applyStyle("font-weight", "normal");
 			item.$.preview.applyStyle("color", "#999999");
-		}
+		};
+		if (( index + 1) == this.Articles.length) {
+			this.setLoadbar(false);
+		};
 		/* Too slow :(
 		if (this.ArticleStarred[index]) {
 			item.$.starredList.setSrc("assets/starred-footer32-on.png");
@@ -764,6 +785,7 @@ enyo.kind({
 		this.selectCategory(inEvent.index);
 	},
 	selectCategory: function(index) {
+		this.setLoadbar(true);	
 		//console.log(this.CategoryID[index]);
 		var oldCatIdx = this.currentCategoryIndex;
 		this.currentCategoryIndex = index;
@@ -777,6 +799,7 @@ enyo.kind({
 		this.selectFeed(inEvent.index);
 	},
 	selectFeed: function(index) {
+		this.setLoadbar(true);	
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		var oldFeedIdx = this.currentFeedIndex;
 		this.currentFeedIndex = index;
@@ -839,6 +862,7 @@ enyo.kind({
 		this.$.MarkFeedReadPopup.hide();
 	},
 	UpdateFeedClick: function(inEvent) {
+		this.setLoadbar(true);
 		this.selectFeed(this.currentFeedIndex);
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
@@ -929,6 +953,7 @@ enyo.kind({
 			this.enablePanels();
 		}		
 		if (this.RecentArticleIndex >= 1){
+			this.setLoadbar(true);	
 			this.RecentArticleIndex = this.RecentArticleIndex - 1;
 			if (this.ViewMode != "0") {
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
@@ -939,6 +964,7 @@ enyo.kind({
 		//console.log(RecentArticleIndex);
 	},
 	nextArticle: function(inSender, inEvent){
+		this.setLoadbar(true);		
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
 			this.RecentArticleIndex = this.RecentArticleIndex + 1;
 			//console.log(RecentArticleIndex);
@@ -1047,5 +1073,17 @@ enyo.kind({
 			  }
 		  }
 		  this.resize();
+	},
+	setLoadbar: function (status){
+		if (status) {
+			this.$.loadbar.setShowing(true);
+			this.$.loadbarBlank.setShowing(false);
+			console.log("TRUE");
+		} else {
+			this.$.loadbar.setShowing(false);
+			this.$.loadbarBlank.setShowing(true);
+			console.log("FALSE");
+		}
+		
 	}
 });
