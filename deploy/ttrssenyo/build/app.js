@@ -4537,12 +4537,12 @@ components: [ {
 tag: "span",
 name: "titel",
 fit: !0,
-style: "white-space:nowrap; text-align: left; margin-left: 5px;"
+style: "white-space:nowrap; text-align:left; margin-left:5px; overflow:hidden;"
 }, {
 tag: "span",
 name: "unread",
 fit: !1,
-style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"
+style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"
 } ]
 } ]
 } ]
@@ -4582,17 +4582,17 @@ kind: "enyo.Image",
 fit: !1,
 name: "icon",
 src: "assets/blankfeedicon.ico",
-style: "height: 30px; width: 30px"
+style: "height: 32px; width: 32px"
 }, {
 tag: "span",
 name: "titel",
 fit: !0,
-style: "width: auto; white-space:nowrap; text-align: left; margin-left: 8px;"
+style: "width:auto; white-space:nowrap; text-align:left; margin-left:8px; overflow:hidden;"
 }, {
 tag: "span",
 name: "unread",
 fit: !1,
-style: "width: 50px; text-align: right;  margin-left: 2px; font-weight: normal"
+style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"
 } ]
 } ]
 } ]
@@ -4696,6 +4696,14 @@ ontap: "MarkFeedReadClick"
 kind: "onyx.IconButton",
 src: "assets/menu-icon-refresh.png",
 ontap: "UpdateFeedClick"
+}, {
+kind: "onyx.Button",
+content: "Up",
+ontap: "FeedListPageUp"
+}, {
+kind: "onyx.Button",
+content: "Dwn",
+ontap: "FeedListPageDown"
 } ]
 } ]
 }, {
@@ -4753,7 +4761,7 @@ ontap: "enablePanels"
 }, {
 kind: "onyx.Button",
 name: "btnUnlockPanels",
-content: "unlock",
+content: "Unlock",
 ontap: "enablePanels",
 showing: !1
 }, {
@@ -4934,6 +4942,11 @@ name: "autoLoadFirstFeed",
 content: "Autoload 1st feed",
 style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
 }, {
+kind: "onyx.Checkbox",
+name: "autoLockPanels",
+content: "Swipeable article view (on phones)",
+style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
+}, {
 kind: "FittableColumns",
 style: "height: auto",
 components: [ {
@@ -5081,6 +5094,7 @@ ttrss_SID: "",
 ttrssAutoMarkRead: "2000",
 ViewMode: "0",
 AutoLoadFirstFeed: !1,
+AutoLockPanels: !1,
 dragStartPanelIndex: null,
 rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 10);
@@ -5089,7 +5103,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.ViewMode == "1" && this.$.body.setShowing(!1);
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.ViewMode == "1" && this.$.body.setShowing(!1);
 if (this.ttrssURL == null) this.$.LoginPopup.show(); else {
 ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 var n = this.$.toggleUnread.getValue();
@@ -5104,7 +5118,7 @@ LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.LoginPopup.hide();
 },
 LoginTap: function(e, t) {
 this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
@@ -5118,7 +5132,7 @@ break;
 case "2":
 this.$.pickViewMode.setSelected(this.$.VM2);
 }
-this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
+this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed), this.$.autoLockPanels.setValue(this.AutoLockPanels);
 switch (this.ttrssAutoMarkRead) {
 case "1000":
 this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
@@ -5304,6 +5318,12 @@ this.$.MarkFeedReadPopup.hide();
 UpdateFeedClick: function(e) {
 this.selectFeed(this.currentFeedIndex);
 },
+FeedListPageUp: function(e) {
+this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() - window.innerHeight * 3 / 4);
+},
+FeedListPageDown: function(e) {
+this.$.articleScroller.scrollTo(this.$.articleScroller.getScrollLeft(), this.$.articleScroller.getScrollTop() + window.innerHeight * 3 / 4);
+},
 processUpdateFeedSuccess: function(e) {
 console.log(e), this.selectFeed(this.currentFeedIndex);
 },
@@ -5311,7 +5331,7 @@ processUpdateFeedError: function(e) {
 console.log(e);
 },
 holdItem: function(e, t) {
-window.innerWidth < 1024 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1)), this.clickItem(" ", t), this.resize();
+window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.clickItem(" ", t), this.resize());
 },
 enablePanels: function(e, t) {
 console.log("ENABLE Panels"), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.resize(), this.$.viewPanels.setDraggable(!0);
@@ -5323,7 +5343,7 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 window.open(n);
 return;
 }
-this.ViewMode == "2" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
+this.ViewMode == "2" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : (window.innerWidth < 1024 && this.AutoLockPanels && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.resize()), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
 },
 openArticle: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
@@ -5334,7 +5354,7 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 this.ttrssURL == ".." && (n = "proxy.php?proxy_url=" + n), ttrssGetFullArticle(n, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
 },
 prevArticle: function(e, t) {
-this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex == 0 && this.enablePanels(), this.RecentArticleIndex >= 1 && (this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 nextArticle: function(e, t) {
 this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
