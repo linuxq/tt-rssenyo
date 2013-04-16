@@ -41,7 +41,7 @@ enyo.kind({
 									//{name: "feedlist", classes:"repeater-sample-item", style: "border: 1px solid silver; padding: 5px; font-weight: bold;", components: [
 									{name: "feedlist", classes:"repeater-sample-item", style: "padding: 5px; font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
-												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 30px; width: 30px"},
+												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height: 32px; width: 32px"},
 												{tag: "span", name: "titel", fit: true, style: "width:auto; white-space:nowrap; text-align:left; margin-left:8px; overflow:hidden;"},
 												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"}
 										]}
@@ -119,7 +119,7 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
-					{kind: "onyx.Button", name: "btnUnlockPanels", content: "unlock", ontap: "enablePanels", showing: false},
+					{kind: "onyx.Button", name: "btnUnlockPanels", content: "Unlock", ontap: "enablePanels", showing: false},
 					{fit: true},
 					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},rr
@@ -138,6 +138,8 @@ enyo.kind({
 				]}
 			]}
 		]},
+		{name: "loadbar", content: "", classes: "squaresWaveG", style: "position: relative; width: auto; height:5px", showing:false},
+		{name: "loadbarBlank", content: "", style: "position: relative; width: auto; height:5px; background: #000000"},
 		{kind: enyo.Signals, onkeyup: "handleKeyUp", onkeydown: "handleKeyDown", onkeypress: "handleKeyPress"},
 		{kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
@@ -175,6 +177,7 @@ enyo.kind({
 			]},
 			{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+			{kind: "onyx.Checkbox", name: "autoLockPanels", content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "FittableColumns", style: "height: auto", components: [
 				{kind: "onyx.PickerDecorator", components: [
 					{},
@@ -241,6 +244,7 @@ enyo.kind({
 	//Settings
 	ViewMode: "0",
 	AutoLoadFirstFeed: false,
+	AutoLockPanels: false,
 
 	// Merkvariablen
 	dragStartPanelIndex: null,
@@ -258,6 +262,7 @@ enyo.kind({
 		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
 		this.ViewMode = localStorage.getItem("ViewMode");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
+		this.AutoLockPanels = (localStorage.getItem("AutoLockPanels") == "true");
 		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
 		if (this.ViewMode == "1") {
 			this.$.body.setShowing(false);
@@ -314,12 +319,14 @@ enyo.kind({
 		this.ttrssPassword = this.$.serverPassword.getValue();
 		this.ViewMode = this.$.pickViewMode.getSelected().value;
 		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
+		this.AutoLockPanels = this.$.autoLockPanels.getValue();
 		gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
 		localStorage.setItem("ViewMode", this.ViewMode);
 		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
+		localStorage.setItem("AutoLockPanels", this.AutoLockPanels);
 		localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
@@ -341,6 +348,7 @@ enyo.kind({
 				break;
 		}
 		this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
+		this.$.autoLockPanels.setValue(this.AutoLockPanels);
 		switch (this.ttrssAutoMarkRead) {
 			case '1000':
 				this.$.pickMarkReadTimeout.setSelected(this.$.T1s);
@@ -394,6 +402,7 @@ enyo.kind({
 	getCategories: function (inSender){
 		//console.error("getCategories");
 		//console.log(this.ttrss_SID);
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleUnread.getValue();
 		this.$.toggleFeedUnread.setValue(getUnreadOnly);
 		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, getUnreadOnly, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
@@ -440,14 +449,17 @@ enyo.kind({
 			this.selectCategory(0);
 		}
 		//console.log(inEvent);
+		//this.setLoadbar(false);		
 	},
 	processGetCategoriesError: function(inEvent){
 		console.error("processGetCategoriesError");
 		console.error(inEvent);
 		alert(inEvent);
+		this.setLoadbar(false);
 	},
 	getFeeds: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleUnread.getValue();
 		ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.catID.getValue(), enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 	},
@@ -476,9 +488,11 @@ enyo.kind({
 			this.selectFeed(0);
 		}
 		//console.log(inEvent);
+		//this.setLoadbar(false);		
 	},
 	processGetFeedsError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	processGetConfigSuccess: function(inEvent){
 		//console.log(inEvent);
@@ -490,6 +504,7 @@ enyo.kind({
 	},
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		var getUnreadOnly = this.$.toggleFeedUnread.getValue();
 		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
@@ -522,12 +537,15 @@ enyo.kind({
 		this.$.articleScroller.setScrollTop(0);
 		//this.$.feedlist.setContent(TextHelp);
 		//console.log(inEvent);
+		//this.setLoadbar(false);
 	},
 	processGetHeadlinesError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	getArticle: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
+		this.setLoadbar(true);
 		ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.articleID.getValue(), enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 	},
 	processGetArticleSuccess: function(inEvent){
@@ -572,6 +590,7 @@ enyo.kind({
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
+		this.setLoadbar(false);
 	},
 	processGetFullArticleSuccess: function(inContent) {
 		var inEvent = this.ArticleData[this.RecentArticleIndex];
@@ -615,9 +634,11 @@ enyo.kind({
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
+		this.setLoadbar(false);
 	},
 	processGetArticleError: function(inEvent){
 		console.log(inEvent);
+		this.setLoadbar(false);
 	},
 	TimedMarkRead: function() {
 		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
@@ -725,6 +746,9 @@ enyo.kind({
 		feedlist.$.unread.setContent(this.FeedUnread[index]);
 		feedlist.$.titel.setContent(this.FeedTitle[index]);
 		this.resize();
+		if (( index + 1) == this.FeedID.length) {
+			this.setLoadbar(false);
+		};
 		////////item.$.dauer.setContent(PCastsDuration[index]);
 
 	},
@@ -745,7 +769,10 @@ enyo.kind({
 			//item.$.titel.applyStyle("color", "#999999");
 			item.$.titel.applyStyle("font-weight", "normal");
 			item.$.preview.applyStyle("color", "#999999");
-		}
+		};
+		if (( index + 1) == this.Articles.length) {
+			this.setLoadbar(false);
+		};
 		/* Too slow :(
 		if (this.ArticleStarred[index]) {
 			item.$.starredList.setSrc("assets/starred-footer32-on.png");
@@ -758,6 +785,7 @@ enyo.kind({
 		this.selectCategory(inEvent.index);
 	},
 	selectCategory: function(index) {
+		this.setLoadbar(true);	
 		//console.log(this.CategoryID[index]);
 		var oldCatIdx = this.currentCategoryIndex;
 		this.currentCategoryIndex = index;
@@ -771,6 +799,7 @@ enyo.kind({
 		this.selectFeed(inEvent.index);
 	},
 	selectFeed: function(index) {
+		this.setLoadbar(true);	
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
 		var oldFeedIdx = this.currentFeedIndex;
 		this.currentFeedIndex = index;
@@ -833,6 +862,7 @@ enyo.kind({
 		this.$.MarkFeedReadPopup.hide();
 	},
 	UpdateFeedClick: function(inEvent) {
+		this.setLoadbar(true);
 		this.selectFeed(this.currentFeedIndex);
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
@@ -851,16 +881,16 @@ enyo.kind({
 	},
 	holdItem: function(inSender, inEvent){
 		//Show only article view to be able to use swipe for previous article
-		if (window.innerWidth < 1024) {
+		if ((window.innerWidth < 1024) && (this.ViewMode == 0)) {
 			this.$.viewPanels.setIndex(3);
 			this.$.left2.setShowing(false);
 			this.$.middle.setShowing(false);
 			this.$.btnUnlockPanels.setShowing(true);
 			this.$.grabberArticleView.setShowing(false);
 			this.$.viewPanels.setDraggable(false);
+			this.clickItem(" ", inEvent);
+			this.resize();
 		};
-		this.clickItem(" ", inEvent);
-		this.resize();
 	},
 	enablePanels: function(inSender, inEvent){
 		console.log("ENABLE Panels");
@@ -875,6 +905,7 @@ enyo.kind({
 	clickItem: function(inSender, inEvent){
 		//console.log(inEvent);
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
+		this.setLoadbar(true);
 		this.RecentArticleIndex = inEvent.index;
 		if (this.ViewMode == "1") {
 			// no content preview
@@ -886,6 +917,15 @@ enyo.kind({
 			ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		} else {
 			// classic feed title / feed content structure
+			if ((window.innerWidth < 1024) && (this.AutoLockPanels)) {
+				this.$.viewPanels.setIndex(3);
+				this.$.left2.setShowing(false);
+				this.$.middle.setShowing(false);
+				this.$.btnUnlockPanels.setShowing(true);
+				this.$.grabberArticleView.setShowing(false);
+				this.$.viewPanels.setDraggable(false);
+				this.resize();
+			};
 			ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[inEvent.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		}
 		if (window.innerWidth < 1024) {
@@ -910,7 +950,11 @@ enyo.kind({
 		this.$.viewPanels.setIndex(3);
 	},
 	prevArticle: function(inSender, inEvent){
+		if ((this.RecentArticleIndex == 0)) {
+			this.enablePanels();
+		}		
 		if (this.RecentArticleIndex >= 1){
+			this.setLoadbar(true);	
 			this.RecentArticleIndex = this.RecentArticleIndex - 1;
 			if (this.ViewMode != "0") {
 				ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
@@ -921,6 +965,7 @@ enyo.kind({
 		//console.log(RecentArticleIndex);
 	},
 	nextArticle: function(inSender, inEvent){
+		this.setLoadbar(true);		
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
 			this.RecentArticleIndex = this.RecentArticleIndex + 1;
 			//console.log(RecentArticleIndex);
@@ -1029,5 +1074,17 @@ enyo.kind({
 			  }
 		  }
 		  this.resize();
+	},
+	setLoadbar: function (status){
+		if (status) {
+			this.$.loadbar.setShowing(true);
+			this.$.loadbarBlank.setShowing(false);
+			console.log("TRUE");
+		} else {
+			this.$.loadbar.setShowing(false);
+			this.$.loadbarBlank.setShowing(true);
+			console.log("FALSE");
+		}
+		
 	}
 });

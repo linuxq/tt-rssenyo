@@ -9,5 +9,6 @@ enyo.depends(
         "ApplicationEvents.js",
         "DividerDrawer.js",
         "DividerDrawer.css",
-        "themes.css"
+        "themes.css",
+        "loadbar.css"
 );
