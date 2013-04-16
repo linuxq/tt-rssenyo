@@ -911,7 +911,6 @@ enyo.kind({
 	clickItem: function(inSender, inEvent){
 		//console.log(inEvent);
 		//console.log(ArticleID[inEvent.index] + " - " + Articles[inEvent.index]);
-		this.setLoadbar(true);
 		this.RecentArticleIndex = inEvent.index;
 		if (this.ViewMode == "1") {
 			// no content preview
@@ -920,9 +919,11 @@ enyo.kind({
 			return;
 		} else if (this.ViewMode == "2") {
 			// content preview
+			this.setLoadbar(true);
 			ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 		} else {
 			// classic feed title / feed content structure
+			this.setLoadbar(true);
 			if ((window.innerWidth < 1024) && (this.AutoLockPanels)) {
 				this.$.viewPanels.setIndex(3);
 				this.$.left2.setShowing(false);
