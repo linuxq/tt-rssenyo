@@ -113,8 +113,11 @@ enyo.kind({
 					{name: "articleViewTitle2", content: "", style: "font-size: 0.8em; padding: 5px;"},
 				]},
 				{content: "", style: "border: 1px solid silver;"},
+				{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
+					{name: "articlePreview", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
+				]},
 				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
-					{name: "articleView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
+					{name: "articleView", kind: "MyAjaxWebView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
@@ -168,7 +171,7 @@ enyo.kind({
 			{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
 				{kind: "onyx.PickerDecorator", style: "width:100%;", components: [
 					{style: "width:100%;", classes: "onyx-blue"}, // A content-less PickerButton
-					{kind: "onyx.Picker", name: "pickViewMode", onSelect: "changeViewMode", components: [
+					{kind: "onyx.Picker", name: "pickViewMode", onSelect: "handleViewModeChange", components: [
 						{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
 						{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
 						{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
@@ -201,7 +204,7 @@ enyo.kind({
 			{name: "AddFeedCategory", content: ""},
 			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
 				{kind: "onyx.InputDecorator", components: [
-					{kind: "onyx.Input", placeholder: "FeedURL", name: "AddFeedURL", value: "", style: "width:100%;"}
+					{kind: "onyx.Input", placeholder: "FeedURL", name: "AddFeedURL", value: "", selectOnFocus: true, style: "width:100%;"}
 				]}
 			]},
 			{tag: "div", style: "height:10px;"},
@@ -264,11 +267,7 @@ enyo.kind({
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
 		this.AutoLockPanels = (localStorage.getItem("AutoLockPanels") == "true");
 		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
-		if (this.ViewMode == "1") {
-			this.$.body.setShowing(false);
-			this.$.FeedListPageUpButton.setShowing(true);
-			this.$.FeedListPageDownButton.setShowing(true);
-		}
+		this.changeViewMode();
 		if (this.ttrssURL == null) {
 			this.$.LoginPopup.show();
 		} else {
@@ -285,6 +284,7 @@ enyo.kind({
 				//this.$.feedHeader.applyStyle("font-size", "1.8em");
 				this.$.feedRepeater.applyStyle("font-size", "1.8em");
 				this.$.articleRepeater.applyStyle("font-size", "1.8em");
+				this.$.articlePreviewScroller.applyStyle("font-size", "1.8em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.6em");
@@ -296,6 +296,7 @@ enyo.kind({
 				//this.$.feedHeader.applyStyle("font-size", "1.2em");
 				this.$.feedRepeater.applyStyle("font-size", "1.2em");
 				this.$.articleRepeater.applyStyle("font-size", "1.2em");
+				this.$.articlePreviewScroller.applyStyle("font-size", "1.2em");
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.0em");
@@ -372,14 +373,27 @@ enyo.kind({
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
 	},
-	changeViewMode: function(inSender, inEvent){
+	handleViewModeChange: function(inSender, inEvent) {
 		this.ViewMode = inEvent.selected.value;
 		this.selectFeed(this.currentFeedIndex);
+		this.changeViewMode();
+	},
+	changeViewMode: function(inSender, inEvent) {
 		if (this.ViewMode == "1") {
+			this.$.articlePreviewScroller.setShowing(true);
+			this.$.articleViewScroller.setShowing(false);
 			this.$.body.setShowing(false);
 			this.$.FeedListPageUpButton.setShowing(true);
 			this.$.FeedListPageDownButton.setShowing(true);
+		} else if (this.ViewMode == "2") {
+			this.$.articlePreviewScroller.setShowing(false);
+			this.$.articleViewScroller.setShowing(true);
+			this.$.body.setShowing(true);
+			this.$.FeedListPageUpButton.setShowing(false);
+			this.$.FeedListPageDownButton.setShowing(false);
 		} else {
+			this.$.articlePreviewScroller.setShowing(true);
+			this.$.articleViewScroller.setShowing(false);
 			this.$.body.setShowing(true);
 			this.$.FeedListPageUpButton.setShowing(false);
 			this.$.FeedListPageDownButton.setShowing(false);
@@ -529,15 +543,15 @@ enyo.kind({
 			this.ArticleURL[i] = inEvent[i].link;
 			this.ArticleUnread[i] = inEvent[i].unread;
 			this.ArticleStarred[i] = inEvent[i].marked;
-			if ((this.ViewMode == "1") || (this.ViewMode == "2")) {
-				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
-					enyo.bind(this, function(i, inEvent) {
-						//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
-						this.ArticleData[i] = inEvent;
+			ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
+				enyo.bind(this, function(i, inEvent) {
+					//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
+					this.ArticleData[i] = inEvent;
+					if ((this.ViewMode == "1") || (this.ViewMode == "2")) {
 						this.$.articleRepeater.renderRow(i);
-					}, i),
-					enyo.bind(this, function() {}));
-			}
+					}
+				}, i),
+				enyo.bind(this, function() {}));
 		};
 		this.$.articleRepeater.setCount(this.Articles.length);
 		this.$.articleScroller.setScrollTop(0);
@@ -569,9 +583,11 @@ enyo.kind({
 		//console.log(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
 		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
-		this.$.articleView.setContent(inEvent[0].content);
-		this.$.articleViewScroller.setScrollTop(0);
-		this.$.articleViewScroller.setScrollLeft(0);
+		this.$.articleViewScroller.setShowing(false);
+		this.$.articlePreviewScroller.setShowing(true);
+		this.$.articlePreview.setContent(inEvent[0].content);
+		this.$.articlePreviewScroller.setScrollTop(0);
+		this.$.articlePreviewScroller.setScrollLeft(0);
 		//Checkbox ReadStatus setzen
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
@@ -614,7 +630,9 @@ enyo.kind({
 		//console.log(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
 		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
-		this.$.articleView.setContent(inContent);
+		this.$.articlePreviewScroller.setShowing(false);
+		this.$.articleViewScroller.setShowing(true);
+		this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], inContent);
 		this.$.articleViewScroller.setScrollTop(0);
 		this.$.articleViewScroller.setScrollLeft(0);
 
@@ -647,34 +665,36 @@ enyo.kind({
 		this.setLoadbar(false);
 	},
 	TimedMarkRead: function() {
-		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+		this.MarkArticleRead();
 		this.$.chkArticleRead.setChecked(!0);
-		this.ArticleUnread[this.RecentArticleIndex] = false;
-		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
-		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
-		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
 		clearTimeout(this.MarkReadTimer);
 	},
 	toggleArticleRead: function(inSender, inEvent) {
 		var Readstate = this.$.chkArticleRead.getValue();
 		if (Readstate) {
-			//als gelesen markieren
-			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
-			this.ArticleUnread[this.RecentArticleIndex] = false;
-			//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
+			this.MarkArticleRead();
 		} else
 		{
-			//als ungelesen markieren
-			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
-			this.ArticleUnread[this.RecentArticleIndex] = true;
-			//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333");
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "bold");
-			this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#333333");
+			this.MarkArticleUnread();
 		};
 		//console.log(Readstate + " " + RecentArticle);
 		//this.$.result.setContent(inSender.name + " was " + (inSender.getValue() ? " selected." : "deselected."));
+	},
+	MarkArticleRead: function() {
+		//als gelesen markieren
+		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+		this.ArticleUnread[this.RecentArticleIndex] = false;
+		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
+	},
+	MarkArticleUnread: function() {
+		//als ungelesen markieren
+		ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+		this.ArticleUnread[this.RecentArticleIndex] = true;
+		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "bold");
+		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#333333");
 	},
 	processMarkArticleReadSuccess: function(inEvent){
 		//console.log(inEvent);
@@ -916,6 +936,7 @@ enyo.kind({
 			// no content preview
 			var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
 			window.open(FullArticelURL);
+			this.MarkArticleRead();
 			return;
 		} else if (this.ViewMode == "2") {
 			// content preview
