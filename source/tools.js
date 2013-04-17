@@ -326,40 +326,43 @@ enyo.kind({
     },
 	*/
     call: function(url, content) {
-        this.currentPage = this.pages.length;
-        this.pages[this.pages.length] = {
-            "src": url
-        };
+		try {
+			this.currentPage = this.pages.length;
+			this.pages[this.pages.length] = {
+				"src": url
+			};
 
-        if (this.currentPage <= 0) {
-            this.$.backb.setDisabled(true);
-        } else {
-            this.$.backb.setDisabled(false);
-        }
-        if (this.currentPage + 1 >= this.pages.length) {
-            this.$.forb.setDisabled(true);
-        } else {
-            this.$.forb.setDisabled(false);
-        }
-
-        //this.$.scroller.setScrollTop(0);
-        if (this.pages[this.currentPage]) {
-			var file = url;
-			console.log(file);
-			this.base = url.slice(0, url.indexOf("/", 8) + 1);
-			if (this.base == "") {
-				this.base = file + "/";
+			if (this.currentPage <= 0) {
+				this.$.backb.setDisabled(true);
+			} else {
+				this.$.backb.setDisabled(false);
 			}
-			console.log(this.base);
+			if (this.currentPage + 1 >= this.pages.length) {
+				this.$.forb.setDisabled(true);
+			} else {
+				this.$.forb.setDisabled(false);
+			}
 
-			var i = 0;
-			//this.$.scrim2.hideAtZIndex(10);
-			var str = content.replace(/href=\"\//g, 'href="' + this.base); //update on site links with base uri
-			str = str.replace(/src=\"\//g, 'src="' + this.base);
-			console.log(this.base);
-			this.$.content.setContent(str);
-			this.$.content.render();
-			this.processChapter();
+			//this.$.scroller.setScrollTop(0);
+			if (this.pages[this.currentPage]) {
+				var file = url;
+				console.log(file);
+				this.base = url.slice(0, url.indexOf("/", 8) + 1);
+				if (this.base == "") {
+					this.base = file + "/";
+				}
+				console.log(this.base);
+
+				var i = 0;
+				//this.$.scrim2.hideAtZIndex(10);
+				var str = content.replace(/href=\"\//g, 'href="' + this.base); //update on site links with base uri
+				str = str.replace(/src=\"\//g, 'src="' + this.base);
+				console.log(this.base);
+				this.$.content.setContent(str);
+				this.$.content.render();
+				this.processChapter();
+			}
+		} catch (e) {
 		}
     },
     processChapter: function() {

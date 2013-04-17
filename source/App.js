@@ -16,7 +16,7 @@ enyo.kind({
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"},
 					{fit: true},
-					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", value: true, src: "assets/menu-icon-bookmark.png"}
+					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
 				{name: "left3", kind: "FittableRows", fit: true, classes: "panels-theme-light", components: [
 					{kind: "Scroller", touch:true, fit: true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
@@ -27,7 +27,7 @@ enyo.kind({
 									{name: "categorylist", classes:"repeater-sample-item", style: "padding: 5px;nowr font-weight: bold;", components: [
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 												{tag: "span", name: "titel", fit:true, style: "white-space:nowrap; text-align:left; margin-left:5px; overflow:hidden;"},
-												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; font-weight:normal;"}
+												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; margin-right:2px; font-weight:normal;"}
 										]}
 									]}
 								]}
@@ -43,7 +43,7 @@ enyo.kind({
 										{kind: "FittableColumns", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 												{kind: "enyo.Image", fit: false, name: "icon", src: "assets/blankfeedicon.ico", style: "height:32px; width:32px;"},
 												{tag: "span", name: "titel", fit: true, style: "width:auto; white-space:nowrap; text-align:left; margin-left:5px; padding-top:8px; overflow:hidden;"},
-												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; padding-top:5px; font-weight:normal;"}
+												{tag: "span", name: "unread", fit: false, style: "width:50px; text-align:right; margin-left:2px; margin-right:2px; padding-top:8px; font-weight:normal;"}
 										]}
 									]}
 								]}
@@ -64,7 +64,7 @@ enyo.kind({
 					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height:30px;"}, //height: 54px"},
 					{name: "lblFeedTitle", content: "Feed", style: "font-size:1.2em; font-weight:bold;"},
 					{fit: true},
-					{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", value: true, src: "assets/menu-icon-bookmark.png"}
+					{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
 
 				/* With "star/unstar" ->  too slow :(
@@ -303,6 +303,11 @@ enyo.kind({
 			}
 		} else {
 			this.$.viewPanels.layout.peekWidth = 40;
+			if (this.ViewMode == "0") {
+				this.$.btnFullArticle.setShowing(true);
+			} else {
+				this.$.btnFullArticle.setShowing(false);
+			}
 		}
 	},
 	resize: function(){
@@ -744,9 +749,11 @@ enyo.kind({
 			if (index == this.currentCategoryIndex) {
 				//categorylist.$.titel.applyStyle("color", "#333333");
 				categorylist.$.titel.applyStyle("font-weight", "bold");
+				categorylist.$.unread.applyStyle("font-weight", "bold");
 			} else {
 				//categorylist.$.titel.applyStyle("color", "#999999");
 				categorylist.$.titel.applyStyle("font-weight", "normal");
+				categorylist.$.unread.applyStyle("font-weight", "normal");
 			}
 			categorylist.$.titel.setContent(this.CategoryTitle[index]);
 			categorylist.$.unread.setContent(this.CategoryUnread[index]);
@@ -761,9 +768,11 @@ enyo.kind({
 		if (index == this.currentFeedIndex) {
 			//feedlist.$.titel.applyStyle("color", "#333333");
 			feedlist.$.titel.applyStyle("font-weight", "bold");
+			feedlist.$.unread.applyStyle("font-weight", "bold");
 		} else {
 			//feedlist.$.titel.applyStyle("color", "#999999");
 			feedlist.$.titel.applyStyle("font-weight", "normal");
+			feedlist.$.unread.applyStyle("font-weight", "normal");
 		}
 		if (this.FeedIcon[index]) {
 			feedlist.$.icon.setSrc(this.ttrssIconPath + this.FeedID[index] + ".ico");
