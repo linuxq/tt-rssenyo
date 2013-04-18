@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
        Licensed to the Apache Software Foundation (ASF) under one
        or more contributor license agreements.  See the NOTICE file
        distributed with this work for additional information
@@ -36,6 +36,11 @@
   <license href="http://opensource.org/licenses/alphabetical">
   </license>
 
+  <feature id="blackberry.ui.dialog"/>
+  <feature id="blackberry.app.event"/>
+  <feature id="blackberry.invoke"/>
+  <access uri="*" subdomains="true" browserOnly="true" />
+
   <!-- Cordova API -->
   <feature id="blackberry.system" required="true" version="1.0.0.0" />
   <feature id="org.apache.cordova" required="true" version="1.0.0" />
@@ -53,11 +58,11 @@
   <feature id="blackberry.media.camera" />
   <feature id="blackberry.ui.dialog" />
   <feature id="blackberry.media.microphone" required="true" version="1.0.0.0"/>
-  
+
   <!-- Cordova API -->
   <access subdomains="true" uri="file:///store/home" />
   <access subdomains="true" uri="file:///SDCard" />
-	
+
   <access subdomains="false" uri="http://cdn.peoplemesh.net" />
   <access subdomains="false" uri="http://cdn.peoplemesh.net:80000" />
 
