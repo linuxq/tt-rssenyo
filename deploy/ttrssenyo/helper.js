@@ -92,10 +92,14 @@ window.onload = function () {
 		// call onDeviceReady on windows desktop (chrome)
 		onDeviceReady();
 	}
+	//console.log("BLACKBERRY: " + typeof blackberry);
 	if (typeof blackberry != "undefined") {
 		// call onDeviceReady on windows desktop (chrome)
 		onDeviceReady();
 	}
+	if (navigator.userAgent.indexOf("BB10") > -1) {
+		onDeviceReady();
+	}	
 	if (window.PalmSystem) {
 		// call stageReady on webos
 		window.PalmSystem.stageReady();
