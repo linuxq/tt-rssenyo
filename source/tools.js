@@ -244,17 +244,10 @@ enyo.kind({
         disabled: true,
         onclick: "goNext"},
     {
-        kind: "Scroller",
-        classes: "enyo-fit",
-        components: [
-            {
-
-            name: "content",
-            onclick: "catchtap",
-            content: "",
-            allowHtml: true}
-
-        ]}
+		name: "content",
+		onclick: "catchtap",
+		content: "",
+		allowHtml: true}
     ],
     create: function() {
         this.inherited(arguments);
@@ -360,7 +353,7 @@ enyo.kind({
 				console.log(this.base);
 				this.$.content.setContent(str);
 				this.$.content.render();
-				this.processChapter();
+				//this.processChapter();
 			}
 		} catch (e) {
 		}
