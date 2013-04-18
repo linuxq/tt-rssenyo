@@ -5925,14 +5925,10 @@ name: "forb",
 disabled: !0,
 onclick: "goNext"
 }, {
-kind: "Scroller",
-classes: "enyo-fit",
-components: [ {
 name: "content",
 onclick: "catchtap",
 content: "",
 allowHtml: !0
-} ]
 } ],
 create: function() {
 this.inherited(arguments), this.pages = [], this.base = "", this.currentPage = 0, this.setupMenu = !1, this.loadit();
@@ -5967,7 +5963,7 @@ if (this.pages[this.currentPage]) {
 var n = e;
 console.log(n), this.base = e.slice(0, e.indexOf("/", 8) + 1), this.base == "" && (this.base = n + "/"), console.log(this.base);
 var r = 0, i = t.replace(/href=\"\//g, 'href="' + this.base);
-i = i.replace(/src=\"\//g, 'src="' + this.base), console.log(this.base), this.$.content.setContent(i), this.$.content.render(), this.processChapter();
+i = i.replace(/src=\"\//g, 'src="' + this.base), console.log(this.base), this.$.content.setContent(i), this.$.content.render();
 }
 } catch (s) {}
 },
