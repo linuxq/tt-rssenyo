@@ -24,7 +24,7 @@
 
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:rim="http://www.blackberry.com/ns/widgets"
-	version="0.0.2.4" id="com.meissel.ttrssenyo">
+	version="0.0.2.4" id="com.meissel.ttrssreader">
 
   <name>TTRSS Enyo</name>
 
