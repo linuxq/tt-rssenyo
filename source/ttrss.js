@@ -289,6 +289,44 @@ function ttrssMarkArticleStarredResponse(response, successCallback, errorCallbac
 	}
 };
 
+//**************** PublishArticleStarred ********************
+function ttrssPublishArticle(ttrssurl, ttrssSID, articleID, published, successCallback, errorCallback) {
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "updateArticle",
+		article_ids: articleID,
+		mode: published,
+		field: 1, //publish-Status
+		sid: ttrssSID
+	};
+	if (gblUseJsonpRequest) {
+		var request = new enyo.JsonpRequest({
+			url: ttrssurl + "/api/index.php"
+		});
+		request.response(function(request, response) {ttrssPublishArticleResponse(response, successCallback, errorCallback)});
+	} else {
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data)
+		});
+		request.response(function(daten) {ttrssPublishArticleResponse(JSON.parse(daten.xhrResponse.body), successCallback, errorCallback)});
+	}
+	request.go(data);
+
+	return;
+};
+
+function ttrssPublishArticleResponse(response, successCallback, errorCallback) {
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
+};
+
+
 //**************** SubscribeToFeed ********************
 function ttrssSubscribeToFeed(ttrssurl, ttrssSID, url, categoryID, successCallback, errorCallback) {
 	var data = {

@@ -122,9 +122,9 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
-					{kind: "onyx.Button", name: "btnUnlockPanels", content: "Unlock", ontap: "enablePanels", showing: false},
+					{kind: "onyx.Button", name: "btnUnlockPanels", content: "<-", ontap: "enablePanels", showing: false},
 					{fit: true},
-					{kind: "onyx.Button", style: "width: 40px", content: "<", ontap: "prevArticle"},
+					{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},rr
 					{fit: true},
 					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
@@ -135,9 +135,11 @@ enyo.kind({
 					{fit: true},
 					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer-on.png", ontap: "toggleArticleStarred"},
 					{fit: true},
+					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/starred-footer-on.png", ontap: "toggleArticlePublished"},
+					{fit: true},					
 					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 					{fit: true},
-					{kind: "onyx.Button", style: "width: 40px", content: ">", ontap: "nextArticle"}
+					{kind: "onyx.Button", name: "btnNextArticle", style: "width: 40px", content: ">", ontap: "nextArticle"}
 				]}
 			]}
 		]},
@@ -156,7 +158,7 @@ enyo.kind({
 			{kind: "onyx.Input", name: "articleID", style: "width: 50px", placeholder: "ID", onchange: "getArticle"}
 
 		]},
-		{name: "LoginPopup", style: "width:320px;", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
+		{name: "LoginPopup", style: "width:320px;", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", autoDismiss: false, components: [
 			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
 				{kind: "onyx.InputDecorator", components: [
 					{kind: "onyx.Input", placeholder: "Server (with http:// or https://)", name: "serverAddress", value: "..", style: "width:100%;"}
@@ -199,7 +201,7 @@ enyo.kind({
 			{tag: "div", style: "height:2px;"},
 			{kind: "onyx.Button", content: "Cancel", ontap: "LoginClose", style: "width:100%;"}
 		]},
-		{name: "AddFeedPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", components: [
+		{name: "AddFeedPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, autoDismiss: false, onShow: "popupShown", onHide: "popupHidden", components: [
 			{content: "Add a new feed into:"},
 			{name: "AddFeedCategory", content: ""},
 			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
@@ -612,6 +614,13 @@ enyo.kind({
 		{
 			this.$.iconStarred.setSrc("assets/starred-footer.png");
 		}
+		//FPublish-Stern setzen
+		if(inEvent[0].published) {
+			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+		} else
+		{
+			this.$.iconPublished.setSrc("assets/starred-footer.png");
+		}		
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
@@ -658,6 +667,12 @@ enyo.kind({
 		} else {
 			this.$.iconStarred.setSrc("assets/starred-footer.png");
 		}
+		//Publish-Stern setzen
+		if(inEvent[0].published) {
+			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+		} else {
+			this.$.iconPublished.setSrc("assets/starred-footer.png");
+		}		
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
@@ -741,6 +756,24 @@ enyo.kind({
 	processMarkArticleStarredError: function(inEvent){
 		//console.log(inEvent);
 	},
+	toggleArticlePublished: function(inSender, inEvent) {
+		if (this.$.iconStarred.src == "assets/starred-footer.png") {
+			//STARREN
+			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError"));
+			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+		} else
+		{
+			//STAR entfernen
+			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPulishArticleError"));
+			this.$.iconPublished.setSrc("assets/starred-footer.png");
+		}
+	},
+	processPublishArticleSuccess: function(inEvent){
+		//console.log(inEvent);
+	},
+	processPublishArticleError: function(inEvent){
+		//console.log(inEvent);
+	},	
 	setupCategories: function(inSender, inEvent) {
 		//console.log(inEvent.item);
 		var index = inEvent.index;
@@ -921,6 +954,8 @@ enyo.kind({
 			this.$.left2.setShowing(false);
 			this.$.middle.setShowing(false);
 			this.$.btnUnlockPanels.setShowing(true);
+			this.$.btnPrevArticle.setShowing(false);
+			this.$.btnNextArticle.setShowing(false);
 			this.$.grabberArticleView.setShowing(false);
 			this.$.viewPanels.setDraggable(false);
 			this.clickItem(" ", inEvent);
@@ -932,6 +967,8 @@ enyo.kind({
 		this.$.left2.setShowing(true);
 		this.$.middle.setShowing(true);
 		this.$.btnUnlockPanels.setShowing(false);
+		this.$.btnPrevArticle.setShowing(true);
+		this.$.btnNextArticle.setShowing(true);
 		this.$.grabberArticleView.setShowing(true);
 		this.$.viewPanels.setIndex(2);
 		this.resize();
@@ -959,6 +996,8 @@ enyo.kind({
 				this.$.left2.setShowing(false);
 				this.$.middle.setShowing(false);
 				this.$.btnUnlockPanels.setShowing(true);
+				this.$.btnPrevArticle.setShowing(false);
+				this.$.btnNextArticle.setShowing(false);
 				this.$.grabberArticleView.setShowing(false);
 				this.$.viewPanels.setDraggable(false);
 				this.resize();
