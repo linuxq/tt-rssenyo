@@ -1,6 +1,7 @@
 tools/deploy.sh
 cp config.xml deploy/tt-rssenyo/
 cp icon*.png deploy/tt-rssenyo/
+cp manifest.json deploy/tt-rssenyo/
 cp proxy.php deploy/tt-rssenyo/
 cp class_http.php deploy/tt-rssenyo/
 cd deploy/tt-rssenyo

@@ -133,9 +133,9 @@ enyo.kind({
 					{fit: true},
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
 					{fit: true},
-					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer-on.png", ontap: "toggleArticleStarred"},
+					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
 					{fit: true},
-					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/starred-footer-on.png", ontap: "toggleArticlePublished"},
+					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
 					{fit: true},					
 					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 					{fit: true},
@@ -616,10 +616,10 @@ enyo.kind({
 		}
 		//FPublish-Stern setzen
 		if(inEvent[0].published) {
-			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+			this.$.iconPublished.setSrc("assets/published-on.png");
 		} else
 		{
-			this.$.iconPublished.setSrc("assets/starred-footer.png");
+			this.$.iconPublished.setSrc("assets/published-off.png");
 		}		
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
@@ -669,9 +669,9 @@ enyo.kind({
 		}
 		//Publish-Stern setzen
 		if(inEvent[0].published) {
-			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+			this.$.iconPublished.setSrc("assets/published-on.png");
 		} else {
-			this.$.iconPublished.setSrc("assets/starred-footer.png");
+			this.$.iconPublished.setSrc("assets/published-off.png");
 		}		
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
@@ -757,15 +757,18 @@ enyo.kind({
 		//console.log(inEvent);
 	},
 	toggleArticlePublished: function(inSender, inEvent) {
-		if (this.$.iconStarred.src == "assets/starred-footer.png") {
-			//STARREN
+		if (this.$.iconPublished.src == "assets/published-off.png") {
+			//Publish
+			console.log("PUBLISH");
 			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError"));
-			this.$.iconPublished.setSrc("assets/starred-footer-on.png");
+			this.$.iconPublished.setSrc("assets/published-on.png");
 		} else
 		{
-			//STAR entfernen
-			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPulishArticleError"));
-			this.$.iconPublished.setSrc("assets/starred-footer.png");
+			//PuBublish
+			console.log("UNPUBLISH");
+			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError"));
+			//ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPulishArticleError"));
+			this.$.iconPublished.setSrc("assets/published-off.png");
 		}
 	},
 	processPublishArticleSuccess: function(inEvent){
@@ -1155,11 +1158,11 @@ enyo.kind({
 		if (status) {
 			this.$.loadbar.setShowing(true);
 			this.$.loadbarBlank.setShowing(false);
-			console.log("TRUE");
+			//console.log("TRUE");
 		} else {
 			this.$.loadbar.setShowing(false);
 			this.$.loadbarBlank.setShowing(true);
-			console.log("FALSE");
+			//console.log("FALSE");
 		}
 	}
 });
