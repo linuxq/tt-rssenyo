@@ -88,7 +88,8 @@ enyo.kind({
 						{name: "item", classes:"repeater-sample-item", style: "border: 1px solid black; padding: 5px; font-weight: bold;", components: [
 							{kind: "FittableRows", name: "Data1", fit: true, classes: "fittable-sample-shadow", style: "height: auto", components: [
 								{tag: "div", name: "titel", style: "width:100%; text-align:left;"},
-								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"}
+								{tag: "div", name: "preview", style: "width:100%; text-align:left; font-weight:normal;"},
+								{tag: "div", name: "timestamp", style: "width:100%; text-align:right; font-size:10px;"}
 							]}
 						]}
 					]}
@@ -136,7 +137,7 @@ enyo.kind({
 					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
 					{fit: true},
 					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
-					{fit: true},					
+					{fit: true},
 					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 					{fit: true},
 					{kind: "onyx.Button", name: "btnNextArticle", style: "width: 40px", content: ">", ontap: "nextArticle"}
@@ -620,7 +621,7 @@ enyo.kind({
 		} else
 		{
 			this.$.iconPublished.setSrc("assets/published-off.png");
-		}		
+		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
@@ -672,7 +673,7 @@ enyo.kind({
 			this.$.iconPublished.setSrc("assets/published-on.png");
 		} else {
 			this.$.iconPublished.setSrc("assets/published-off.png");
-		}		
+		}
 		//console.log("unread : " + inEvent[0].unread);
 		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
@@ -776,7 +777,7 @@ enyo.kind({
 	},
 	processPublishArticleError: function(inEvent){
 		//console.log(inEvent);
-	},	
+	},
 	setupCategories: function(inSender, inEvent) {
 		//console.log(inEvent.item);
 		var index = inEvent.index;
@@ -831,6 +832,14 @@ enyo.kind({
 		if (this.ArticleData.length > index) {
 			var data = this.ArticleData[index];
 			item.$.preview.setContent(stripHTML(html_entity_decode(data[0].content)));
+			var timestamp = data[0].updated;
+			var pubDate = new Date(timestamp * 1000);
+			var weekday = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat");
+			var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
+			var formattedDate = weekday[pubDate.getDay()] + ' '
+						+ monthname[pubDate.getMonth()] + ' '
+						+ pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
+			item.$.timestamp.setContent(formattedDate);
 		}
 		if (this.ArticleUnread[index]) {
 			//item.$.titel.applyStyle("color", "#333333");
