@@ -5,6 +5,14 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
+function format_number(num, digits, lead) {
+	var result = "" + num;
+	while (result.length < digits) {
+		result = lead + result;
+	}
+	return result;
+};
+
 // html_entity_decode from http://phpjs.org (MIT Licensed)
 function html_entity_decode(string, quote_style) {
   // http://kevin.vanzonneveld.net

@@ -1,5 +1,6 @@
 MarkReadTimer = "";
 gblUseJsonpRequest = false;
+gblApiLevel = 0;
 
 enyo.kind({
 	name: "App",
@@ -261,7 +262,7 @@ enyo.kind({
 	create: function(){
 		this.inherited(arguments);
 	},
-	startapp: function(inSender,inEvent){
+	startapp: function(inSender,inEvent) {
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
@@ -270,7 +271,9 @@ enyo.kind({
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
 		this.AutoLockPanels = (localStorage.getItem("AutoLockPanels") == "true");
 		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
+
 		this.changeViewMode();
+
 		if (this.ttrssURL == null) {
 			this.$.LoginPopup.show();
 		} else {
@@ -416,6 +419,7 @@ enyo.kind({
 		this.$.main.setContent("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
 		this.getCategories();
 		ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
+		ttrssGetApiLevel(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetApiLevelSuccess"), enyo.bind(this, "processGetApiLevelError"));
 	},
 	processLoginError: function(LoginResponse) {
 		//LoginResponse = inResponse;
@@ -435,7 +439,7 @@ enyo.kind({
 		this.$.toggleFeedUnread.setValue(getUnreadOnly);
 		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, getUnreadOnly, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 	},
-	processGetCategoriesSuccess: function(inEvent){
+	processGetCategoriesSuccess: function(inEvent) {
 		console.error("processGetCategoriesSuccess");
 		//console.log(inEvent);
 		var TextHelp = "";
@@ -530,6 +534,12 @@ enyo.kind({
 	processGetConfigError: function(inEvent){
 		console.log(inEvent);
 	},
+	processGetApiLevelSuccess: function(inEvent){
+		gblApiLevel = inEvent.level;
+	},
+	processGetApiLevelError: function(inEvent){
+		console.log(inEvent);
+	},
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
 		this.setLoadbar(true);
@@ -586,7 +596,7 @@ enyo.kind({
 		var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 		var formattedDate = weekday[pubDate.getDay()] + ' '
 				    + monthname[pubDate.getMonth()] + ' '
-				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
+				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + format_number(pubDate.getMinutes(), 2, "0");
 		//var pubDate = new Date(timestamp);
 		//console.log(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
@@ -640,7 +650,7 @@ enyo.kind({
 		var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 		var formattedDate = weekday[pubDate.getDay()] + ' '
 				    + monthname[pubDate.getMonth()] + ' '
-				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
+				    + pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + format_number(pubDate.getMinutes(), 2, "0");
 		//var pubDate = new Date(timestamp);
 		//console.log(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
@@ -838,7 +848,7 @@ enyo.kind({
 			var monthname = new Array("Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec");
 			var formattedDate = weekday[pubDate.getDay()] + ' '
 						+ monthname[pubDate.getMonth()] + ' '
-						+ pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + pubDate.getMinutes();
+						+ pubDate.getDate() + ', ' + pubDate.getFullYear() + ' ' + pubDate.getHours() + ':' + format_number(pubDate.getMinutes(), 2, "0");
 			item.$.timestamp.setContent(formattedDate);
 		}
 		if (this.ArticleUnread[index]) {

@@ -515,3 +515,37 @@ function ttrssUpdateFeedResponse(response, successCallback, errorCallback) {
 		errorCallback(response.content.error);
 	}
 };
+
+//**************** GetApiLevel ********************
+function ttrssGetApiLevel(ttrssurl, ttrssSID, successCallback, errorCallback) {
+	//console.log("GET CATEGORIES");
+	var data = {
+		op: "getApiLevel",
+		sid: ttrssSID
+	};
+	if (gblUseJsonpRequest) {
+		var request = new enyo.JsonpRequest({
+			url: ttrssurl + "/api/index.php"
+		});
+		request.response(function(request, response) {ttrssGetApiLevelResponse(response, successCallback, errorCallback)});
+	} else {
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data)
+		});
+		request.response(function(daten) {ttrssGetApiLevelResponse(JSON.parse(daten.xhrResponse.body), successCallback, errorCallback)});
+	}
+	request.go(data);
+
+	return;
+};
+
+function ttrssGetApiLevelResponse(response, successCallback, errorCallback) {
+	if (response.status == 0) {
+		successCallback(response.content);
+	} else {
+		errorCallback(response.content.error);
+	}
+};
