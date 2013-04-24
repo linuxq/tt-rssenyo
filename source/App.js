@@ -183,7 +183,8 @@ enyo.kind({
 				]}
 			]},
 			{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
-			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
+			{kind: "onyx.Checkbox", name: "autoLoadAllArticles", content: "Autoload 'all articles' feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
 			{kind: "onyx.Checkbox", name: "autoLockPanels", content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 			{kind: "FittableColumns", style: "height: auto", components: [
 				{kind: "onyx.PickerDecorator", components: [
@@ -252,6 +253,7 @@ enyo.kind({
 	ViewMode: "0",
 	AutoLoadFirstFeed: false,
 	AutoLockPanels: false,
+	AutoLoadAllArticles: false,
 
 	// Merkvariablen
 	dragStartPanelIndex: null,
@@ -269,6 +271,7 @@ enyo.kind({
 		this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout");
 		this.ViewMode = localStorage.getItem("ViewMode");
 		this.AutoLoadFirstFeed = (localStorage.getItem("AutoLoadFirstFeed") == "true");
+		this.AutoLoadAllArticles= (localStorage.getItem("AutoLoadAllArticles") == "true");
 		this.AutoLockPanels = (localStorage.getItem("AutoLockPanels") == "true");
 		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
 
@@ -278,8 +281,14 @@ enyo.kind({
 			this.$.LoginPopup.show();
 		} else {
 			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-			var getUnreadOnly = this.$.toggleUnread.getValue();
-			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			/*var getUnreadOnly = this.$.toggleUnread.getValue();
+			if (this.AutoLoadAllArticles) {
+				ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -4, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			} else
+			{
+				ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			}
+			*/
 		};
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
@@ -334,12 +343,14 @@ enyo.kind({
 		this.ViewMode = this.$.pickViewMode.getSelected().value;
 		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 		this.AutoLockPanels = this.$.autoLockPanels.getValue();
+		this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue();
 		gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
 		localStorage.setItem("ttrsspassword", this.ttrssPassword);
 		localStorage.setItem("ViewMode", this.ViewMode);
 		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
+		localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles);
 		localStorage.setItem("AutoLockPanels", this.AutoLockPanels);
 		localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
@@ -362,6 +373,7 @@ enyo.kind({
 				break;
 		}
 		this.$.autoLoadFirstFeed.setValue(this.AutoLoadFirstFeed);
+		this.$.autoLoadAllArticles.setValue(this.AutoLoadAllArticles);
 		this.$.autoLockPanels.setValue(this.AutoLockPanels);
 		switch (this.ttrssAutoMarkRead) {
 			case '1000':
@@ -420,6 +432,17 @@ enyo.kind({
 		this.getCategories();
 		ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError"));
 		ttrssGetApiLevel(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetApiLevelSuccess"), enyo.bind(this, "processGetApiLevelError"));
+		var getUnreadOnly = this.$.toggleUnread.getValue();
+		if (this.AutoLoadAllArticles)
+		{
+			this.$.lblFeedTitle.setContent("All articles");
+			this.$.feedTitleIcon.setShowing(false);			
+			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -4, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+			//this.$.viewPanels.setIndex(2);
+		} else
+		{
+			//ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
+		}		
 	},
 	processLoginError: function(LoginResponse) {
 		//LoginResponse = inResponse;
@@ -1149,6 +1172,18 @@ enyo.kind({
 	},
 	goBack: function(inSender, inEvent){
 		console.error(" BACK ");
+	},
+	AutoLoadChanged: function(inSender, inEvent){
+		if (inSender == this.$.autoLoadAllArticles) {
+			if (inSender.getValue()) {
+				this.$.autoLoadFirstFeed.setValue(false);
+			}
+		};
+		if (inSender == this.$.autoLoadFirstFeed) {
+			if (inSender.getValue()) {
+				this.$.autoLoadAllArticles.setValue(false);
+			}
+		}		
 	},
 	titleDragStart: function(inSender, inEvent){
 		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
