@@ -329,22 +329,39 @@ function ttrssPublishArticleResponse(response, successCallback, errorCallback) {
 
 //**************** SubscribeToFeed ********************
 function ttrssSubscribeToFeed(ttrssurl, ttrssSID, url, categoryID, successCallback, errorCallback) {
-	var data = {
-		op: "subscribeToFeed",
-		feed_url: url,
-		category_id: categoryID,
-		sid: ttrssSID
-	};
-	var request = new enyo.Ajax({
-		url: ttrssurl + "/public.php?op=subscribe&feed_url=" + url,
-		method: "GET"
-		//url: ttrssurl + "/api/",
-		//method: "POST",
-		//handleAs: "json",
-		//postBody: JSON.stringify(data)
-	});
-	request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
-	request.go();
+	if (gblApiLevel <= 4) {
+		var data = {
+			op: "subscribeToFeed",
+			feed_url: url,
+			category_id: categoryID,
+			sid: ttrssSID
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/public.php?op=subscribe&feed_url=" + url,
+			method: "GET"
+			//url: ttrssurl + "/api/",
+			//method: "POST",
+			//handleAs: "json",
+			//postBody: JSON.stringify(data)
+		});
+		request.response(function(daten) {ttrssSubscribeToFeedResponse(daten, successCallback, errorCallback)});
+		request.go();
+	} else {
+		var data = {
+			op: "subscribeToFeed",
+			feed_url: url,
+			category_id: categoryID,
+			sid: ttrssSID
+		};
+		var request = new enyo.Ajax({
+			url: ttrssurl + "/api/",
+			method: "POST",
+			handleAs: "json",
+			postBody: JSON.stringify(data)
+		});
+		request.response(function(daten) {ttrssSubscribeToFeedResponse(JSON.parse(daten.xhrResponse.body), successCallback, errorCallback)});
+		request.go(data);		
+	}
 	//request.go(data);
 
 	return;

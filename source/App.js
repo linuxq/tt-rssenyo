@@ -248,6 +248,7 @@ enyo.kind({
 	ttrssIconPath: null,
 	ttrss_SID: "",
 	ttrssAutoMarkRead: "2000",
+	JustStarted: true,
 
 	//Settings
 	ViewMode: "0",
@@ -438,7 +439,9 @@ enyo.kind({
 			this.$.lblFeedTitle.setContent("All articles");
 			this.$.feedTitleIcon.setShowing(false);			
 			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -4, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-			//this.$.viewPanels.setIndex(2);
+			if (window.innerWidth < 1024) {
+				this.$.viewPanels.setIndex(2);
+			}
 		} else
 		{
 			//ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
@@ -487,21 +490,27 @@ enyo.kind({
 			};
 		};
 		this.$.categoryRepeater.setCount(this.CategoryTitle.length);
-		if (this.CategoryTitle.length > 0) {
-			if (userCategories) {
-				//open first user defined category
-				this.selectCategory(0);
-			} else
-			{
-				//open "undefined" category = all feeds if no categories defined
-				this.$.categoryHeader.toggleOpen(false);
-				this.selectCategory(undefinedCategory);
+		if (this.AutoLoadAllArticles){
+			this.setLoadbar(true);
+			var getUnreadOnly = this.$.toggleUnread.getValue();
+			ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -1, enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));												
+		} else {
+			if (this.CategoryTitle.length > 0) {
+				if (userCategories) {
+					//open first user defined category
+					this.selectCategory(0);
+				} else
+				{
+					//open "undefined" category = all feeds if no categories defined
+					this.$.categoryHeader.toggleOpen(false);
+					this.selectCategory(undefinedCategory);
+				}
 			}
-		}
-
-		//open "undefined" category
-		if ((this.CategoryTitle.length > 0) && (userCategories)) {
-			this.selectCategory(0);
+				
+			//open "undefined" category
+			if ((this.CategoryTitle.length > 0) && (userCategories)) {
+				this.selectCategory(0);
+			}
 		}
 		//console.log(inEvent);
 		//this.setLoadbar(false);

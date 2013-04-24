@@ -5146,6 +5146,7 @@ ttrssPassword: null,
 ttrssIconPath: null,
 ttrss_SID: "",
 ttrssAutoMarkRead: "2000",
+JustStarted: !0,
 ViewMode: "0",
 AutoLoadFirstFeed: !1,
 AutoLockPanels: !1,
@@ -5212,7 +5213,7 @@ this.ttrssAutoMarkRead = t.selected.value;
 processLoginSuccess: function(e) {
 this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError")), ttrssGetApiLevel(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetApiLevelSuccess"), enyo.bind(this, "processGetApiLevelError"));
 var t = this.$.toggleUnread.getValue();
-this.AutoLoadAllArticles && (this.$.lblFeedTitle.setContent("All articles"), this.$.feedTitleIcon.setShowing(!1), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, t, -4, !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")));
+this.AutoLoadAllArticles && (this.$.lblFeedTitle.setContent("All articles"), this.$.feedTitleIcon.setShowing(!1), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, t, -4, !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2));
 },
 processLoginError: function(e) {
 console.error("LOGIN Error: " + e.error), alert("LOGIN Error: " + e.error), this.$.main.setContent("LOGIN ERROR: " + e.error);
@@ -5231,7 +5232,12 @@ var t = "";
 this.CategoryTitle.length = 0, this.CategoryUnread.length = 0, this.CategoryID.length = 0;
 var n = 0, r = null;
 for (var i = 0; i < e.length; i++) t = t + "#" + e[i].id + " " + e[i].title + " - " + e[i].unread + "<br>", this.CategoryTitle[i] = html_entity_decode(e[i].title), this.CategoryUnread[i] = e[i].unread, this.CategoryID[i] = e[i].id, e[i].id > 0 && n++, e[i].id == 0 && (r = i);
-this.$.categoryRepeater.setCount(this.CategoryTitle.length), this.CategoryTitle.length > 0 && (n ? this.selectCategory(0) : (this.$.categoryHeader.toggleOpen(!1), this.selectCategory(r))), this.CategoryTitle.length > 0 && n && this.selectCategory(0);
+this.$.categoryRepeater.setCount(this.CategoryTitle.length);
+if (this.AutoLoadAllArticles) {
+this.setLoadbar(!0);
+var s = this.$.toggleUnread.getValue();
+ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, s, -1, enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
+} else this.CategoryTitle.length > 0 && (n ? this.selectCategory(0) : (this.$.categoryHeader.toggleOpen(!1), this.selectCategory(r))), this.CategoryTitle.length > 0 && n && this.selectCategory(0);
 },
 processGetCategoriesError: function(e) {
 console.error("processGetCategoriesError"), console.error(e), alert(e), this.setLoadbar(!1);
@@ -5788,6 +5794,7 @@ e.status == 0 ? t(e.content) : n(e.content.error);
 }
 
 function ttrssSubscribeToFeed(e, t, n, r, i, s) {
+if (gblApiLevel <= 4) {
 var o = {
 op: "subscribeToFeed",
 feed_url: n,
@@ -5800,6 +5807,22 @@ method: "GET"
 u.response(function(e) {
 ttrssSubscribeToFeedResponse(e, i, s);
 }), u.go();
+} else {
+var o = {
+op: "subscribeToFeed",
+feed_url: n,
+category_id: r,
+sid: t
+}, u = new enyo.Ajax({
+url: e + "/api/",
+method: "POST",
+handleAs: "json",
+postBody: JSON.stringify(o)
+});
+u.response(function(e) {
+ttrssSubscribeToFeedResponse(JSON.parse(e.xhrResponse.body), i, s);
+}), u.go(o);
+}
 return;
 }
 
