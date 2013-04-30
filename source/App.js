@@ -133,7 +133,24 @@ enyo.kind({
 					{fit: true},
 					{name: "lblArticles", align: "right"},
 					{fit: true},
+					
+					{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
+						{kind: "onyx.Button", content: "..."},
+						{kind: "onyx.Menu", components: [
+							//{components: [
+							//	{kind: "onyx.IconButton", src: "assets/menu-icon-bookmark.png"},
+								{content: "Twitter", name: "shareTW"},
+							//]},
+							{content: "Facebook", name: "shareFB"},
+							//{classes: "onyx-menu-divider"},
+							{content: "App.net"},
+							{content: "G+"},
+							//{content: "ReadItLater", active: false},
+						]}
+					]},					
+					
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+					//{kind: "enyo.Image", fit: false, onclick: "sharePodcastOpen", style: "height: 30px", src: "assets/sharebt48.png"},
 					{fit: true},
 					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
 					{fit: true},
@@ -1106,6 +1123,29 @@ enyo.kind({
 			}
 		};
 	},
+	shareArticle: function(inSender, inEvent){
+		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
+		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;		
+		switch (inEvent.originator.content) {
+			case "Twitter":
+
+				//console.log(this.ArticleData[this.RecentArticleIndex][0].title);
+				window.open("http://www.twitter.com/share?text='" + ShareText + "'&url=" + ShareUrl);
+				break;
+			case "Facebook":
+				//window.open("http://www.facebook.com/sharer/sharer.php?u=" + PCastsUrl[PCMerker.index] + "&t=Interessanter%20Podcast");
+				window.open("http://www.facebook.com/sharer/sharer.php?u=" + ShareUrl); //+ "&i=http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png" );
+				//http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png
+				break;
+			case "G+":
+				window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + ShareUrl); 
+				break;
+			case "App.net":
+				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl); 
+				break;			
+		};
+			
+	},	
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
