@@ -13,7 +13,7 @@ enyo.kind({
 					{name: "main", classes: "nice-padding", allowHtml: true}
 				]}
 			]},
-			{name: "left2", kind: "FittableRows", classes: ".panels-theme-light", style: "width: 260px", components: [
+			{name: "left2", kind: "FittableRows", classes: "panels-theme-light", style: "width:260px; background-color:#fff;", components: [
 				{kind: "onyx.Toolbar", components: [
 					{content: "TT-RSS Reader"},
 					{fit: true},
@@ -101,8 +101,8 @@ enyo.kind({
 					{kind: "onyx.Grabber"},
 					{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
 					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
-					{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", ontap: "FeedListPageUp", showing: false},
-					{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", ontap: "FeedListPageDown", showing: false}
+					{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
+					{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
 				]}
 				//{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
@@ -133,7 +133,7 @@ enyo.kind({
 					{fit: true},
 					{name: "lblArticles", align: "right"},
 					{fit: true},
-					
+
 					{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
 						{kind: "onyx.Button", content: "..."},
 						{kind: "onyx.Menu", components: [
@@ -147,8 +147,8 @@ enyo.kind({
 							{content: "G+"},
 							//{content: "ReadItLater", active: false},
 						]}
-					]},					
-					
+					]},
+
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
 					//{kind: "enyo.Image", fit: false, onclick: "sharePodcastOpen", style: "height: 30px", src: "assets/sharebt48.png"},
 					{fit: true},
@@ -343,6 +343,45 @@ enyo.kind({
 			}
 		}
 	},
+	resizeHandler: function() {
+	  // don't forget to call the default implementation
+	  this.inherited(arguments);
+	  // do my resizing tasks
+		if (window.innerWidth < 1024) {
+			this.$.btnFullArticle.setShowing(false);
+			if (window.innerWidth > 400) {
+				//Bei Pre 3 ArticelView vergrößern
+				//this.$.categoryHeader.applyStyle("font-size", "1.8em");
+				this.$.categoryRepeater.applyStyle("font-size", "1.8em");
+				//this.$.feedHeader.applyStyle("font-size", "1.8em");
+				this.$.feedRepeater.applyStyle("font-size", "1.8em");
+				this.$.articleRepeater.applyStyle("font-size", "1.8em");
+				this.$.articlePreviewScroller.applyStyle("font-size", "1.8em");
+				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
+				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
+				this.$.articleViewTitle2.applyStyle("font-size", "1.6em");
+			} else
+			{
+				//Bei Pre / Veer etc ArticelView vergrößern
+				//this.$.categoryHeader.applyStyle("font-size", "1.2em");
+				this.$.categoryRepeater.applyStyle("font-size", "1.2em");
+				//this.$.feedHeader.applyStyle("font-size", "1.2em");
+				this.$.feedRepeater.applyStyle("font-size", "1.2em");
+				this.$.articleRepeater.applyStyle("font-size", "1.2em");
+				this.$.articlePreviewScroller.applyStyle("font-size", "1.2em");
+				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
+				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
+				this.$.articleViewTitle2.applyStyle("font-size", "1.0em");
+			}
+		} else {
+			this.$.viewPanels.layout.peekWidth = 40;
+			if (this.ViewMode == "0") {
+				this.$.btnFullArticle.setShowing(true);
+			} else {
+				this.$.btnFullArticle.setShowing(false);
+			}
+		}
+	},
 	resize: function(){
 		//console.log("resize");
 		this.$.left2.reflow();
@@ -350,6 +389,7 @@ enyo.kind({
 		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
 		this.$.body.reflow();
+		this.resized();
 	},
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
@@ -454,7 +494,7 @@ enyo.kind({
 		if (this.AutoLoadAllArticles)
 		{
 			this.$.lblFeedTitle.setContent("All articles");
-			this.$.feedTitleIcon.setShowing(false);			
+			this.$.feedTitleIcon.setShowing(false);
 			ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -4, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 			if (window.innerWidth < 1024) {
 				this.$.viewPanels.setIndex(2);
@@ -462,7 +502,7 @@ enyo.kind({
 		} else
 		{
 			//ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-		}		
+		}
 	},
 	processLoginError: function(LoginResponse) {
 		//LoginResponse = inResponse;
@@ -510,7 +550,7 @@ enyo.kind({
 		if (this.AutoLoadAllArticles){
 			this.setLoadbar(true);
 			var getUnreadOnly = this.$.toggleUnread.getValue();
-			ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -1, enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));												
+			ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -1, enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError"));
 		} else {
 			if (this.CategoryTitle.length > 0) {
 				if (userCategories) {
@@ -523,7 +563,7 @@ enyo.kind({
 					this.selectCategory(undefinedCategory);
 				}
 			}
-				
+
 			//open "undefined" category
 			if ((this.CategoryTitle.length > 0) && (userCategories)) {
 				this.selectCategory(0);
@@ -1005,11 +1045,25 @@ enyo.kind({
 		this.selectFeed(this.currentFeedIndex);
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
-	FeedListPageUp: function(inEvent) {
+	FeedListPageUp: function() {
 		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight/3);
 	},
-	FeedListPageDown: function(inEvent) {
+	FeedListPageUpDown: function() {
+		this.FeedListPageUp();
+		this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+	},
+	FeedListPageUpUp: function() {
+		clearInterval(this.FeedListPageUpInterval);
+	},
+	FeedListPageDown: function() {
 		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight/3);
+	},
+	FeedListPageDownDown: function() {
+		this.FeedListPageDown();
+		this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+	},
+	FeedListPageDownUp: function() {
+		clearInterval(this.FeedListPageDownInterval);
 	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
@@ -1125,7 +1179,7 @@ enyo.kind({
 	},
 	shareArticle: function(inSender, inEvent){
 		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
-		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;		
+		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 		switch (inEvent.originator.content) {
 			case "Twitter":
 
@@ -1138,14 +1192,14 @@ enyo.kind({
 				//http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png
 				break;
 			case "G+":
-				window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + ShareUrl); 
+				window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + ShareUrl);
 				break;
 			case "App.net":
-				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl); 
-				break;			
+				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl);
+				break;
 		};
-			
-	},	
+
+	},
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
@@ -1232,7 +1286,7 @@ enyo.kind({
 			if (inSender.getValue()) {
 				this.$.autoLoadAllArticles.setValue(false);
 			}
-		}		
+		}
 	},
 	titleDragStart: function(inSender, inEvent){
 		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
