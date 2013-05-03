@@ -1032,6 +1032,8 @@ enyo.kind({
 	},
 	processMarkFeedReadSuccess: function(inEvent) {
 		console.log(inEvent);
+		this.$.articleRepeater.setCount(0);
+		this.$.articleScroller.setScrollTop(0);		
 		this.getCategories();
 	},
 	processMarkFeedReadError: function(inEvent) {
@@ -1095,6 +1097,7 @@ enyo.kind({
 	},
 	enablePanels: function(inSender, inEvent){
 		console.log("ENABLE Panels");
+		this.UpdateFeedClick();
 		this.$.left2.setShowing(true);
 		this.$.middle.setShowing(true);
 		this.$.btnUnlockPanels.setShowing(false);
@@ -1158,6 +1161,7 @@ enyo.kind({
 	},
 	prevArticle: function(inSender, inEvent){
 		if ((this.RecentArticleIndex == 0)) {
+			this.UpdateFeedClick();
 			this.enablePanels();
 		}
 		if (this.RecentArticleIndex >= 1){
@@ -1172,8 +1176,8 @@ enyo.kind({
 		//console.log(RecentArticleIndex);
 	},
 	nextArticle: function(inSender, inEvent){
-		this.setLoadbar(true);
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
+			this.setLoadbar(true);
 			this.RecentArticleIndex = this.RecentArticleIndex + 1;
 			//console.log(RecentArticleIndex);
 			if (this.ViewMode != "0") {

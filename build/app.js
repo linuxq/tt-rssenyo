@@ -4479,8 +4479,8 @@ allowHtml: !0
 }, {
 name: "left2",
 kind: "FittableRows",
-classes: ".panels-theme-light",
-style: "width: 260px",
+classes: "panels-theme-light",
+style: "width:260px; background-color:#fff;",
 components: [ {
 kind: "onyx.Toolbar",
 components: [ {
@@ -4706,14 +4706,18 @@ ontap: "UpdateFeedClick"
 kind: "onyx.Button",
 name: "FeedListPageUpButton",
 content: "Up",
-ontap: "FeedListPageUp",
-showing: !1
+onmousedown: "FeedListPageUpDown",
+onmouseup: "FeedListPageUpUp",
+showing: !1,
+style: "margin-left:0px; margin-right:0px; width:68px;"
 }, {
 kind: "onyx.Button",
 name: "FeedListPageDownButton",
 content: "Dwn",
-ontap: "FeedListPageDown",
-showing: !1
+onmousedown: "FeedListPageDownDown",
+onmouseup: "FeedListPageDownUp",
+showing: !1,
+style: "margin-left:0px; margin-right:0px; width:68px;"
 } ]
 } ]
 }, {
@@ -4812,6 +4816,26 @@ name: "lblArticles",
 align: "right"
 }, {
 fit: !0
+}, {
+kind: "onyx.MenuDecorator",
+onSelect: "shareArticle",
+components: [ {
+kind: "onyx.Button",
+content: "..."
+}, {
+kind: "onyx.Menu",
+components: [ {
+content: "Twitter",
+name: "shareTW"
+}, {
+content: "Facebook",
+name: "shareFB"
+}, {
+content: "App.net"
+}, {
+content: "G+"
+} ]
+} ]
 }, {
 kind: "onyx.IconButton",
 src: "assets/browser2.png",
@@ -5161,8 +5185,11 @@ this.inherited(arguments);
 startapp: function(e, t) {
 this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
 },
+resizeHandler: function() {
+this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
+},
 resize: function() {
-this.$.left2.reflow(), this.$.middle.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
+this.$.left2.reflow(), this.$.middle.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow(), this.resized();
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -5391,7 +5418,7 @@ MarkFeedRead: function(e) {
 ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
 },
 processMarkFeedReadSuccess: function(e) {
-console.log(e), this.getCategories();
+console.log(e), this.$.articleRepeater.setCount(0), this.$.articleScroller.setScrollTop(0), this.getCategories();
 },
 processMarkFeedReadError: function(e) {
 console.log(e);
@@ -5402,11 +5429,23 @@ this.$.MarkFeedReadPopup.hide();
 UpdateFeedClick: function(e) {
 this.setLoadbar(!0), this.selectFeed(this.currentFeedIndex);
 },
-FeedListPageUp: function(e) {
+FeedListPageUp: function() {
 this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight / 3);
 },
-FeedListPageDown: function(e) {
+FeedListPageUpDown: function() {
+this.FeedListPageUp(), this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+},
+FeedListPageUpUp: function() {
+clearInterval(this.FeedListPageUpInterval);
+},
+FeedListPageDown: function() {
 this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight / 3);
+},
+FeedListPageDownDown: function() {
+this.FeedListPageDown(), this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+},
+FeedListPageDownUp: function() {
+clearInterval(this.FeedListPageDownInterval);
 },
 processUpdateFeedSuccess: function(e) {
 console.log(e), this.selectFeed(this.currentFeedIndex);
@@ -5418,7 +5457,7 @@ holdItem: function(e, t) {
 window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.clickItem(" ", t), this.resize());
 },
 enablePanels: function(e, t) {
-console.log("ENABLE Panels"), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.btnPrevArticle.setShowing(!0), this.$.btnNextArticle.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.resize(), this.$.viewPanels.setDraggable(!0);
+console.log("ENABLE Panels"), this.UpdateFeedClick(), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.btnPrevArticle.setShowing(!0), this.$.btnNextArticle.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.resize(), this.$.viewPanels.setDraggable(!0);
 },
 clickItem: function(e, t) {
 this.RecentArticleIndex = t.index;
@@ -5438,10 +5477,27 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 this.ttrssURL == ".." && (n = "proxy.php?proxy_url=" + n), ttrssGetFullArticle(n, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3);
 },
 prevArticle: function(e, t) {
-this.RecentArticleIndex == 0 && this.enablePanels(), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex == 0 && (this.UpdateFeedClick(), this.enablePanels()), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 nextArticle: function(e, t) {
-this.setLoadbar(!0), this.RecentArticleIndex < this.Articles.length - 1 && (this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex < this.Articles.length - 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+},
+shareArticle: function(e, t) {
+var n = this.ArticleURL[this.RecentArticleIndex];
+ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
+switch (t.originator.content) {
+case "Twitter":
+window.open("http://www.twitter.com/share?text='" + ShareText + "'&url=" + n);
+break;
+case "Facebook":
+window.open("http://www.facebook.com/sharer/sharer.php?u=" + n);
+break;
+case "G+":
+window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + n);
+break;
+case "App.net":
+window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + n);
+}
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
