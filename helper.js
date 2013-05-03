@@ -99,7 +99,7 @@ window.onload = function () {
 	}
 	if (navigator.userAgent.indexOf("BB10") > -1) {
 		onDeviceReady();
-	}	
+	}
 	if (window.PalmSystem) {
 		// call stageReady on webos
 		window.PalmSystem.stageReady();

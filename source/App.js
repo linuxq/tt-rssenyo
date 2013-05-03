@@ -1033,7 +1033,7 @@ enyo.kind({
 	processMarkFeedReadSuccess: function(inEvent) {
 		console.log(inEvent);
 		this.$.articleRepeater.setCount(0);
-		this.$.articleScroller.setScrollTop(0);		
+		this.$.articleScroller.setScrollTop(0);
 		this.getCategories();
 	},
 	processMarkFeedReadError: function(inEvent) {
@@ -1053,11 +1053,18 @@ enyo.kind({
 	FeedListPageUpDown: function() {
 		this.FeedListPageUp();
 		if (!this.FeedListPageUpInterval) {
-			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 400);
 		}
+		// page up? then ensure we cancel page down
+		if (this.FeedListPageDownInterval) {
+			clearInterval(this.FeedListPageDownInterval);
+		}
+		this.FeedListPageDownInterval = null;
 	},
 	FeedListPageUpUp: function() {
-		clearInterval(this.FeedListPageUpInterval);
+		if (this.FeedListPageUpInterval) {
+			clearInterval(this.FeedListPageUpInterval);
+		}
 		this.FeedListPageUpInterval = null;
 	},
 	FeedListPageDown: function() {
@@ -1066,11 +1073,18 @@ enyo.kind({
 	FeedListPageDownDown: function() {
 		this.FeedListPageDown();
 		if (!this.FeedListPageDownInterval) {
-			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 400);
 		}
+		// page down? then ensure we cancel page up
+		if (this.FeedListPageUpInterval) {
+			clearInterval(this.FeedListPageUpInterval);
+		}
+		this.FeedListPageUpInterval = null;
 	},
 	FeedListPageDownUp: function() {
-		clearInterval(this.FeedListPageDownInterval);
+		if (this.FeedListPageDownInterval) {
+			clearInterval(this.FeedListPageDownInterval);
+		}
 		this.FeedListPageDownInterval = null;
 	},
 	processUpdateFeedSuccess: function(inEvent) {
