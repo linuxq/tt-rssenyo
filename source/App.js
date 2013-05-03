@@ -1046,24 +1046,30 @@ enyo.kind({
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
 	FeedListPageUp: function() {
-		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight/3);
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight/10);
 	},
 	FeedListPageUpDown: function() {
 		this.FeedListPageUp();
-		this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+		if (!this.FeedListPageUpInterval) {
+			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+		}
 	},
 	FeedListPageUpUp: function() {
 		clearInterval(this.FeedListPageUpInterval);
+		this.FeedListPageUpInterval = null;
 	},
 	FeedListPageDown: function() {
-		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight/3);
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight/10);
 	},
 	FeedListPageDownDown: function() {
 		this.FeedListPageDown();
-		this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+		if (!this.FeedListPageDownInterval) {
+			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+		}
 	},
 	FeedListPageDownUp: function() {
 		clearInterval(this.FeedListPageDownInterval);
+		this.FeedListPageDownInterval = null;
 	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
