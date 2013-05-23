@@ -99,7 +99,15 @@ enyo.kind({
 				{fit: true},
 				{kind: "onyx.Toolbar", components: [
 					{kind: "onyx.Grabber"},
-					{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
+					//{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
+					{kind: "onyx.MenuDecorator", onSelect: "MarkFeedReadClick", components: [
+						{kind: "onyx.Button", content: "Read..."},
+						{kind: "onyx.Menu", components: [
+							{content: "until Current", name: "current"},
+							{content: "all List", name: "list"},
+							{content: "all Feed", name: "feed"}
+						]}
+					]},
 					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
 					{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
 					{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
@@ -1024,14 +1032,39 @@ enyo.kind({
 		console.log(inEvent);
 		this.$.main.setContent(inEvent);
 	},
-	MarkFeedReadClick: function(inEvent) {
-		//als gelesen markieren
-		for (var i=0; i<this.ArticleID.length; i++) {
-			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
-			this.ArticleUnread[i] = false;
+	MarkFeedReadClick: function(inSender, inEvent) {
+		switch (inEvent.originator.name) {
+			case "current":
+				var top = 0;
+				var currentArticle = 0;
+				for (var i=0; i<this.$.articleScroller.controlAtIndex(1).controls.length; i++) {
+					top += this.$.articleScroller.controlAtIndex(1).controls[i].children[0].children[0].node.offsetHeight;
+					currentArticle++;
+					if (top > this.$.articleScroller.getScrollTop()) {
+						break;
+					}
+				}
+				for (var i=0; i<currentArticle; i++) {
+					ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+					this.ArticleUnread[i] = false;
+				}
+				this.setLoadbar(true);
+				this.selectFeed(this.currentFeedIndex);
+				break;
+			case "list":
+				for (var i=0; i<this.ArticleID.length; i++) {
+					ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+					this.ArticleUnread[i] = false;
+				}
+				this.setLoadbar(true);
+				this.selectFeed(this.currentFeedIndex);
+				break;
+			case "feed":
+				ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
+				break;
 		}
-		this.setLoadbar(true);
-		this.selectFeed(this.currentFeedIndex);
+
+		//als gelesen markieren
 
 		//this.$.MarkFeedReadPopup.show();
 	},
