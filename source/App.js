@@ -664,7 +664,8 @@ enyo.kind({
 		this.$.articleScroller.setScrollTop(0);
 		//this.$.feedlist.setContent(TextHelp);
 		//console.log(inEvent);
-		//this.setLoadbar(false);
+		if (inEvent.length == 0)
+			this.setLoadbar(false);
 	},
 	processGetHeadlinesError: function(inEvent){
 		console.log(inEvent);
@@ -1023,8 +1024,16 @@ enyo.kind({
 		console.log(inEvent);
 		this.$.main.setContent(inEvent);
 	},
-	MarkFeedReadClick: function(inEvent){
-		this.$.MarkFeedReadPopup.show();
+	MarkFeedReadClick: function(inEvent) {
+		//als gelesen markieren
+		for (var i=0; i<this.ArticleID.length; i++) {
+			ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], false,  enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError"));
+			this.ArticleUnread[i] = false;
+		}
+		this.setLoadbar(true);
+		this.selectFeed(this.currentFeedIndex);
+
+		//this.$.MarkFeedReadPopup.show();
 	},
 	MarkFeedRead: function(inEvent){
 		ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
