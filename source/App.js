@@ -5,6 +5,10 @@ gblApiLevel = 0;
 enyo.kind({
 	name: "App",
 	kind: "FittableRows",
+	handlers: {
+		//oncontextmenu: "handleContextMenu",
+		onmouseup: "handleGlobalMouseUp"
+	},
 	fit: true,
 	components:[
 		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", wrap: false, components: [
@@ -1128,6 +1132,16 @@ enyo.kind({
 			clearInterval(this.FeedListPageDownInterval);
 		}
 		this.FeedListPageDownInterval = null;
+	},
+	handleGlobalMouseUp: function(inSender, inEvent) {
+		if (this.FeedListPageDownInterval) {
+			clearInterval(this.FeedListPageDownInterval);
+		}
+		this.FeedListPageDownInterval = null;
+		if (this.FeedListPageUpInterval) {
+			clearInterval(this.FeedListPageUpInterval);
+		}
+		this.FeedListPageUpInterval = null;
 	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
