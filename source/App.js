@@ -7,6 +7,7 @@ enyo.kind({
 	kind: "FittableRows",
 	handlers: {
 		//oncontextmenu: "handleContextMenu",
+		onmousemove: "handleGlobalMouseMove",
 		onmouseup: "handleGlobalMouseUp"
 	},
 	fit: true,
@@ -1093,11 +1094,13 @@ enyo.kind({
 		this.selectFeed(this.currentFeedIndex);
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
-	FeedListPageUp: function() {
-		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight/10);
+	FeedListPageUp: function(first) {
+		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 2, window.innerHeight/5);
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - step);
 	},
 	FeedListPageUpDown: function() {
-		this.FeedListPageUp();
+		this.startY = this.mouseY;
+		this.FeedListPageUp(true);
 		if (!this.FeedListPageUpInterval) {
 			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 400);
 		}
@@ -1113,11 +1116,14 @@ enyo.kind({
 		}
 		this.FeedListPageUpInterval = null;
 	},
-	FeedListPageDown: function() {
-		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight/10);
+	FeedListPageDown: function(first) {
+		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 2, window.innerHeight/5);
+		//console.log("step " + step + " " + window.innerHeight/5 + " " + this.startY + " " + this.mouseY + " " + (this.startY - this.mouseY));
+		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + step);
 	},
 	FeedListPageDownDown: function() {
-		this.FeedListPageDown();
+		this.startY = this.mouseY;
+		this.FeedListPageDown(true);
 		if (!this.FeedListPageDownInterval) {
 			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 400);
 		}
@@ -1142,6 +1148,9 @@ enyo.kind({
 			clearInterval(this.FeedListPageUpInterval);
 		}
 		this.FeedListPageUpInterval = null;
+	},
+	handleGlobalMouseMove: function(inSender, inEvent) {
+		this.mouseY = inEvent.screenY;
 	},
 	processUpdateFeedSuccess: function(inEvent) {
 		console.log(inEvent);
