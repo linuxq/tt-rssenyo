@@ -8,6 +8,7 @@ enyo.kind({
 	handlers: {
 		//oncontextmenu: "handleContextMenu",
 		onmousemove: "handleGlobalMouseMove",
+		onmousedown: "handleGlobalMouseDown",
 		onmouseup: "handleGlobalMouseUp"
 	},
 	fit: true,
@@ -1095,14 +1096,14 @@ enyo.kind({
 		//ttrssUpdateFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processUpdateFeedSuccess"), enyo.bind(this, "processUpdateFeedError"));
 	},
 	FeedListPageUp: function(first) {
-		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 2, window.innerHeight/5);
+		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 4, window.innerHeight / 10);
 		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - step);
 	},
-	FeedListPageUpDown: function() {
-		this.startY = this.mouseY;
+	FeedListPageUpDown: function(inSender, inEvent) {
+		this.startY = this.mouseY = inEvent.screenY;
 		this.FeedListPageUp(true);
 		if (!this.FeedListPageUpInterval) {
-			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 400);
+			this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 200);
 		}
 		// page up? then ensure we cancel page down
 		if (this.FeedListPageDownInterval) {
@@ -1110,22 +1111,22 @@ enyo.kind({
 		}
 		this.FeedListPageDownInterval = null;
 	},
-	FeedListPageUpUp: function() {
+	FeedListPageUpUp: function(inSender, inEvent) {
 		if (this.FeedListPageUpInterval) {
 			clearInterval(this.FeedListPageUpInterval);
 		}
 		this.FeedListPageUpInterval = null;
 	},
 	FeedListPageDown: function(first) {
-		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 2, window.innerHeight/5);
+		var step = first ? window.innerHeight/10 : Math.min(Math.abs(this.startY - this.mouseY) / 4, window.innerHeight/10);
 		//console.log("step " + step + " " + window.innerHeight/5 + " " + this.startY + " " + this.mouseY + " " + (this.startY - this.mouseY));
 		this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + step);
 	},
-	FeedListPageDownDown: function() {
-		this.startY = this.mouseY;
+	FeedListPageDownDown: function(inSender, inEvent) {
+		this.startY = this.mouseY = inEvent.screenY;
 		this.FeedListPageDown(true);
 		if (!this.FeedListPageDownInterval) {
-			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 400);
+			this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 200);
 		}
 		// page down? then ensure we cancel page up
 		if (this.FeedListPageUpInterval) {
@@ -1133,7 +1134,7 @@ enyo.kind({
 		}
 		this.FeedListPageUpInterval = null;
 	},
-	FeedListPageDownUp: function() {
+	FeedListPageDownUp: function(inSender, inEvent) {
 		if (this.FeedListPageDownInterval) {
 			clearInterval(this.FeedListPageDownInterval);
 		}
@@ -1148,6 +1149,9 @@ enyo.kind({
 			clearInterval(this.FeedListPageUpInterval);
 		}
 		this.FeedListPageUpInterval = null;
+	},
+	handleGlobalMouseDown: function(inSender, inEvent) {
+		this.mouseY = inEvent.screenY;
 	},
 	handleGlobalMouseMove: function(inSender, inEvent) {
 		this.mouseY = inEvent.screenY;
