@@ -1064,6 +1064,7 @@ enyo.kind({
 				}
 				this.setLoadbar(true);
 				this.selectFeed(this.currentFeedIndex);
+				this.getCategories();
 				break;
 			case "feed":
 				ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
@@ -1079,13 +1080,13 @@ enyo.kind({
 		this.$.MarkFeedReadPopup.hide();
 	},
 	processMarkFeedReadSuccess: function(inEvent) {
-		console.log(inEvent);
+		console.error(enyo.json.stringify(inEvent));
 		this.$.articleRepeater.setCount(0);
 		this.$.articleScroller.setScrollTop(0);
 		this.getCategories();
 	},
 	processMarkFeedReadError: function(inEvent) {
-		console.log(inEvent);
+		console.error(enyo.json.stringify(inEvent));
 	},
 	MarkFeedReadClose: function(inEvent){
 		this.$.MarkFeedReadPopup.hide();
@@ -1161,7 +1162,7 @@ enyo.kind({
 		this.selectFeed(this.currentFeedIndex);
 	},
 	processUpdateFeedError: function(inEvent) {
-		console.log(inEvent);
+		console.error(inEvent);
 	},
 	holdItem: function(inSender, inEvent){
 		//Show only article view to be able to use swipe for previous article
