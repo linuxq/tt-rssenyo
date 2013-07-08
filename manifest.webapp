@@ -1,0 +1,14 @@
+{
+	"version": "0.0.1",
+	"name": "Tiny RSS Reader",
+	"description": "Enyo based TT-RSS Reader",
+	"launch_path": "/index.html",
+	"icons": {
+		"32": "/icon32.png",
+		"48": "/icon48.png",
+		"64": "/icon64.png",
+		"128": "/icon128.png"
+	},
+	"installs_allowed_from": ["*"],
+	"default_locale": "en"
+}
