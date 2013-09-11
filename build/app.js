@@ -4455,6 +4455,11 @@ this.setShowing(!1);
 MarkReadTimer = "", gblUseJsonpRequest = !1, gblApiLevel = 0, enyo.kind({
 name: "App",
 kind: "FittableRows",
+handlers: {
+onmousemove: "handleGlobalMouseMove",
+onmousedown: "handleGlobalMouseDown",
+onmouseup: "handleGlobalMouseUp"
+},
 fit: !0,
 components: [ {
 kind: "Panels",
@@ -4695,9 +4700,24 @@ kind: "onyx.Toolbar",
 components: [ {
 kind: "onyx.Grabber"
 }, {
+kind: "onyx.MenuDecorator",
+onSelect: "MarkFeedReadClick",
+components: [ {
 kind: "onyx.Button",
-content: "All read",
-ontap: "MarkFeedReadClick"
+content: "Read..."
+}, {
+kind: "onyx.Menu",
+components: [ {
+content: "until Current",
+name: "current"
+}, {
+content: "all List",
+name: "list"
+}, {
+content: "all Feed",
+name: "feed"
+} ]
+} ]
 }, {
 kind: "onyx.IconButton",
 src: "assets/menu-icon-refresh.png",
@@ -4790,11 +4810,9 @@ ontap: "enablePanels"
 }, {
 kind: "onyx.Button",
 name: "btnUnlockPanels",
-content: "<-",
+content: "<",
 ontap: "enablePanels",
 showing: !1
-}, {
-fit: !0
 }, {
 kind: "onyx.Button",
 name: "btnPrevArticle",
@@ -4802,25 +4820,20 @@ style: "width: 40px",
 content: "<",
 ontap: "prevArticle"
 }, {
-fit: !0
-}, {
 kind: "onyx.Checkbox",
 style: "height: 29px",
 name: "chkArticleRead",
 onchange: "toggleArticleRead",
 checked: !1
 }, {
-fit: !0
-}, {
 name: "lblArticles",
 align: "right"
-}, {
-fit: !0
 }, {
 kind: "onyx.MenuDecorator",
 onSelect: "shareArticle",
 components: [ {
 kind: "onyx.Button",
+name: "mnuShare",
 content: "..."
 }, {
 kind: "onyx.Menu",
@@ -4841,28 +4854,20 @@ kind: "onyx.IconButton",
 src: "assets/browser2.png",
 ontap: "openArticle"
 }, {
-fit: !0
-}, {
 kind: "onyx.IconButton",
 name: "iconStarred",
 src: "assets/starred-footer.png",
 ontap: "toggleArticleStarred"
-}, {
-fit: !0
 }, {
 kind: "onyx.IconButton",
 name: "iconPublished",
 src: "assets/published-off.png",
 ontap: "toggleArticlePublished"
 }, {
-fit: !0
-}, {
 kind: "onyx.Button",
 name: "btnFullArticle",
 content: "Full",
 ontap: "showFullArticle"
-}, {
-fit: !0
 }, {
 kind: "onyx.Button",
 name: "btnNextArticle",
@@ -4948,7 +4953,7 @@ components: [ {
 kind: "onyx.Input",
 placeholder: "Server (with http:// or https://)",
 name: "serverAddress",
-value: "..",
+value: "http://",
 style: "width:100%;"
 } ]
 }, {
@@ -5183,7 +5188,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
+this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), navigator.userAgent.indexOf("BB10") > -1 && (this.$.grabberArticleView.setShowing(!1), this.$.btnUnlockPanels.applyStyle("width", "20px"), this.$.chkArticelRead.applyStyle("height", "20px"), this.$.mnuShare.applyStyle("height", "20px"));
 },
 resizeHandler: function() {
 this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
@@ -5306,7 +5311,7 @@ this.Articles.length = 0, this.ArticleData.length = 0, this.ArticleID.length = 0
 for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.ArticleUnread[t] = e[t].unread, this.ArticleStarred[t] = e[t].marked, ttrssGetArticle(this.ttrssURL, this.ttrss_SID, e[t].id, enyo.bind(this, function(e, t) {
 this.ArticleData[e] = t, (this.ViewMode == "1" || this.ViewMode == "2") && this.$.articleRepeater.renderRow(e);
 }, t), enyo.bind(this, function() {}));
-this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0);
+this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0), e.length == 0 && this.setLoadbar(!1);
 },
 processGetHeadlinesError: function(e) {
 console.log(e), this.setLoadbar(!1);
@@ -5411,17 +5416,33 @@ this.getCategories();
 addFeedError: function(e) {
 console.log(e), this.$.main.setContent(e);
 },
-MarkFeedReadClick: function(e) {
-this.$.MarkFeedReadPopup.show();
+MarkFeedReadClick: function(e, t) {
+switch (t.originator.name) {
+case "current":
+var n = 0, r = 0;
+for (var i = 0; i < this.$.articleScroller.controlAtIndex(1).controls.length; i++) {
+n += this.$.articleScroller.controlAtIndex(1).controls[i].children[0].children[0].node.offsetHeight, r++;
+if (n > this.$.articleScroller.getScrollTop()) break;
+}
+for (var i = 0; i < r; i++) ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[i] = !1;
+this.setLoadbar(!0), this.selectFeed(this.currentFeedIndex);
+break;
+case "list":
+for (var i = 0; i < this.ArticleID.length; i++) ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[i], !1, enyo.bind(this, "processMarkArticleReadSuccess"), enyo.bind(this, "processMarkArticleReadError")), this.ArticleUnread[i] = !1;
+this.setLoadbar(!0), this.selectFeed(this.currentFeedIndex), this.getCategories();
+break;
+case "feed":
+ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
+}
 },
 MarkFeedRead: function(e) {
 ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
 },
 processMarkFeedReadSuccess: function(e) {
-console.log(e), this.$.articleRepeater.setCount(0), this.$.articleScroller.setScrollTop(0), this.getCategories();
+console.error(enyo.json.stringify(e)), this.$.articleRepeater.setCount(0), this.$.articleScroller.setScrollTop(0), this.getCategories();
 },
 processMarkFeedReadError: function(e) {
-console.log(e);
+console.error(enyo.json.stringify(e));
 },
 MarkFeedReadClose: function(e) {
 this.$.MarkFeedReadPopup.hide();
@@ -5429,29 +5450,40 @@ this.$.MarkFeedReadPopup.hide();
 UpdateFeedClick: function(e) {
 this.setLoadbar(!0), this.selectFeed(this.currentFeedIndex);
 },
-FeedListPageUp: function() {
-this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - window.innerHeight / 3);
+FeedListPageUp: function(e) {
+var t = e ? window.innerHeight / 10 : Math.min(Math.abs(this.startY - this.mouseY) / 4, window.innerHeight / 10);
+this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() - t);
 },
-FeedListPageUpDown: function() {
-this.FeedListPageUp(), this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 500);
+FeedListPageUpDown: function(e, t) {
+this.startY = this.mouseY = t.screenY, this.FeedListPageUp(!0), this.FeedListPageUpInterval || (this.FeedListPageUpInterval = setInterval(enyo.bind(this, "FeedListPageUp"), 200)), this.FeedListPageDownInterval && clearInterval(this.FeedListPageDownInterval), this.FeedListPageDownInterval = null;
 },
-FeedListPageUpUp: function() {
-clearInterval(this.FeedListPageUpInterval);
+FeedListPageUpUp: function(e, t) {
+this.FeedListPageUpInterval && clearInterval(this.FeedListPageUpInterval), this.FeedListPageUpInterval = null;
 },
-FeedListPageDown: function() {
-this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + window.innerHeight / 3);
+FeedListPageDown: function(e) {
+var t = e ? window.innerHeight / 10 : Math.min(Math.abs(this.startY - this.mouseY) / 4, window.innerHeight / 10);
+this.$.articleScroller.setScrollTop(this.$.articleScroller.getScrollTop() + t);
 },
-FeedListPageDownDown: function() {
-this.FeedListPageDown(), this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 500);
+FeedListPageDownDown: function(e, t) {
+this.startY = this.mouseY = t.screenY, this.FeedListPageDown(!0), this.FeedListPageDownInterval || (this.FeedListPageDownInterval = setInterval(enyo.bind(this, "FeedListPageDown"), 200)), this.FeedListPageUpInterval && clearInterval(this.FeedListPageUpInterval), this.FeedListPageUpInterval = null;
 },
-FeedListPageDownUp: function() {
-clearInterval(this.FeedListPageDownInterval);
+FeedListPageDownUp: function(e, t) {
+this.FeedListPageDownInterval && clearInterval(this.FeedListPageDownInterval), this.FeedListPageDownInterval = null;
+},
+handleGlobalMouseUp: function(e, t) {
+this.FeedListPageDownInterval && clearInterval(this.FeedListPageDownInterval), this.FeedListPageDownInterval = null, this.FeedListPageUpInterval && clearInterval(this.FeedListPageUpInterval), this.FeedListPageUpInterval = null;
+},
+handleGlobalMouseDown: function(e, t) {
+this.mouseY = t.screenY;
+},
+handleGlobalMouseMove: function(e, t) {
+this.mouseY = t.screenY;
 },
 processUpdateFeedSuccess: function(e) {
 console.log(e), this.selectFeed(this.currentFeedIndex);
 },
 processUpdateFeedError: function(e) {
-console.log(e);
+console.error(e);
 },
 holdItem: function(e, t) {
 window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.clickItem(" ", t), this.resize());

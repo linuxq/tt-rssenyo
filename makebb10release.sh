@@ -1,6 +1,7 @@
 rm -R deploy/*
 rm *.bar
 rm *.zip
+rm *.ipk
 ./tools/deploy.sh 
 cp bb10/config.xml deploy/tt-rssenyo/
 cp bb10/indexbb10.html deploy/tt-rssenyo/index.html
