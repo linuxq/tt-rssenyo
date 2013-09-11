@@ -138,18 +138,18 @@ enyo.kind({
 				//{fit: true},
 				{kind: "onyx.Toolbar", fit: true, components: [
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
-					{kind: "onyx.Button", name: "btnUnlockPanels", content: "<-", ontap: "enablePanels", showing: false},
-					{fit: true},
+					{kind: "onyx.Button", name: "btnUnlockPanels", content: "<", ontap: "enablePanels", showing: false},
+					//{fit: true},
 					{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
 					//{content: "Read "},rr
-					{fit: true},
+					//{fit: true},
 					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
-					{fit: true},
+					//{fit: true},
 					{name: "lblArticles", align: "right"},
-					{fit: true},
+					//{fit: true},
 
 					{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
-						{kind: "onyx.Button", content: "..."},
+						{kind: "onyx.Button", name: "mnuShare", content: "..."},
 						{kind: "onyx.Menu", components: [
 							//{components: [
 							//	{kind: "onyx.IconButton", src: "assets/menu-icon-bookmark.png"},
@@ -165,13 +165,13 @@ enyo.kind({
 
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
 					//{kind: "enyo.Image", fit: false, onclick: "sharePodcastOpen", style: "height: 30px", src: "assets/sharebt48.png"},
-					{fit: true},
+					//{fit: true},
 					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
-					{fit: true},
+					//{fit: true},
 					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
-					{fit: true},
+					//{fit: true},
 					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
-					{fit: true},
+					//{fit: true},
 					{kind: "onyx.Button", name: "btnNextArticle", style: "width: 40px", content: ">", ontap: "nextArticle"}
 				]}
 			]}
@@ -356,6 +356,18 @@ enyo.kind({
 				this.$.btnFullArticle.setShowing(false);
 			}
 		}
+		//Hide arrows in Article View for LockedPanels
+		if (this.AutoLockPanels) {
+			this.$.btnNextArticle.setShowing(false);
+			this.$.btnPrevArticle.setShowing(false);	
+		}		
+		//BB10 Scaling 
+		if (navigator.userAgent.indexOf("BB10") > -1) {
+			this.$.grabberArticleView.setShowing(false);
+			this.$.btnUnlockPanels.applyStyle("width", "20px");
+			this.$.chkArticelRead.applyStyle("height", "20px");
+			this.$.mnuShare.applyStyle("height", "20px");
+		}		
 	},
 	resizeHandler: function() {
 	  // don't forget to call the default implementation
@@ -1385,8 +1397,10 @@ enyo.kind({
 	titleDragStart: function(inSender, inEvent){
 		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
 		this.dragStartPanelIndex = this.$.viewPanels.getIndex();
+		//console.log("DRAGSTART");
 	},
 	titleDragFinish: function(inSender, inEvent){
+		//console.log("DRAGSTOP " + inEvent.dx);
 		this.resize();
 		  if (+inEvent.dx < -80) {
 			if (this.dragStartPanelIndex == 3) {

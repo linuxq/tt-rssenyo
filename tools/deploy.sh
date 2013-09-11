@@ -4,10 +4,12 @@
 TOOLS=$(cd `dirname $0` && pwd)
 
 # enyo location
-ENYO="$TOOLS/../enyo"
-
+# ENYO="$TOOLS/../enyo"
+#ENYO="/../enyo"
+DEPLOY="/home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/tools/deploy.js"
+ENYO="/home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo"
 # deploy script location
-DEPLOY="$ENYO/tools/deploy.js"
+# DEPLOY="$ENYO/tools/deploy.js"
 
 # check for node, but quietly
 if command -v node >/dev/null 2>&1; then
@@ -18,6 +20,9 @@ else
 	echo "No node found in path"
 	exit 1
 fi
+echo $TOOLS
+echo $ENYO
+echo $DEPLOY
 
 # copy files and package if deploying to cordova webos
 while [ "$1" != "" ]; do
