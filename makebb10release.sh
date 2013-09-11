@@ -11,7 +11,7 @@ zip -r tt-rssenyo.zip *
 cd ..
 cd ..
 mv deploy/tt-rssenyo/tt-rssenyo.zip ./
-${BB10SDK}/bbwp tt-rssenyo.zip -d
+${BB10SDK}/bbwp tt-rssenyo.zip -g ${BB10SIGNPASS}
 mv simulator/tt-rssenyo.bar ttrssenyo-simulator.bar
 mv device/tt-rssenyo.bar ttrssenyo-device.bar
 rm -R simulator
