@@ -4935,7 +4935,7 @@ onchange: "getArticle"
 } ]
 }, {
 name: "LoginPopup",
-style: "width:320px;",
+style: "width:320px; height",
 classes: "onyx-sample-popup",
 kind: "onyx.Popup",
 centered: !0,
@@ -4944,6 +4944,13 @@ floating: !0,
 onShow: "popupShown",
 onHide: "popupHidden",
 autoDismiss: !1,
+components: [ {
+kind: "Scroller",
+style: "height: 280px",
+touch: !0,
+fit: !0,
+horizontal: "hidden",
+classes: "scroller-sample-scroller",
 components: [ {
 kind: "onyx.Groupbox",
 style: "width:100%; background-color:#EAEAEA;",
@@ -5063,22 +5070,21 @@ name: "Toff"
 content: "Auto mark read timer",
 style: "padding-left: 10px; vertical-align: middle"
 } ]
+} ]
 }, {
-tag: "div",
-style: "height:10px;"
-}, {
+kind: "FittableColumns",
+style: "width:100%; margin-top:5px;",
+components: [ {
 kind: "onyx.Button",
 content: "Save",
 ontap: "LoginSave",
-style: "width:100%;"
-}, {
-tag: "div",
-style: "height:2px;"
+style: "width:50%;"
 }, {
 kind: "onyx.Button",
 content: "Cancel",
 ontap: "LoginClose",
-style: "width:100%;"
+style: "width:50%;"
+} ]
 } ]
 }, {
 name: "AddFeedPopup",

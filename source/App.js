@@ -191,49 +191,53 @@ enyo.kind({
 			{kind: "onyx.Input", name: "articleID", style: "width: 50px", placeholder: "ID", onchange: "getArticle"}
 
 		]},
-		{name: "LoginPopup", style: "width:320px;", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", autoDismiss: false, components: [
-			{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
-				{kind: "onyx.InputDecorator", components: [
-					{kind: "onyx.Input", placeholder: "Server (with http:// or https://)", name: "serverAddress", value: "http://", style: "width:100%;"}
-				]},
-				{kind: "onyx.InputDecorator", components: [
-					{kind: "onyx.Input", name: "serverUser", placeholder: "Username", value: "", style: "width:100%;"}
-				]},
-				{kind: "onyx.InputDecorator", components: [
-					{kind: "onyx.Input", type:"password", name: "serverPassword", placeholder: "Enter password", value: "", style: "width:100%;"}
-				]}
-			]},
-			{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
-				{kind: "onyx.PickerDecorator", style: "width:100%;", components: [
-					{style: "width:100%;", classes: "onyx-blue"}, // A content-less PickerButton
-					{kind: "onyx.Picker", name: "pickViewMode", onSelect: "handleViewModeChange", components: [
-						{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
-						{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
-						{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
-					]}
-				]}
-			]},
-			{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
-			{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
-			{kind: "onyx.Checkbox", name: "autoLoadAllArticles", content: "Autoload 'all articles' feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
-			{kind: "onyx.Checkbox", name: "autoLockPanels", content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
-			{kind: "FittableColumns", style: "height: auto", components: [
-				{kind: "onyx.PickerDecorator", components: [
-					{},
-					{kind: "onyx.Picker", name: "pickMarkReadTimeout", onSelect: "changeMarkReadTimeout", components: [
-						{content: "1s", value: 1000, name: "T1s"},
-						{content: "2s", value: 2000, name: "T2s", active: true},
-						{content: "3s", value: 3000, name: "T3s"},
-						{content: "5s", value: 5000, name: "T5s"},
-						{content: "off", value: 0, name: "Toff"}
+		{name: "LoginPopup", style: "width:320px; height", classes: "onyx-sample-popup", kind: "onyx.Popup", centered: true, modal: true, floating: true, onShow: "popupShown", onHide: "popupHidden", autoDismiss: false, components: [
+			{kind: "Scroller", style: "height: 280px", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
+				{kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input", placeholder: "Server (with http:// or https://)", name: "serverAddress", value: "http://", style: "width:100%;"}
+					]},
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input", name: "serverUser", placeholder: "Username", value: "", style: "width:100%;"}
+					]},
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input", type:"password", name: "serverPassword", placeholder: "Enter password", value: "", style: "width:100%;"}
 					]}
 				]},
-				{content: "Auto mark read timer", style: "padding-left: 10px; vertical-align: middle"}
-			]},
-			{tag: "div", style: "height:10px;"},
-			{kind: "onyx.Button", content: "Save", ontap: "LoginSave", style: "width:100%;"},
-			{tag: "div", style: "height:2px;"},
-			{kind: "onyx.Button", content: "Cancel", ontap: "LoginClose", style: "width:100%;"}
+				{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
+					{kind: "onyx.PickerDecorator", style: "width:100%;", components: [
+						{style: "width:100%;", classes: "onyx-blue"}, // A content-less PickerButton
+						{kind: "onyx.Picker", name: "pickViewMode", onSelect: "handleViewModeChange", components: [
+							{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
+							{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
+							{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
+						]}
+					]}
+				]},
+				{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+				{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
+				{kind: "onyx.Checkbox", name: "autoLoadAllArticles", content: "Autoload 'all articles' feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
+				{kind: "onyx.Checkbox", name: "autoLockPanels", content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+				{kind: "FittableColumns", style: "height: auto", components: [
+					{kind: "onyx.PickerDecorator", components: [
+						{},
+						{kind: "onyx.Picker", name: "pickMarkReadTimeout", onSelect: "changeMarkReadTimeout", components: [
+							{content: "1s", value: 1000, name: "T1s"},
+							{content: "2s", value: 2000, name: "T2s", active: true},
+							{content: "3s", value: 3000, name: "T3s"},
+							{content: "5s", value: 5000, name: "T5s"},
+							{content: "off", value: 0, name: "Toff"}
+						]}
+					]},
+					{content: "Auto mark read timer", style: "padding-left: 10px; vertical-align: middle"}
+				]},
+				]},
+				//{tag: "div", style: "height:10px;"},
+				{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
+					{kind: "onyx.Button", content: "Save", ontap: "LoginSave", style: "width:50%;"},
+					{kind: "onyx.Button", content: "Cancel", ontap: "LoginClose", style: "width:50%;"}
+				]}
+			//]}
 		]},
 		{name: "AddFeedPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, autoDismiss: false, onShow: "popupShown", onHide: "popupHidden", components: [
 			{content: "Add a new feed into:"},
