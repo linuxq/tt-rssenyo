@@ -1315,7 +1315,7 @@ enyo.kind({
 			case "Twitter":
 
 				//console.log(this.ArticleData[this.RecentArticleIndex][0].title);
-				window.open("http://www.twitter.com/share?text='" + ShareText + "'&url=" + ShareUrl);
+				window.open("http://www.twitter.com/share?text='" + "Via%20#ttrssenyo:%20" + ShareText + "'&url=" + ShareUrl);
 				break;
 			case "Facebook":
 				//window.open("http://www.facebook.com/sharer/sharer.php?u=" + PCastsUrl[PCMerker.index] + "&t=Interessanter%20Podcast");
@@ -1323,10 +1323,10 @@ enyo.kind({
 				//http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png
 				break;
 			case "G+":
-				window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + ShareUrl);
+				window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + ShareUrl + "%20via%20#ttrssenyo");
 				break;
 			case "App.net":
-				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl);
+				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl + "%20via%20#ttrssenyo");
 				break;
 		};
 
