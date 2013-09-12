@@ -59,7 +59,7 @@ enyo.kind({
 						{name: "left2blank", fit: true}
 					]}
 				]},
-				{kind: "onyx.Toolbar", components: [
+				{kind: "onyx.Toolbar", style: "background: #252525;", components: [
 					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
 					{kind: "onyx.Button", content: "Add Feed", ontap: "addFeedClick"},
 					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}
@@ -103,21 +103,32 @@ enyo.kind({
 				]},
 
 				{fit: true},
-				{kind: "onyx.Toolbar", components: [
-					{kind: "onyx.Grabber"},
-					//{kind: "onyx.Button", content: "All read", ontap: "MarkFeedReadClick"},
-					{kind: "onyx.MenuDecorator", onSelect: "MarkFeedReadClick", components: [
-						{kind: "onyx.Button", content: "Read..."},
-						{kind: "onyx.Menu", components: [
-							{content: "until Current", name: "current"},
-							{content: "all List", name: "list"},
-							{content: "all Feed", name: "feed"}
-						]}
-					]},
-					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
-					{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
-					{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
-				]}
+				{kind: "FittableColumns", name: "listviewtoolbar", showing: true, style: "width:100%; background: #252525;", components:[
+					{kind: "enyo.Image", name: "bb10listviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "bb10backmain"}, //height: 54px"},
+					{style: "width: 10px"},
+					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
+						{style: "height: 14px"},
+						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
+							{kind: "onyx.Grabber", name: "listviewgrabber", style: "height: 30px"},
+							{style: "width: 10px"},
+							{kind: "onyx.MenuDecorator", style: "width: 100px", onSelect: "MarkFeedReadClick", components: [
+								{kind: "onyx.Button", content: "Mark"},
+								{kind: "onyx.Menu", components: [
+									{content: "read until current", name: "current"},
+									{content: "list read", name: "list"},
+									{content: "feed read", name: "feed"}
+								]}
+							]},
+							{style: "width: 10px"},
+							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
+							{style: "width: 10px"},
+							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
+							{style: "width: 10px"},
+							{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
+						]},
+						{style: "height: 14px"}
+					]}		
+				]},
 				//{kind: "Scroller", classes: "enyo-fit", touch: true, components: [
 				//	{name: "feedlist", classes: "nice-padding", allowHtml: true}
 				//]}
@@ -136,43 +147,51 @@ enyo.kind({
 					{name: "articleView", kind: "MyAjaxWebView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				//{fit: true},
-				{kind: "onyx.Toolbar", fit: true, components: [
+				{kind: "FittableColumns", name: "articleviewtoolbar", showing: true, style: "width:100%; background: #252525;", components:[
+					
+					{kind: "enyo.Image", name: "bb10articleviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "enablePanels"}, //height: 54px"},
+					//{style: "width: 10px"},
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
-					{kind: "onyx.Button", name: "btnUnlockPanels", content: "<", ontap: "enablePanels", showing: false},
-					//{fit: true},
-					{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
-					//{content: "Read "},rr
-					//{fit: true},
-					{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
-					//{fit: true},
-					{name: "lblArticles", align: "right"},
-					//{fit: true},
-
-					{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
-						{kind: "onyx.Button", name: "mnuShare", content: "..."},
-						{kind: "onyx.Menu", components: [
-							//{components: [
-							//	{kind: "onyx.IconButton", src: "assets/menu-icon-bookmark.png"},
-								{content: "Twitter", name: "shareTW"},
-							//]},
-							{content: "Facebook", name: "shareFB"},
-							//{classes: "onyx-menu-divider"},
-							{content: "App.net"},
-							{content: "G+"},
-							//{content: "ReadItLater", active: false},
-						]}
-					]},
-					{kind: "onyx.IconButton", name: "btnbb10share", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
-					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
-					//{kind: "enyo.Image", fit: false, onclick: "sharePodcastOpen", style: "height: 30px", src: "assets/sharebt48.png"},
-					//{fit: true},
-					{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
-					//{fit: true},
-					{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
-					//{fit: true},
-					{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
-					//{fit: true},
-					{kind: "onyx.Button", name: "btnNextArticle", style: "width: 40px", content: ">", ontap: "nextArticle"}
+					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
+						{style: "height: 14px"},
+						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
+							{kind: "onyx.Button", name: "btnUnlockPanels", content: "<-", ontap: "enablePanels", showing: false},				
+							{style: "width: 5px"},
+							{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
+							{style: "width: 5px"},
+							{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
+							{style: "width: 5px"},
+							{name: "lblArticles", align: "right", style: "color: white; margin-top: 10px"},
+							{style: "width: 5px"},
+							{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
+								{kind: "onyx.Button", name: "btnshare", content: "..."},
+								{kind: "onyx.Menu", components: [
+									//{components: [
+									//	{kind: "onyx.IconButton", src: "assets/menu-icon-bookmark.png"},
+										{content: "Twitter", name: "shareTW"},
+									//]},
+									{content: "Facebook", name: "shareFB"},
+									//{classes: "onyx-menu-divider"},
+									{content: "App.net"},
+									{content: "G+"},
+									//{content: "ReadItLater", active: false},
+								]}
+							]},							
+							{style: "width: 5px"},
+							{kind: "onyx.IconButton", name: "bb10btnshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
+							{style: "width: 5px"},
+							{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+							{style: "width: 5px"},
+							{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
+							{style: "width: 5px"},
+							{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
+							{style: "width: 5px"},
+							{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
+							{style: "width: 5px"},
+							{kind: "onyx.Button", name: "btnNextArticle", style: "width: 40px", content: ">", ontap: "nextArticle"}
+						]},
+						{style: "height: 14px"}
+					]}
 				]}
 			]}
 		]},
@@ -386,13 +405,37 @@ enyo.kind({
 		}		
 		//BB10 Scaling / UI
 		if (navigator.userAgent.indexOf("BB10") > -1) {
-			this.$.grabberArticleView.setShowing(false);
-			this.$.btnbb10share.setShowing(true);
-			this.$.mnuShare.setShowing(false);
-			this.$.btnUnlockPanels.applyStyle("width", "20px");
+			//this.$.bb10articleviewgrabber.setShowing(false);
+			//this.$.btnUnlockPanels.setShowing(true);			
+			this.$.bb10articleviewgrabber.setShowing(true);
+			this.$.btnUnlockPanels.setShowing(false);
+			
+			this.$.listviewgrabber.setShowing(false);
+			this.$.bb10listviewgrabber.setShowing(true);
+			this.$.bb10btnshare.setShowing(true);
+			this.$.btnshare.setShowing(false);
+			
+			
+			//this.$.grabberArticleView.setShowing(false);
+			//this.$.btnbb10share.setShowing(true);
+			//this.$.mnuShare.setShowing(false);
+			//this.$.btnUnlockPanels.applyStyle("width", "20px");
 			this.$.chkArticelRead.applyStyle("height", "20px");
-			this.$.mnuShare.applyStyle("height", "20px");
-		}		
+			//this.$.mnuShare.applyStyle("height", "20px");
+		} else {
+			this.$.bb10articleviewgrabber.setShowing(false);
+			this.$.btnUnlockPanels.setShowing(true);
+			this.$.listviewgrabber.setShowing(true);
+			this.$.bb10listviewgrabber.setShowing(false);
+			this.$.bb10btnshare.setShowing(false);
+			this.$.btnshare.setShowing(true);			
+			
+			//this.$.bb10listviewtoolbar.setShowing(false);
+			//this.$.listviewtoolbar.setShowing(true);						
+			
+			//this.$.btnbb10share.setShowing(false);
+			//this.$.mnuShare.setShowing(true);
+		}
 	},
 	resizeHandler: function() {
 	  // don't forget to call the default implementation
@@ -515,8 +558,13 @@ enyo.kind({
 			this.$.articlePreviewScroller.setShowing(true);
 			this.$.articleViewScroller.setShowing(false);
 			this.$.body.setShowing(false);
-			this.$.FeedListPageUpButton.setShowing(true);
-			this.$.FeedListPageDownButton.setShowing(true);
+			if (navigator.userAgent.indexOf("BB10") > -1) {
+				this.$.FeedListPageUpButton.setShowing(false);
+				this.$.FeedListPageDownButton.setShowing(false);
+			} else {
+				this.$.FeedListPageUpButton.setShowing(true);
+				this.$.FeedListPageDownButton.setShowing(true);				
+			};
 		} else if (this.ViewMode == "2") {
 			this.$.articlePreviewScroller.setShowing(false);
 			this.$.articleViewScroller.setShowing(true);
@@ -1207,7 +1255,11 @@ enyo.kind({
 			this.$.viewPanels.setIndex(3);
 			this.$.left2.setShowing(false);
 			this.$.middle.setShowing(false);
-			this.$.btnUnlockPanels.setShowing(true);
+			if (navigator.userAgent.indexOf("BB10") > -1) {
+				this.$.btnUnlockPanels.setShowing(false);
+			} else {
+				this.$.btnUnlockPanels.setShowing(true);	
+			};
 			this.$.btnPrevArticle.setShowing(false);
 			this.$.btnNextArticle.setShowing(false);
 			this.$.grabberArticleView.setShowing(false);
@@ -1250,7 +1302,11 @@ enyo.kind({
 				this.$.viewPanels.setIndex(3);
 				this.$.left2.setShowing(false);
 				this.$.middle.setShowing(false);
-				this.$.btnUnlockPanels.setShowing(true);
+				if (navigator.userAgent.indexOf("BB10") > -1) {
+					this.$.btnUnlockPanels.setShowing(false);
+				} else {
+					this.$.btnUnlockPanels.setShowing(true);	
+				};
 				this.$.btnPrevArticle.setShowing(false);
 				this.$.btnNextArticle.setShowing(false);
 				this.$.grabberArticleView.setShowing(false);
@@ -1451,7 +1507,7 @@ enyo.kind({
 		//console.log("DRAGSTART");
 	},
 	titleDragFinish: function(inSender, inEvent){
-		//console.log("DRAGSTOP " + inEvent.dx);
+		console.log("DRAGSTOP " + inEvent.dx);
 		this.resize();
 		  if (+inEvent.dx < -80) {
 			if (this.dragStartPanelIndex == 3) {
@@ -1466,9 +1522,16 @@ enyo.kind({
 			  if (this.$.btnUnlockPanels.getShowing()) {
 				this.prevArticle();
 				//this.$.viewPanels.setIndex(3);
-			  }
+			  };
+			  if (this.$.bb10articleviewgrabber.getShowing()) {
+				this.prevArticle();
+				//this.$.viewPanels.setIndex(3);
+			  }			  
 		  }
 		  this.resize();
+	},
+	bb10backmain: function (){
+		this.$.viewPanels.setIndex(1);
 	},
 	setLoadbar: function (status){
 		if (status) {

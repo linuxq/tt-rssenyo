@@ -4611,6 +4611,7 @@ fit: !0
 } ]
 }, {
 kind: "onyx.Toolbar",
+style: "background: #252525;",
 components: [ {
 kind: "onyx.Button",
 content: "Setup",
@@ -4696,32 +4697,62 @@ style: "width:100%; text-align:right; font-size:10px;"
 }, {
 fit: !0
 }, {
-kind: "onyx.Toolbar",
+kind: "FittableColumns",
+name: "listviewtoolbar",
+showing: !0,
+style: "width:100%; background: #252525;",
 components: [ {
-kind: "onyx.Grabber"
+kind: "enyo.Image",
+name: "bb10listviewgrabber",
+fit: !1,
+src: "assets/bb10panelBack.png",
+style: "height:60px;",
+ontap: "bb10backmain"
+}, {
+style: "width: 10px"
+}, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525;",
+components: [ {
+style: "height: 14px"
+}, {
+kind: "FittableColumns",
+style: "height: 32px; background: #252525;",
+components: [ {
+kind: "onyx.Grabber",
+name: "listviewgrabber",
+style: "height: 30px"
+}, {
+style: "width: 10px"
 }, {
 kind: "onyx.MenuDecorator",
+style: "width: 100px",
 onSelect: "MarkFeedReadClick",
 components: [ {
 kind: "onyx.Button",
-content: "Read..."
+content: "Mark"
 }, {
 kind: "onyx.Menu",
 components: [ {
-content: "until Current",
+content: "read until current",
 name: "current"
 }, {
-content: "all List",
+content: "list read",
 name: "list"
 }, {
-content: "all Feed",
+content: "feed read",
 name: "feed"
 } ]
 } ]
 }, {
+style: "width: 10px"
+}, {
 kind: "onyx.IconButton",
+style: "height: 32px; margin-top: 15px",
 src: "assets/menu-icon-refresh.png",
 ontap: "UpdateFeedClick"
+}, {
+style: "width: 10px"
 }, {
 kind: "onyx.Button",
 name: "FeedListPageUpButton",
@@ -4731,6 +4762,8 @@ onmouseup: "FeedListPageUpUp",
 showing: !1,
 style: "margin-left:0px; margin-right:0px; width:68px;"
 }, {
+style: "width: 10px"
+}, {
 kind: "onyx.Button",
 name: "FeedListPageDownButton",
 content: "Dwn",
@@ -4738,6 +4771,10 @@ onmousedown: "FeedListPageDownDown",
 onmouseup: "FeedListPageDownUp",
 showing: !1,
 style: "margin-left:0px; margin-right:0px; width:68px;"
+} ]
+}, {
+style: "height: 14px"
+} ]
 } ]
 } ]
 }, {
@@ -4801,18 +4838,37 @@ allowHtml: !0,
 content: ""
 } ]
 }, {
-kind: "onyx.Toolbar",
-fit: !0,
+kind: "FittableColumns",
+name: "articleviewtoolbar",
+showing: !0,
+style: "width:100%; background: #252525;",
 components: [ {
+kind: "enyo.Image",
+name: "bb10articleviewgrabber",
+fit: !1,
+src: "assets/bb10panelBack.png",
+style: "height:60px;",
+ontap: "enablePanels"
+}, {
 kind: "onyx.Grabber",
 name: "grabberArticleView",
 ontap: "enablePanels"
 }, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525;",
+components: [ {
+style: "height: 14px"
+}, {
+kind: "FittableColumns",
+style: "height: 32px; background: #252525;",
+components: [ {
 kind: "onyx.Button",
 name: "btnUnlockPanels",
-content: "<",
+content: "<-",
 ontap: "enablePanels",
 showing: !1
+}, {
+style: "width: 5px"
 }, {
 kind: "onyx.Button",
 name: "btnPrevArticle",
@@ -4820,20 +4876,27 @@ style: "width: 40px",
 content: "<",
 ontap: "prevArticle"
 }, {
+style: "width: 5px"
+}, {
 kind: "onyx.Checkbox",
 style: "height: 29px",
 name: "chkArticleRead",
 onchange: "toggleArticleRead",
 checked: !1
 }, {
+style: "width: 5px"
+}, {
 name: "lblArticles",
-align: "right"
+align: "right",
+style: "color: white; margin-top: 10px"
+}, {
+style: "width: 5px"
 }, {
 kind: "onyx.MenuDecorator",
 onSelect: "shareArticle",
 components: [ {
 kind: "onyx.Button",
-name: "mnuShare",
+name: "btnshare",
 content: "..."
 }, {
 kind: "onyx.Menu",
@@ -4850,36 +4913,52 @@ content: "G+"
 } ]
 } ]
 }, {
+style: "width: 5px"
+}, {
 kind: "onyx.IconButton",
-name: "btnbb10share",
+name: "bb10btnshare",
 src: "assets/bb10-share32.png",
 showing: !0,
 ontap: "shareArticlebb10"
 }, {
+style: "width: 5px"
+}, {
 kind: "onyx.IconButton",
 src: "assets/browser2.png",
 ontap: "openArticle"
+}, {
+style: "width: 5px"
 }, {
 kind: "onyx.IconButton",
 name: "iconStarred",
 src: "assets/starred-footer.png",
 ontap: "toggleArticleStarred"
 }, {
+style: "width: 5px"
+}, {
 kind: "onyx.IconButton",
 name: "iconPublished",
 src: "assets/published-off.png",
 ontap: "toggleArticlePublished"
+}, {
+style: "width: 5px"
 }, {
 kind: "onyx.Button",
 name: "btnFullArticle",
 content: "Full",
 ontap: "showFullArticle"
 }, {
+style: "width: 5px"
+}, {
 kind: "onyx.Button",
 name: "btnNextArticle",
 style: "width: 40px",
 content: ">",
 ontap: "nextArticle"
+} ]
+}, {
+style: "height: 14px"
+} ]
 } ]
 } ]
 } ]
@@ -5200,7 +5279,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-BetaDate = "20131012", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), window.close()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), navigator.userAgent.indexOf("BB10") > -1 && (this.$.grabberArticleView.setShowing(!1), this.$.btnbb10share.setShowing(!0), this.$.mnuShare.setShowing(!1), this.$.btnUnlockPanels.applyStyle("width", "20px"), this.$.chkArticelRead.applyStyle("height", "20px"), this.$.mnuShare.applyStyle("height", "20px"));
+BetaDate = "20131012", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), window.close()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), navigator.userAgent.indexOf("BB10") > -1 ? (this.$.bb10articleviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.chkArticelRead.applyStyle("height", "20px")) : (this.$.bb10articleviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.bb10btnshare.setShowing(!1), this.$.btnshare.setShowing(!0));
 },
 resizeHandler: function() {
 this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
@@ -5249,7 +5328,7 @@ handleViewModeChange: function(e, t) {
 this.ViewMode = t.selected.value, this.selectFeed(this.currentFeedIndex), this.changeViewMode();
 },
 changeViewMode: function(e, t) {
-this.ViewMode == "1" ? (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!1), this.$.FeedListPageUpButton.setShowing(!0), this.$.FeedListPageDownButton.setShowing(!0)) : this.ViewMode == "2" ? (this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1)) : (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1));
+this.ViewMode == "1" ? (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!1), navigator.userAgent.indexOf("BB10") > -1 ? (this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1)) : (this.$.FeedListPageUpButton.setShowing(!0), this.$.FeedListPageDownButton.setShowing(!0))) : this.ViewMode == "2" ? (this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1)) : (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1));
 },
 changeMarkReadTimeout: function(e, t) {
 this.ttrssAutoMarkRead = t.selected.value;
@@ -5498,7 +5577,7 @@ processUpdateFeedError: function(e) {
 console.error(e);
 },
 holdItem: function(e, t) {
-window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.clickItem(" ", t), this.resize());
+window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), navigator.userAgent.indexOf("BB10") > -1 ? this.$.btnUnlockPanels.setShowing(!1) : this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.clickItem(" ", t), this.resize());
 },
 enablePanels: function(e, t) {
 console.log("ENABLE Panels"), this.UpdateFeedClick(), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.btnPrevArticle.setShowing(!0), this.$.btnNextArticle.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.resize(), this.$.viewPanels.setDraggable(!0);
@@ -5510,7 +5589,7 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 window.open(n), this.MarkArticleRead();
 return;
 }
-this.ViewMode == "2" ? (this.setLoadbar(!0), ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"))) : (this.setLoadbar(!0), window.innerWidth < 1024 && this.AutoLockPanels && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.resize()), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
+this.ViewMode == "2" ? (this.setLoadbar(!0), ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"))) : (this.setLoadbar(!0), window.innerWidth < 1024 && this.AutoLockPanels && (this.$.viewPanels.setIndex(3), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), navigator.userAgent.indexOf("BB10") > -1 ? this.$.btnUnlockPanels.setShowing(!1) : this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.resize()), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))), window.innerWidth < 1024 ? this.$.viewPanels.setIndex(3) : this.$.viewPanels.setIndex(2);
 },
 openArticle: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
@@ -5531,7 +5610,7 @@ var n = this.ArticleURL[this.RecentArticleIndex];
 ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 switch (t.originator.content) {
 case "Twitter":
-window.open("http://www.twitter.com/share?text='" + ShareText + "'&url=" + n);
+window.open("http://www.twitter.com/share?text=Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + n);
 break;
 case "Facebook":
 window.open("http://www.facebook.com/sharer/sharer.php?u=" + n);
@@ -5540,7 +5619,7 @@ case "G+":
 window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText + "%20" + n);
 break;
 case "App.net":
-window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + n);
+window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + n + "%20via%20%23ttrssenyo");
 }
 },
 shareArticlebb10: function(e, t) {
@@ -5618,7 +5697,10 @@ titleDragStart: function(e, t) {
 this.dragStartPanelIndex = this.$.viewPanels.getIndex();
 },
 titleDragFinish: function(e, t) {
-this.resize(), +t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80 && this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.resize();
+console.log("DRAGSTOP " + t.dx), this.resize(), +t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80 && (this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.$.bb10articleviewgrabber.getShowing() && this.prevArticle()), this.resize();
+},
+bb10backmain: function() {
+this.$.viewPanels.setIndex(1);
 },
 setLoadbar: function(e) {
 e ? (this.$.loadbar.setShowing(!0), this.$.loadbarBlank.setShowing(!1)) : (this.$.loadbar.setShowing(!1), this.$.loadbarBlank.setShowing(!0));
