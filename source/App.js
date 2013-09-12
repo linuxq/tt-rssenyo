@@ -301,6 +301,25 @@ enyo.kind({
 		this.inherited(arguments);
 	},
 	startapp: function(inSender,inEvent) {
+
+		
+		//Beta Laufzeit bis 12.10.2013
+		BetaDate = "20131012"; 
+		jetzt = new Date();
+		Tag = jetzt.getDate();
+		// bei einstelligem Wert Null voranstellen
+		Tag  = ((Tag < 10) ? "0" + Tag : Tag);
+		Monat = jetzt.getMonth()+1;
+		// bei einstelligem Wert Null voranstellen
+		Monat  = ((Monat < 10) ? "0" + Monat : Monat);
+		Jahr = jetzt.getYear() + 1900;
+		Datum = Jahr + Monat + Tag;
+		if (Datum > BetaDate){
+			console.log("BETA abgelaufen");
+			window.close();
+		}
+		
+
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		this.ttrssPassword = localStorage.getItem("ttrsspassword");
 		this.ttrssUser = localStorage.getItem("ttrssuser");
@@ -1321,7 +1340,7 @@ enyo.kind({
 		  // for a file
 		  uri: ShareUrl,
 		  // for text you'd use 'data'
-		  data: ShareText + " " + ShareUrl,
+		  data: ShareText + " " + ShareUrl + " via #ttrssenyo",
 		
 		  target_type: ["APPLICATION", "VIEWER", "CARD"]
 		};
