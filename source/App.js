@@ -162,7 +162,7 @@ enyo.kind({
 							//{content: "ReadItLater", active: false},
 						]}
 					]},
-
+					{kind: "onyx.IconButton", name: "btnbb10share", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
 					{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
 					//{kind: "enyo.Image", fit: false, onclick: "sharePodcastOpen", style: "height: 30px", src: "assets/sharebt48.png"},
 					//{fit: true},
@@ -365,9 +365,11 @@ enyo.kind({
 			this.$.btnNextArticle.setShowing(false);
 			this.$.btnPrevArticle.setShowing(false);	
 		}		
-		//BB10 Scaling 
+		//BB10 Scaling / UI
 		if (navigator.userAgent.indexOf("BB10") > -1) {
 			this.$.grabberArticleView.setShowing(false);
+			this.$.btnbb10share.setShowing(true);
+			this.$.mnuShare.setShowing(false);
 			this.$.btnUnlockPanels.applyStyle("width", "20px");
 			this.$.chkArticelRead.applyStyle("height", "20px");
 			this.$.mnuShare.applyStyle("height", "20px");
@@ -1310,6 +1312,32 @@ enyo.kind({
 		};
 
 	},
+	shareArticlebb10: function(inSender, inEvent){
+		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
+		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
+		var request = {
+		  action: 'bb.action.SHARE',
+		  mimeType: "text/plain",		
+		  // for a file
+		  uri: ShareUrl,
+		  // for text you'd use 'data'
+		  data: ShareText + " " + ShareUrl,
+		
+		  target_type: ["APPLICATION", "VIEWER", "CARD"]
+		};
+		blackberry.invoke.card.invokeTargetPicker(request, "Share",
+		
+		    // success callback
+		    function() {
+			console.log('success');
+		    },
+		
+		    // error callback
+		    function(e) {
+			console.log('error: ' + e);
+		    }
+		);		
+	},	
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;

@@ -6,6 +6,9 @@ rm *.ipk
 cp bb10/config.xml deploy/tt-rssenyo/
 cp bb10/indexbb10.html deploy/tt-rssenyo/index.html
 cp *.png deploy/tt-rssenyo/
+mkdir deploy/tt-rssenyo/css
+cp css/bbui.css deploy/tt-rssenyo/css/
+cp source/bbui.js deploy/tt-rssenyo/build/
 mkdir deploy/tt-rssenyo/resource
 cd deploy/tt-rssenyo/
 zip -r tt-rssenyo.zip *

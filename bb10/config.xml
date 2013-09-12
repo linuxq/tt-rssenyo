@@ -43,11 +43,6 @@
 
   <!-- Cordova API -->
   <feature id="blackberry.system" required="true" version="1.0.0.0" />
-  <feature id="org.apache.cordova" required="true" version="1.0.0" />
-  <feature id="blackberry.find" required="true" version="1.0.0.0" />
-  <feature id="blackberry.identity" required="true" version="1.0.0.0" />
-  <feature id="blackberry.pim.Address" required="true" version="1.0.0.0" />
-  <feature id="blackberry.pim.Contact" required="true" version="1.0.0.0" />
   <feature id="blackberry.io.file" required="true" version="1.0.0.0" />
   <feature id="blackberry.utils" required="true" version="1.0.0.0" />
   <feature id="blackberry.io.dir" required="true" version="1.0.0.0" />
@@ -55,9 +50,17 @@
   <feature id="blackberry.app.event" required="true" version="1.0.0.0" />
   <feature id="blackberry.system.event" required="true" version="1.0.0.0"/>
   <feature id="blackberry.widgetcache" required="true" version="1.0.0.0"/>
+  <!--
   <feature id="blackberry.media.camera" />
-  <feature id="blackberry.ui.dialog" />
   <feature id="blackberry.media.microphone" required="true" version="1.0.0.0"/>
+  <feature id="org.apache.cordova" required="true" version="1.0.0" />
+  <feature id="blackberry.find" required="true" version="1.0.0.0" />
+  <feature id="blackberry.identity" required="true" version="1.0.0.0" />
+  <feature id="blackberry.pim.Address" required="true" version="1.0.0.0" />
+  <feature id="blackberry.pim.Contact" required="true" version="1.0.0.0" />  
+  -->
+  <feature id="blackberry.ui.dialog" />
+  
 
   <!-- Cordova API -->
   <access subdomains="true" uri="file:///store/home" />
@@ -76,10 +79,13 @@
   <access subdomains="true" uri="http://twimg.com" />
   <access subdomains="true" uri="http://twitter.com" />
   <access subdomains="true" uri="http://youtube.com" />
-  
+
+<!--  
   <access subdomains="true" uri="http://rss.meissel.com" />
   <access subdomains="true" uri="http://michote.no-ip.org" />
   <access subdomains="true" uri="https://henze-online.de" />
+-->
+
   <access subdomains="true" uri="*" />
 
   <icon rim:hover="false" src="icon114.png" />
@@ -93,6 +99,12 @@
 
   <content src="index.html" />
 
+  <feature id="blackberry.app">
+   <param name="websecurity" value="disable" />
+  </feature>
+  
+   <feature id="blackberry.invoke.card" />  
+  
   <rim:permissions>
   </rim:permissions>
 
