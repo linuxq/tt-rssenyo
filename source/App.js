@@ -103,7 +103,7 @@ enyo.kind({
 				]},
 
 				{fit: true},
-				{kind: "FittableColumns", name: "listviewtoolbar", showing: true, style: "width:100%; background: #252525;", components:[
+				{kind: "FittableColumns", name: "listviewtoolbar", showing: true, style: "width:100%; height: 60px; background: #252525;", components:[
 					{kind: "enyo.Image", name: "bb10listviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "bb10backmain"}, //height: 54px"},
 					{style: "width: 10px"},
 					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
@@ -147,7 +147,7 @@ enyo.kind({
 					{name: "articleView", kind: "MyAjaxWebView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
 				]},
 				//{fit: true},
-				{kind: "FittableColumns", name: "articleviewtoolbar", showing: true, style: "width:100%; background: #252525;", components:[
+				{kind: "FittableColumns", name: "articleviewtoolbar", showing: true, style: "width:100%; height: 60px; background: #252525;", components:[
 					
 					{kind: "enyo.Image", name: "bb10articleviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "enablePanels"}, //height: 54px"},
 					//{style: "width: 10px"},
@@ -155,14 +155,23 @@ enyo.kind({
 					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
 						{style: "height: 14px"},
 						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
+							{style: "width: 5px"},
 							{kind: "onyx.Button", name: "btnUnlockPanels", content: "<-", ontap: "enablePanels", showing: false},				
 							{style: "width: 5px"},
 							{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
 							{style: "width: 5px"},
 							{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
 							{style: "width: 5px"},
-							{name: "lblArticles", align: "right", style: "color: white; margin-top: 10px"},
-							{style: "width: 5px"},
+							
+							{kind: "FittableRows", style: "background: #252525; width: 23px; padding-right: 5px;", components:[
+								//{style: "height: 14px"},
+								{name: "lblArticles1", align: "center", style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: top;"},
+								//{content: "of", align: "center", style: "font-size: 5px; color: white; height: 10px; padding-top: 1px; padding-bottom: 1px; vertical-align: middle;"},
+								{name: "lblArticles2", align: "center", style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: bottom;"},
+								{style: "height: 3px"},
+							]},
+
+							//{style: "width: 5px"},
 							{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
 								{kind: "onyx.Button", name: "btnshare", content: "..."},
 								{kind: "onyx.Menu", components: [
@@ -177,7 +186,7 @@ enyo.kind({
 									//{content: "ReadItLater", active: false},
 								]}
 							]},							
-							{style: "width: 5px"},
+							//{style: "width: 5px"},
 							{kind: "onyx.IconButton", name: "bb10btnshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
 							{style: "width: 5px"},
 							{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
@@ -822,7 +831,9 @@ enyo.kind({
 			this.$.iconPublished.setSrc("assets/published-off.png");
 		}
 		//console.log("unread : " + inEvent[0].unread);
-		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		//this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		this.$.lblArticles1.setContent((this.RecentArticleIndex + 1));
+		this.$.lblArticles2.setContent(this.Articles.length)
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
@@ -874,7 +885,9 @@ enyo.kind({
 			this.$.iconPublished.setSrc("assets/published-off.png");
 		}
 		//console.log("unread : " + inEvent[0].unread);
-		this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		//this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
+		this.$.lblArticles1.setContent((this.RecentArticleIndex + 1));
+		this.$.lblArticles2.setContent(this.Articles.length)
 		this.$.articleTitleIcon.setSrc(this.ttrssIconPath + inEvent[0].feed_id + ".ico");
 		//console.log(inEvent);
 		this.resize();
