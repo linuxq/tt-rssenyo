@@ -245,7 +245,7 @@ enyo.kind({
 				{kind: "onyx.Checkbox", name: "useJsonpRequest", content: "Use JsonpRequest", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 				{kind: "onyx.Checkbox", name: "autoLoadFirstFeed", content: "Autoload 1st feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
 				{kind: "onyx.Checkbox", name: "autoLoadAllArticles", content: "Autoload 'all articles' feed", style: "width:100%; height:24px; padding:10px 0px 0px 40px;", onchange: "AutoLoadChanged"},
-				{kind: "onyx.Checkbox", name: "autoLockPanels", content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
+				{kind: "onyx.Checkbox", name: "autoLockPanels", checked: true, content: "Swipeable article view (on phones)", style: "width:100%; height:24px; padding:10px 0px 0px 40px;"},
 				{kind: "FittableColumns", style: "height: auto", components: [
 					{kind: "onyx.PickerDecorator", components: [
 						{},
@@ -316,7 +316,7 @@ enyo.kind({
 	//Settings
 	ViewMode: "0",
 	AutoLoadFirstFeed: false,
-	AutoLockPanels: false,
+	AutoLockPanels: true,
 	AutoLoadAllArticles: false,
 
 	// Merkvariablen

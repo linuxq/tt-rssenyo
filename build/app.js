@@ -4700,7 +4700,7 @@ fit: !0
 kind: "FittableColumns",
 name: "listviewtoolbar",
 showing: !0,
-style: "width:100%; background: #252525;",
+style: "width:100%; height: 60px; background: #252525;",
 components: [ {
 kind: "enyo.Image",
 name: "bb10listviewgrabber",
@@ -4841,7 +4841,7 @@ content: ""
 kind: "FittableColumns",
 name: "articleviewtoolbar",
 showing: !0,
-style: "width:100%; background: #252525;",
+style: "width:100%; height: 60px; background: #252525;",
 components: [ {
 kind: "enyo.Image",
 name: "bb10articleviewgrabber",
@@ -4862,6 +4862,8 @@ style: "height: 14px"
 kind: "FittableColumns",
 style: "height: 32px; background: #252525;",
 components: [ {
+style: "width: 5px"
+}, {
 kind: "onyx.Button",
 name: "btnUnlockPanels",
 content: "<-",
@@ -4886,11 +4888,19 @@ checked: !1
 }, {
 style: "width: 5px"
 }, {
-name: "lblArticles",
-align: "right",
-style: "color: white; margin-top: 10px"
+kind: "FittableRows",
+style: "background: #252525; width: 23px; padding-right: 5px;",
+components: [ {
+name: "lblArticles1",
+align: "center",
+style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: top;"
 }, {
-style: "width: 5px"
+name: "lblArticles2",
+align: "center",
+style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: bottom;"
+}, {
+style: "height: 3px"
+} ]
 }, {
 kind: "onyx.MenuDecorator",
 onSelect: "shareArticle",
@@ -4912,8 +4922,6 @@ content: "App.net"
 content: "G+"
 } ]
 } ]
-}, {
-style: "width: 5px"
 }, {
 kind: "onyx.IconButton",
 name: "bb10btnshare",
@@ -5117,6 +5125,7 @@ onchange: "AutoLoadChanged"
 }, {
 kind: "onyx.Checkbox",
 name: "autoLockPanels",
+checked: !0,
 content: "Swipeable article view (on phones)",
 style: "width:100%; height:24px; padding:10px 0px 0px 40px;"
 }, {
@@ -5269,7 +5278,7 @@ ttrssAutoMarkRead: "2000",
 JustStarted: !0,
 ViewMode: "0",
 AutoLoadFirstFeed: !1,
-AutoLockPanels: !1,
+AutoLockPanels: !0,
 AutoLoadAllArticles: !1,
 dragStartPanelIndex: null,
 rendered: function(e, t) {
@@ -5412,11 +5421,11 @@ this.setLoadbar(!0), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.artic
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + format_number(r.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), this.$.articlePreview.setContent(e[0].content), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), e[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), this.$.articlePreview.setContent(e[0].content), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), e[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetFullArticleSuccess: function(e) {
 var t = this.ArticleData[this.RecentArticleIndex], n = "", r = t[0].updated, i = new Date(r * 1e3), s = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), o = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), u = s[i.getDay()] + " " + o[i.getMonth()] + " " + i.getDate() + ", " + i.getFullYear() + " " + i.getHours() + ":" + format_number(i.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), t[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles.setContent(this.RecentArticleIndex + 1 + "/" + this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), t[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetArticleError: function(e) {
 console.log(e), this.setLoadbar(!1);
