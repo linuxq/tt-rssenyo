@@ -5360,6 +5360,10 @@ this.$.toggleFeedUnread.setValue(t), ttrssGetCategories(this.ttrssURL, this.ttrs
 },
 processGetCategoriesSuccess: function(e) {
 console.error("processGetCategoriesSuccess");
+if (e.length == 0) {
+console.log("GetCategories: NO Categories"), this.setLoadbar(!1), alert("Sorry, no news!"), this.setLoadbar(!1);
+return;
+}
 var t = "";
 this.CategoryTitle.length = 0, this.CategoryUnread.length = 0, this.CategoryID.length = 0;
 var n = 0, r = null;
@@ -5407,11 +5411,15 @@ var n = this.$.toggleFeedUnread.getValue();
 ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, n, this.$.feedID.getValue(), !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 },
 processGetHeadlinesSuccess: function(e) {
-this.Articles.length = 0, this.ArticleData.length = 0, this.ArticleID.length = 0, this.ArticleURL.length = 0, this.ArticleUnread.length = 0, this.ArticleStarred.length = 0;
+console.log(e.length), this.Articles.length = 0, this.ArticleData.length = 0, this.ArticleID.length = 0, this.ArticleURL.length = 0, this.ArticleUnread.length = 0, this.ArticleStarred.length = 0;
+if (e.length == 0) {
+console.log("GetHeadlines: NO HEADLINES"), this.setLoadbar(!1), this.$.articleRepeater.setCount(0), this.$.articleScroller.setScrollTop(0), this.$.viewPanels.setIndex(1), this.clickRefresh();
+return;
+}
 for (var t = 0; t < e.length; t++) this.Articles[t] = html_entity_decode(e[t].title), this.ArticleID[t] = e[t].id, this.ArticleURL[t] = e[t].link, this.ArticleUnread[t] = e[t].unread, this.ArticleStarred[t] = e[t].marked, ttrssGetArticle(this.ttrssURL, this.ttrss_SID, e[t].id, enyo.bind(this, function(e, t) {
 this.ArticleData[e] = t, (this.ViewMode == "1" || this.ViewMode == "2") && this.$.articleRepeater.renderRow(e);
 }, t), enyo.bind(this, function() {}));
-this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0), e.length == 0 && this.setLoadbar(!1);
+this.$.articleRepeater.setCount(this.Articles.length), this.$.articleScroller.setScrollTop(0);
 },
 processGetHeadlinesError: function(e) {
 console.log(e), this.setLoadbar(!1);

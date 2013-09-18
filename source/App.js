@@ -632,6 +632,13 @@ enyo.kind({
 	},
 	processGetCategoriesSuccess: function(inEvent) {
 		console.error("processGetCategoriesSuccess");
+		if (inEvent.length == 0) {
+			console.log("GetCategories: NO Categories");
+			this.setLoadbar(false);
+			alert("Sorry, no news!");
+			this.setLoadbar(false);
+			return;
+		};	
 		//console.log(inEvent);
 		var TextHelp = "";
 		this.CategoryTitle.length = 0;
@@ -744,6 +751,7 @@ enyo.kind({
 		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
 	processGetHeadlinesSuccess: function(inEvent){
+		console.log(inEvent.length);
 		this.Articles.length = 0; //Artikelliste leeren
 		//this.ArticleContent.length = 0;
 		this.ArticleData.length = 0;
@@ -751,29 +759,39 @@ enyo.kind({
 		this.ArticleURL.length = 0;
 		this.ArticleUnread.length = 0;
 		this.ArticleStarred.length = 0;
-		for (var i=0; i<inEvent.length; i++) {
-			//console.log(inEvent[i].title + " - " + inEvent[i].unread);
-			this.Articles[i] = html_entity_decode(inEvent[i].title);
-			this.ArticleID[i] = inEvent[i].id;
-			this.ArticleURL[i] = inEvent[i].link;
-			this.ArticleUnread[i] = inEvent[i].unread;
-			this.ArticleStarred[i] = inEvent[i].marked;
-			ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
-				enyo.bind(this, function(i, inEvent) {
-					//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
-					this.ArticleData[i] = inEvent;
-					if ((this.ViewMode == "1") || (this.ViewMode == "2")) {
-						this.$.articleRepeater.renderRow(i);
-					}
-				}, i),
-				enyo.bind(this, function() {}));
-		};
-		this.$.articleRepeater.setCount(this.Articles.length);
-		this.$.articleScroller.setScrollTop(0);
-		//this.$.feedlist.setContent(TextHelp);
-		//console.log(inEvent);
-		if (inEvent.length == 0)
+		if (inEvent.length == 0) {
+			console.log("GetHeadlines: NO HEADLINES");
 			this.setLoadbar(false);
+			this.$.articleRepeater.setCount(0);
+			this.$.articleScroller.setScrollTop(0);
+			this.$.viewPanels.setIndex(1);
+			this.clickRefresh();
+			return;
+		} else {
+			for (var i=0; i<inEvent.length; i++) {
+				//console.log(inEvent[i].title + " - " + inEvent[i].unread);
+				this.Articles[i] = html_entity_decode(inEvent[i].title);
+				this.ArticleID[i] = inEvent[i].id;
+				this.ArticleURL[i] = inEvent[i].link;
+				this.ArticleUnread[i] = inEvent[i].unread;
+				this.ArticleStarred[i] = inEvent[i].marked;
+				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, inEvent[i].id,
+					enyo.bind(this, function(i, inEvent) {
+						//this.ArticleContent[i] = stripHTML(html_entity_decode(inEvent[0].content));
+						this.ArticleData[i] = inEvent;
+						if ((this.ViewMode == "1") || (this.ViewMode == "2")) {
+							this.$.articleRepeater.renderRow(i);
+						}
+					}, i),
+					enyo.bind(this, function() {}));
+			};
+			this.$.articleRepeater.setCount(this.Articles.length);
+			this.$.articleScroller.setScrollTop(0);
+		}
+		//this.$.feedlist.setContent(TextHelp);
+		//console.log(inEvent);	
+		//if (inEvent.length == 0)
+		//	this.setLoadbar(false);
 	},
 	processGetHeadlinesError: function(inEvent){
 		console.log(inEvent);
