@@ -189,7 +189,7 @@ enyo.kind({
 							//{style: "width: 5px"},
 							{kind: "onyx.IconButton", name: "bb10btnshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
 							{style: "width: 5px"},
-							{kind: "onyx.IconButton" , src: "assets/browser2.png", ontap: "openArticle"},
+							{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png", ontap: "openArticle"},
 							{style: "width: 5px"},
 							{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
 							{style: "width: 5px"},
@@ -312,6 +312,10 @@ enyo.kind({
 	ttrss_SID: "",
 	ttrssAutoMarkRead: "2000",
 	JustStarted: true,
+	staredon: "assets/starred-footer-on.png",
+	staredoff: "assets/starred-footer.png",
+	publishedon: "assets/published-on.png",
+	publishedoff: "assets/published-off.png",
 
 	//Settings
 	ViewMode: "0",
@@ -327,6 +331,14 @@ enyo.kind({
 	},
 	create: function(){
 		this.inherited(arguments);
+		if (navigator.userAgent.indexOf("BB10") > -1) {
+			this.staredon =  "assets/bb10staron.png";
+			this.staredoff = "assets/bb10staroff.png";
+			this.$.iconStarred.setSrc(this.staredoff);
+			this.publishedon = "assets/bb10publishon.png";
+			this.publishedoff = "assets/bb10publishoff.png";
+			this.$.btnbrowser.setSrc("assets/bb10browser.png");			
+		};
 	},
 	startapp: function(inSender,inEvent) {
 
@@ -437,7 +449,7 @@ enyo.kind({
 			this.$.listviewgrabber.setShowing(true);
 			this.$.bb10listviewgrabber.setShowing(false);
 			this.$.bb10btnshare.setShowing(false);
-			this.$.btnshare.setShowing(true);			
+			this.$.btnshare.setShowing(true);
 			
 			//this.$.bb10listviewtoolbar.setShowing(false);
 			//this.$.listviewtoolbar.setShowing(true);						
@@ -593,6 +605,7 @@ enyo.kind({
 	},
 	processLoginSuccess: function(LoginResponse) {
 		//console.error("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
+		this.$.LoginPopup.hide();
 		this.ttrss_SID = LoginResponse.sessionid;
 		this.$.main.setContent("LOGIN SUCCESSS SID: " + LoginResponse.sessionid);
 		this.getCategories();
@@ -836,17 +849,17 @@ enyo.kind({
 		}
 		//Favorite-Stern setzen
 		if(inEvent[0].marked) {
-			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+			this.$.iconStarred.setSrc(this.staredon);
 		} else
 		{
-			this.$.iconStarred.setSrc("assets/starred-footer.png");
+			this.$.iconStarred.setSrc(this.staredoff);
 		}
 		//FPublish-Stern setzen
 		if(inEvent[0].published) {
-			this.$.iconPublished.setSrc("assets/published-on.png");
+			this.$.iconPublished.setSrc(this.publishedon);
 		} else
 		{
-			this.$.iconPublished.setSrc("assets/published-off.png");
+			this.$.iconPublished.setSrc(this.publishedoff);
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		//this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
@@ -892,15 +905,15 @@ enyo.kind({
 
 		//Favorite-Stern setzen
 		if(inEvent[0].marked) {
-			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+			this.$.iconStarred.setSrc(this.staredon);
 		} else {
-			this.$.iconStarred.setSrc("assets/starred-footer.png");
+			this.$.iconStarred.setSrc(this.staredoff);
 		}
 		//Publish-Stern setzen
 		if(inEvent[0].published) {
-			this.$.iconPublished.setSrc("assets/published-on.png");
+			this.$.iconPublished.setSrc(this.publishedon);
 		} else {
-			this.$.iconPublished.setSrc("assets/published-off.png");
+			this.$.iconPublished.setSrc(this.publishedoff);
 		}
 		//console.log("unread : " + inEvent[0].unread);
 		//this.$.lblArticles.setContent((this.RecentArticleIndex + 1) + "/" + this.Articles.length);
@@ -954,15 +967,16 @@ enyo.kind({
 		//console.log(inEvent);
 	},
 	toggleArticleStarred: function(inSender, inEvent) {
-		if (this.$.iconStarred.src == "assets/starred-footer.png") {
+		console.log(this.staredon);
+		if (this.$.iconStarred.src == this.staredoff) { //"assets/starred-footer.png") {
 			//STARREN
 			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
-			this.$.iconStarred.setSrc("assets/starred-footer-on.png");
+			this.$.iconStarred.setSrc(this.staredon);//"assets/bb10staron.png");//starred-footer-on.png");
 		} else
 		{
 			//STAR entfernen
 			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
-			this.$.iconStarred.setSrc("assets/starred-footer.png");
+			this.$.iconStarred.setSrc(this.staredoff);//"assets/bb10staroff.png");//starred-footer.png");
 		}
 	},
 	toggleArticleStarredList: function(inSender, inEvent) {
@@ -988,18 +1002,18 @@ enyo.kind({
 		//console.log(inEvent);
 	},
 	toggleArticlePublished: function(inSender, inEvent) {
-		if (this.$.iconPublished.src == "assets/published-off.png") {
+		if (this.$.iconPublished.src == this.publishedoff) {
 			//Publish
 			console.log("PUBLISH");
 			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError"));
-			this.$.iconPublished.setSrc("assets/published-on.png");
+			this.$.iconPublished.setSrc(this.publishedon);
 		} else
 		{
 			//PuBublish
 			console.log("UNPUBLISH");
 			ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError"));
 			//ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], false,  enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPulishArticleError"));
-			this.$.iconPublished.setSrc("assets/published-off.png");
+			this.$.iconPublished.setSrc(this.publishedoff);
 		}
 	},
 	processPublishArticleSuccess: function(inEvent){
@@ -1185,7 +1199,9 @@ enyo.kind({
 			case "feed":
 				ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
 				break;
-		}
+		};
+		this.clickRefresh();
+		this.$.viewPanels.setIndex(1);
 
 		//als gelesen markieren
 
@@ -1393,6 +1409,8 @@ enyo.kind({
 			} else {
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			}
+		} else {
+			this.vibrate();
 		};
 	},
 	shareArticle: function(inSender, inEvent){
@@ -1574,5 +1592,11 @@ enyo.kind({
 			this.$.loadbarBlank.setShowing(true);
 			//console.log("FALSE");
 		}
+	},
+	vibrate: function (){
+		//BB10
+		if (navigator.userAgent.indexOf("BB10") > -1) {		
+			navigator.vibrate(100);
+		};
 	}
 });

@@ -4932,6 +4932,7 @@ ontap: "shareArticlebb10"
 style: "width: 5px"
 }, {
 kind: "onyx.IconButton",
+name: "btnbrowser",
 src: "assets/browser2.png",
 ontap: "openArticle"
 }, {
@@ -5276,6 +5277,10 @@ ttrssIconPath: null,
 ttrss_SID: "",
 ttrssAutoMarkRead: "2000",
 JustStarted: !0,
+staredon: "assets/starred-footer-on.png",
+staredoff: "assets/starred-footer.png",
+publishedon: "assets/published-on.png",
+publishedoff: "assets/published-off.png",
 ViewMode: "0",
 AutoLoadFirstFeed: !1,
 AutoLockPanels: !0,
@@ -5285,7 +5290,7 @@ rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 10);
 },
 create: function() {
-this.inherited(arguments);
+this.inherited(arguments), navigator.userAgent.indexOf("BB10") > -1 && (this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"));
 },
 startapp: function(e, t) {
 BetaDate = "20131012", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), window.close()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.changeViewMode(), this.ttrssURL == null ? this.$.LoginPopup.show() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), navigator.userAgent.indexOf("BB10") > -1 ? (this.$.bb10articleviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.chkArticelRead.applyStyle("height", "20px")) : (this.$.bb10articleviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.bb10btnshare.setShowing(!1), this.$.btnshare.setShowing(!0));
@@ -5343,7 +5348,7 @@ changeMarkReadTimeout: function(e, t) {
 this.ttrssAutoMarkRead = t.selected.value;
 },
 processLoginSuccess: function(e) {
-this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError")), ttrssGetApiLevel(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetApiLevelSuccess"), enyo.bind(this, "processGetApiLevelError"));
+this.$.LoginPopup.hide(), this.ttrss_SID = e.sessionid, this.$.main.setContent("LOGIN SUCCESSS SID: " + e.sessionid), this.getCategories(), ttrssGetConfig(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetConfigSuccess"), enyo.bind(this, "processGetConfigError")), ttrssGetApiLevel(this.ttrssURL, this.ttrss_SID, enyo.bind(this, "processGetApiLevelSuccess"), enyo.bind(this, "processGetApiLevelError"));
 var t = this.$.toggleUnread.getValue();
 this.AutoLoadAllArticles && (this.$.lblFeedTitle.setContent("All articles"), this.$.feedTitleIcon.setShowing(!1), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, t, -4, !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2));
 },
@@ -5429,11 +5434,11 @@ this.setLoadbar(!0), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.artic
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + format_number(r.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), this.$.articlePreview.setContent(e[0].content), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), e[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), this.$.articlePreview.setContent(e[0].content), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), e[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), e[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetFullArticleSuccess: function(e) {
 var t = this.ArticleData[this.RecentArticleIndex], n = "", r = t[0].updated, i = new Date(r * 1e3), s = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), o = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), u = s[i.getDay()] + " " + o[i.getMonth()] + " " + i.getDate() + ", " + i.getFullYear() + " " + i.getHours() + ":" + format_number(i.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc("assets/starred-footer-on.png") : this.$.iconStarred.setSrc("assets/starred-footer.png"), t[0].published ? this.$.iconPublished.setSrc("assets/published-on.png") : this.$.iconPublished.setSrc("assets/published-off.png"), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), t[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetArticleError: function(e) {
 console.log(e), this.setLoadbar(!1);
@@ -5454,7 +5459,7 @@ ttrssMarkArticleRead(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentAr
 processMarkArticleReadSuccess: function(e) {},
 processMarkArticleReadError: function(e) {},
 toggleArticleStarred: function(e, t) {
-this.$.iconStarred.src == "assets/starred-footer.png" ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer-on.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc("assets/starred-footer.png"));
+console.log(this.staredon), this.$.iconStarred.src == this.staredoff ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc(this.staredon)) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.$.iconStarred.setSrc(this.staredoff));
 },
 toggleArticleStarredList: function(e, t) {
 this.ArticleStarred[t.index] ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !1, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !1, e.setSrc("assets/starred-footer32.png")) : (ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], !0, enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError")), this.ArticleStarred[t.index] = !0, e.setSrc("assets/starred-footer32-on.png"));
@@ -5462,7 +5467,7 @@ this.ArticleStarred[t.index] ? (ttrssMarkArticleStarred(this.ttrssURL, this.ttrs
 processMarkArticleStarredSuccess: function(e) {},
 processMarkArticleStarredError: function(e) {},
 toggleArticlePublished: function(e, t) {
-this.$.iconPublished.src == "assets/published-off.png" ? (console.log("PUBLISH"), ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError")), this.$.iconPublished.setSrc("assets/published-on.png")) : (console.log("UNPUBLISH"), ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError")), this.$.iconPublished.setSrc("assets/published-off.png"));
+this.$.iconPublished.src == this.publishedoff ? (console.log("PUBLISH"), ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !0, enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError")), this.$.iconPublished.setSrc(this.publishedon)) : (console.log("UNPUBLISH"), ttrssPublishArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], !1, enyo.bind(this, "processPublishArticleSuccess"), enyo.bind(this, "processPublishArticleError")), this.$.iconPublished.setSrc(this.publishedoff));
 },
 processPublishArticleSuccess: function(e) {},
 processPublishArticleError: function(e) {},
@@ -5542,6 +5547,7 @@ break;
 case "feed":
 ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError"));
 }
+this.clickRefresh(), this.$.viewPanels.setIndex(1);
 },
 MarkFeedRead: function(e) {
 ttrssCatchupFeed(this.ttrssURL, this.ttrss_SID, this.FeedID[this.currentFeedIndex], enyo.bind(this, "processMarkFeedReadSuccess"), enyo.bind(this, "processMarkFeedReadError")), this.$.MarkFeedReadPopup.hide();
@@ -5620,7 +5626,7 @@ prevArticle: function(e, t) {
 this.RecentArticleIndex == 0 && (this.UpdateFeedClick(), this.enablePanels()), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
 },
 nextArticle: function(e, t) {
-this.RecentArticleIndex < this.Articles.length - 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+this.RecentArticleIndex < this.Articles.length - 1 ? (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))) : this.vibrate();
 },
 shareArticle: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
@@ -5721,6 +5727,9 @@ this.$.viewPanels.setIndex(1);
 },
 setLoadbar: function(e) {
 e ? (this.$.loadbar.setShowing(!0), this.$.loadbarBlank.setShowing(!1)) : (this.$.loadbar.setShowing(!1), this.$.loadbarBlank.setShowing(!0));
+},
+vibrate: function() {
+navigator.userAgent.indexOf("BB10") > -1 && navigator.vibrate(100);
 }
 });
 
