@@ -183,6 +183,7 @@ enyo.kind({
 									//{classes: "onyx-menu-divider"},
 									{content: "App.net"},
 									{content: "G+"},
+                                    {content: "Instapaper"}
 									//{content: "ReadItLater", active: false},
 								]}
 							]},							
@@ -259,6 +260,14 @@ enyo.kind({
 					]},
 					{content: "Auto mark read timer", style: "padding-left: 10px; vertical-align: middle"}
 				]},
+                {kind: "onyx.Groupbox", style: "width:100%; background-color:#EAEAEA;", components: [
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input", name: "instapaperUser", placeholder: "Instapaper User", value: "", style: "width:100%;"}
+					]},
+					{kind: "onyx.InputDecorator", components: [
+						{kind: "onyx.Input", type:"password", name: "instapaperPW", placeholder: "Enter instapaper password", value: "", style: "width:100%;"}
+					]}
+				]},
 				]},
 				//{tag: "div", style: "height:10px;"},
 				{kind: "FittableColumns", style: "width:100%; margin-top:5px;", components:[
@@ -310,6 +319,8 @@ enyo.kind({
 	ttrssPassword: null,
 	ttrssIconPath: null,
 	ttrss_SID: "",
+    instapaperUser: "",
+    instapaperPW: "",
 	ttrssAutoMarkRead: "2000",
 	JustStarted: true,
 	staredon: "assets/starred-footer-on.png",
@@ -369,6 +380,8 @@ enyo.kind({
 		this.AutoLoadAllArticles= (localStorage.getItem("AutoLoadAllArticles") == "true");
 		this.AutoLockPanels = (localStorage.getItem("AutoLockPanels") == "true");
 		gblUseJsonpRequest = (localStorage.getItem("UseJsonpRequest") == "true");
+        this.instapaperUser = localStorage.getItem("instapaperUser");
+        this.instapaperPW = localStorage.getItem("instapaperPW");
 
 		this.changeViewMode();
 
@@ -517,6 +530,8 @@ enyo.kind({
 		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 		this.AutoLockPanels = this.$.autoLockPanels.getValue();
 		this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue();
+        this.instapaperUser = this.$.instapaperUser.getValue();
+        this.instapaperPW = this.$.instapaperPW.getValue();
 		gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
 		localStorage.setItem("ttrssurl", this.ttrssURL);
 		localStorage.setItem("ttrssuser", this.ttrssUser);
@@ -527,6 +542,8 @@ enyo.kind({
 		localStorage.setItem("AutoLockPanels", this.AutoLockPanels);
 		localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
+        localStorage.setItem("instapaperUser", this.instapaperUser);
+        localStorage.setItem("instapaperPW", this.instapaperPW);
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		this.$.LoginPopup.hide();
 	},
@@ -565,6 +582,8 @@ enyo.kind({
 				this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
 				break;
 		};
+        this.$.instapaperUser.setValue(this.instapaperUser);
+        this.$.instapaperPW.setValue(this.instapaperPW);
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//console.log("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
@@ -1370,6 +1389,9 @@ enyo.kind({
 	},
 	openArticle: function(inSender, inEvent){
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
+        if (FullArticelURL.indexOf("www.zeit.de") > 0) {
+            FullArticelURL = FullArticelURL.replace("www.zeit.de", "mobil.zeit.de");   
+        }
 		//if (this.ttrssURL == "..") {
 		//	FullArticelURL = "proxy.php?proxy_url=" + FullArticelURL;
 		//}
@@ -1415,6 +1437,9 @@ enyo.kind({
 	},
 	shareArticle: function(inSender, inEvent){
 		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
+        if (ShareUrl.indexOf("www.zeit.de") > 0) {
+            ShareUrl = ShareUrl.replace("www.zeit.de", "mobil.zeit.de");   
+        }
 		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 		switch (inEvent.originator.content) {
 			case "Twitter":
@@ -1433,6 +1458,9 @@ enyo.kind({
 			case "App.net":
 				window.open("https://alpha.app.net/intent/post?text=" + ShareText + "%20" + ShareUrl + "%20via%20%23ttrssenyo");
 				break;
+            case "Instapaper":
+                window.open("https://www.instapaper.com/api/add?username="+ this.instapaperUser + "&password=" + this.instapaperPW + "&redirect=close&url=" + ShareUrl);
+                break;
 		};
 
 	},
