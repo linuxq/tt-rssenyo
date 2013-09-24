@@ -66,6 +66,8 @@ window.onload = function () {
 	console.log(navigator.userAgent);
 	gblAndroid = false;
 	gblDesktop = false;
+	gblBB10 = false;
+	gblWebos = false;
 	if (navigator.userAgent.indexOf("Android") > -1) {
 		gblAndroid = true;
 	}
@@ -98,11 +100,13 @@ window.onload = function () {
 		onDeviceReady();
 	}
 	if (navigator.userAgent.indexOf("BB10") > -1) {
+		gblBB10 = true;
 		onDeviceReady();
 	}
 	if (window.PalmSystem) {
 		// call stageReady on webos
 		window.PalmSystem.stageReady();
+		gblWebos = true;
 		onDeviceReady();
 	}
 }
