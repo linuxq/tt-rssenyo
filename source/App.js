@@ -152,26 +152,62 @@ enyo.kind({
 					{kind: "enyo.Image", name: "bb10articleviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "enablePanels"}, //height: 54px"},
 					//{style: "width: 10px"},
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
+					{kind: "FittableRows", style: "background: #252525; width: 30px; padding-right: 5px;", components:[
+						{style: "height: 16px"},
+						{name: "lblArticles1", align: "center", style: "font-size: 12px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: top;"},
+						//{content: "of", align: "center", style: "font-size: 5px; color: white; height: 10px; padding-top: 1px; padding-bottom: 1px; vertical-align: middle;"},
+						{name: "lblArticles2", align: "center", style: "font-size: 12px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: bottom;"},
+						{style: "height: 3px"},
+					]},					
+					{kind: "FittableRows", name: "bb10btnread", style: "height: 60px; background: #252525; width: 40px; padding-left: 0px", ontap: "markreadbb10", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton", name: "bb10iconread", src: "assets/bb10readoff.png", style: "height: 32px; width: 40px", showing:true},
+						{style: "height: 2px"},
+						{content: "Read", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},
+					{kind: "FittableRows", name: "bb10btnshare", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "shareArticlebb10", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton", name: "bb10iconshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
+						{style: "height: 2px"},
+						{content: "Share", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},
+					{kind: "FittableRows", name: "bb10btnfull", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "openArticle", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png"},
+						{style: "height: 2px"},
+						{content: "Open", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},
+					{kind: "FittableRows", name: "bb10btnstar", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "toggleArticleStarred", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png"},
+						{style: "height: 2px"},
+						{content: "Star", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},
+					{kind: "FittableRows", name: "bb10btnpublish", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "toggleArticlePublished", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/bb10publishoff.png"},
+						{style: "height: 2px"},
+						{content: "Publish", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},					
+					
+					
 					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
 						{style: "height: 14px"},
 						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
-							{style: "width: 5px"},
+							//{style: "width: 5px"},
 							{kind: "onyx.Button", name: "btnUnlockPanels", content: "<-", ontap: "enablePanels", showing: false},				
 							{style: "width: 5px"},
 							{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
 							{style: "width: 5px"},
 							{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
 							//{style: "width: 5px"},
-							{kind: "onyx.IconButton", name: "bb10btnread", src: "assets/bb10readoff.png", showing:true, ontap: "markreadbb10"},
+							//{kind: "onyx.IconButton", name: "bb10btnread", src: "assets/bb10readoff.png", showing:true, ontap: "markreadbb10"},
 							{style: "width: 8px"},							
-							
-							{kind: "FittableRows", style: "background: #252525; width: 23px; padding-right: 5px;", components:[
-								//{style: "height: 14px"},
-								{name: "lblArticles1", align: "center", style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: top;"},
-								//{content: "of", align: "center", style: "font-size: 5px; color: white; height: 10px; padding-top: 1px; padding-bottom: 1px; vertical-align: middle;"},
-								{name: "lblArticles2", align: "center", style: "font-size: 11px; text-align: center; color: white; height: 20px; padding-top: 1px; padding-bottom: 1px; vertical-align: bottom;"},
-								{style: "height: 3px"},
-							]},
 
 							//{style: "width: 5px"},
 							{kind: "onyx.MenuDecorator", onSelect: "shareArticle", components: [
@@ -190,13 +226,13 @@ enyo.kind({
 								]}
 							]},							
 							//{style: "width: 5px"},
-							{kind: "onyx.IconButton", name: "bb10btnshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
-							{style: "width: 8px"},
-							{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png", ontap: "openArticle"},
-							{style: "width: 8px"},
-							{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
-							{style: "width: 8px"},
-							{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
+							//{kind: "onyx.IconButton", name: "bb10btnshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
+							//{style: "width: 8px"},
+							//{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png", ontap: "openArticle"},
+							//{style: "width: 8px"},
+							//{kind: "onyx.IconButton" , name: "iconStarred", src: "assets/starred-footer.png", ontap: "toggleArticleStarred"},
+							//{style: "width: 8px"},
+							//{kind: "onyx.IconButton" , name: "iconPublished", src: "assets/published-off.png", ontap: "toggleArticlePublished"},
 							{style: "width: 8px"},
 							{kind: "onyx.Button", name: "btnFullArticle", content: "Full", ontap: "showFullArticle"},
 							{style: "width: 8px"},
@@ -348,10 +384,10 @@ enyo.kind({
 	startapp: function(inSender,inEvent) {
 		
 		//Debug
-		//gblBB10 = true;
+		gblBB10 = true;
 		
-		//Beta Laufzeit bis 12.10.2013
-		BetaDate = "20131012"; 
+		//Beta Laufzeit bis 31.12.2013
+		BetaDate = "20131130"; 
 		jetzt = new Date();
 		Tag = jetzt.getDate();
 		// bei einstelligem Wert Null voranstellen
@@ -360,10 +396,15 @@ enyo.kind({
 		// bei einstelligem Wert Null voranstellen
 		Monat  = ((Monat < 10) ? "0" + Monat : Monat);
 		Jahr = jetzt.getYear() + 1900;
-		Datum = Jahr + Monat + Tag;
+		Datum = (Jahr  * 100) + Monat + Tag;
+		//alert(Datum+"-"+BetaDate);
 		if (Datum > BetaDate){
 			console.log("BETA abgelaufen");
+			alert("Sorry, beta period expired 11/30/2013");
 			window.close();
+			if (gblBB10) {
+				blackberry.app.exit();
+			}
 		}
 		
 
@@ -864,7 +905,7 @@ enyo.kind({
 		//Checkbox ReadStatus setzen
 		if (inEvent[0].unread) {
 			this.$.chkArticleRead.setChecked(false);
-			this.$.bb10btnread.setSrc("assets/bb10readoff.png");
+			this.$.bb10iconread.setSrc("assets/bb10readoff.png");
 			clearTimeout(this.MarkReadTimer);
 			if (this.ttrssAutoMarkRead != '0') {
 				this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead);
@@ -873,7 +914,7 @@ enyo.kind({
 		else
 		{
 			this.$.chkArticleRead.setChecked(true);
-			this.$.bb10btnread.setSrc("assets/bb10readon.png");
+			this.$.bb10iconread.setSrc("assets/bb10readon.png");
 		}
 		//Favorite-Stern setzen
 		if(inEvent[0].marked) {
@@ -973,7 +1014,7 @@ enyo.kind({
 		//this.$.result.setContent(inSender.name + " was " + (inSender.getValue() ? " selected." : "deselected."));
 	},
 	markreadbb10: function () {
-		var Readstate = this.$.bb10btnread.src;
+		var Readstate = this.$.bb10iconread.src;
 		if (Readstate == "assets/bb10readoff.png") {
 			this.$.chkArticleRead.setValue(true);
 			this.MarkArticleRead();
@@ -990,7 +1031,7 @@ enyo.kind({
 		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#999999");
 		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "normal");
 		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#999999");
-		this.$.bb10btnread.setSrc("assets/bb10readon.png");
+		this.$.bb10iconread.setSrc("assets/bb10readon.png");
 	},
 	MarkArticleUnread: function() {
 		//als ungelesen markieren
@@ -999,7 +1040,7 @@ enyo.kind({
 		//this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("color", "#333333");
 		this.$.articleRepeater.children[this.RecentArticleIndex].$.titel.applyStyle("font-weight", "bold");
 		this.$.articleRepeater.children[this.RecentArticleIndex].$.preview.applyStyle("color", "#333333");
-		this.$.bb10btnread.setSrc("assets/bb10readoff.png");
+		this.$.bb10iconread.setSrc("assets/bb10readoff.png");
 	},
 	processMarkArticleReadSuccess: function(inEvent){
 		//console.log(inEvent);

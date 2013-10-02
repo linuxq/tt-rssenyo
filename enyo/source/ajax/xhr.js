@@ -133,7 +133,7 @@ enyo.xhr = {
 			}
 		} catch(e) {}
 		try {
-			return new XMLHttpRequest();
+			return new XMLHttpRequest({ "mozSystem": true });
 		} catch(e) {}
 		return null;
 	}

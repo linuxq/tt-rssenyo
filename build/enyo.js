@@ -985,7 +985,9 @@ try {
 if (enyo.platform.ie < 10 && window.XDomainRequest && !e.headers && !this.inOrigin(e.url) && !/^file:\/\//.test(window.location.href)) return new XDomainRequest;
 } catch (t) {}
 try {
-return new XMLHttpRequest;
+return new XMLHttpRequest({
+mozSystem: !0
+});
 } catch (t) {}
 return null;
 }
