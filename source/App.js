@@ -384,7 +384,7 @@ enyo.kind({
 	startapp: function(inSender,inEvent) {
 		
 		//Debug
-		gblBB10 = true;
+		//gblBB10 = true;
 		
 		//Beta Laufzeit bis 31.12.2013
 		BetaDate = "20131130"; 
