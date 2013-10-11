@@ -108,10 +108,26 @@ enyo.kind({
 					{style: "width: 10px"},
 					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
 						{style: "height: 14px"},
-						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
+						{kind: "FittableColumns", style: "height: 32px; background: #252525;", fit: true, components:[
 							{kind: "onyx.Grabber", name: "listviewgrabber", style: "height: 30px"},
 							{style: "width: 10px"},
-							{kind: "onyx.MenuDecorator", style: "width: 100px", onSelect: "MarkFeedReadClick", components: [
+							
+							{kind: "FittableRows", name: "bb10marklist", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "toggleArticleStarred", components:[
+								//{style: "height: 6px"},
+								{kind: "onyx.MenuDecorator", onSelect: "MarkFeedReadClick", style: "width: 100px; height: 24px", components: [
+									{kind: "onyx.IconButton", src: "assets/bb10mark.png", style: "height: 32px; width: 40px; margin-top: -3px"},
+									{kind: "onyx.Menu", components: [
+										{content: "read until current", name: "current"},
+										{content: "list read", name: "list"},
+										{content: "feed read", name: "feed"}
+									]}
+								]},									
+								{style: "height: 2px"},
+								{content: "Mark", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+								{style: "height: 4px"}
+							]},													
+							
+							/*{kind: "onyx.MenuDecorator", style: "width: 100px", onSelect: "MarkFeedReadClick", components: [
 								{kind: "onyx.Button", content: "Mark"},
 								{kind: "onyx.Menu", components: [
 									{content: "read until current", name: "current"},
@@ -119,7 +135,8 @@ enyo.kind({
 									{content: "feed read", name: "feed"}
 								]}
 							]},
-							{style: "width: 10px"},
+							*/
+							{style: "width: 100%"},
 							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
 							{style: "width: 10px"},
 							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
@@ -141,7 +158,7 @@ enyo.kind({
 				]},
 				{content: "", style: "border: 1px solid silver;"},
 				{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
-					{name: "articlePreview", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
+					{name: "articlePreview", classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: ""}
 				]},
 				{kind: "Scroller", name: "articleViewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
 					{name: "articleView", kind: "MyAjaxWebView", classes: "panels-sample-sliding-content", allowHtml: true, content: ""}
@@ -168,14 +185,14 @@ enyo.kind({
 					]},
 					{kind: "FittableRows", name: "bb10btnshare", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "shareArticlebb10", components:[
 						{style: "height: 6px"},
-						{kind: "onyx.IconButton", name: "bb10iconshare", src: "assets/bb10-share32.png", showing:true, ontap: "shareArticlebb10"},
+						{kind: "onyx.IconButton", name: "bb10iconshare", src: "assets/bb10-share32.png", style: "height: 32px; width: 40px", showing:true, ontap: "shareArticlebb10"},
 						{style: "height: 2px"},
 						{content: "Share", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 						{style: "height: 4px"}
 					]},
 					{kind: "FittableRows", name: "bb10btnfull", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "openArticle", components:[
 						{style: "height: 6px"},
-						{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png"},
+						{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png", style: "height: 32px; width: 40px",},
 						{style: "height: 2px"},
 						{content: "Open", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 						{style: "height: 4px"}
@@ -277,7 +294,7 @@ enyo.kind({
 						{kind: "onyx.Picker", name: "pickViewMode", onSelect: "handleViewModeChange", components: [
 							{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
 							{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
-							{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
+							//{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
 						]}
 					]}
 				]},
@@ -384,7 +401,7 @@ enyo.kind({
 	startapp: function(inSender,inEvent) {
 		
 		//Debug
-		//gblBB10 = true;
+		gblBB10 = true;
 		
 		//Beta Laufzeit bis 31.12.2013
 		BetaDate = "20131130"; 
@@ -423,7 +440,8 @@ enyo.kind({
 		this.changeViewMode();
 
 		if (this.ttrssURL == null) {
-			this.$.LoginPopup.show();
+			this.LoginTap();
+			//this.$.LoginPopup.show();
 		} else {
 			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 			/*var getUnreadOnly = this.$.toggleUnread.getValue();
@@ -473,7 +491,9 @@ enyo.kind({
 		if (this.AutoLockPanels) {
 			this.$.btnNextArticle.setShowing(false);
 			this.$.btnPrevArticle.setShowing(false);	
-		}		
+		}
+		this.$.useJsonpRequest.setShowing(false);
+		this.$.autoLockPanels.setShowing(false);
 		//BB10 Scaling / UI
 		if (gblBB10) {
 			//this.$.bb10articleviewgrabber.setShowing(false);
@@ -488,9 +508,11 @@ enyo.kind({
 			this.$.bb10btnread.setShowing(true);
 			this.$.chkArticleRead.setShowing(false);
 			this.$.setupinstapaper.setShowing(false);
+			this.$.btnNextArticle.setShowing(false);
+			this.$.btnPrevArticle.setShowing(false);
 			
 			
-			//this.$.grabberArticleView.setShowing(false);
+			this.$.grabberArticleView.setShowing(false);
 			//this.$.btnbb10share.setShowing(true);
 			//this.$.mnuShare.setShowing(false);
 			//this.$.btnUnlockPanels.applyStyle("width", "20px");
@@ -503,6 +525,7 @@ enyo.kind({
 			this.publishedoff = "assets/bb10publishoff.png";
 			this.$.btnbrowser.setSrc("assets/bb10browser.png");						
 		} else {
+			this.$.grabberArticleView.setShowing(true);
 			this.$.bb10articleviewgrabber.setShowing(false);
 			this.$.btnUnlockPanels.setShowing(true);
 			this.$.listviewgrabber.setShowing(true);
@@ -592,8 +615,9 @@ enyo.kind({
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		localStorage.setItem("instapaperUser", this.instapaperUser);
 		localStorage.setItem("instapaperPW", this.instapaperPW);
-		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		this.$.LoginPopup.hide();
+		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+		//this.$.LoginPopup.hide();
 	},
 	LoginTap: function(inSender, inEvent) {
 		this.$.serverAddress.setValue(this.ttrssURL);
@@ -812,17 +836,21 @@ enyo.kind({
 	},
 	processGetConfigSuccess: function(inEvent){
 		//console.log(inEvent);
+		this.$.LoginPopup.hide();
 		this.ttrssIconPath = this.ttrssURL + "/" + inEvent.icons_url + "/";
 		//console.log(this.ttrssIconPath);
 	},
 	processGetConfigError: function(inEvent){
 		console.log(inEvent);
+		this.$.LoginPopup.hide();
 	},
 	processGetApiLevelSuccess: function(inEvent){
 		gblApiLevel = inEvent.level;
+		this.$.LoginPopup.hide();
 	},
 	processGetApiLevelError: function(inEvent){
 		console.log(inEvent);
+		this.$.LoginPopup.hide();
 	},
 	getHeadlines: function(inSender, inEvent){
 		//console.log(this.$.catID.getValue());
@@ -1416,8 +1444,17 @@ enyo.kind({
 		this.RecentArticleIndex = inEvent.index;
 		if (this.ViewMode == "1") {
 			// no content preview
-			var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
-			window.open(FullArticelURL);
+			var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];			
+			if (gblBB10) {
+				/*blackberry.invoke.invoke({
+				    target: "sys.browser",
+				    uri: FullArticelURL
+				});
+				*/
+				window.open(FullArticelURL);
+			} else {
+				window.open(FullArticelURL);
+			}			
 			this.MarkArticleRead();
 			return;
 		} else if (this.ViewMode == "2") {
@@ -1452,13 +1489,21 @@ enyo.kind({
 	},
 	openArticle: function(inSender, inEvent){
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
-        if (FullArticelURL.indexOf("www.zeit.de") > 0) {
-            FullArticelURL = FullArticelURL.replace("www.zeit.de", "mobil.zeit.de");   
-        }
+	
+		if (FullArticelURL.indexOf("www.zeit.de") > 0) {
+		    FullArticelURL = FullArticelURL.replace("www.zeit.de", "mobil.zeit.de");   
+		}
 		//if (this.ttrssURL == "..") {
 		//	FullArticelURL = "proxy.php?proxy_url=" + FullArticelURL;
 		//}
-		window.open(FullArticelURL);
+		if (gblBB10) {
+			blackberry.invoke.invoke({
+			    target: "sys.browser",
+			    uri: FullArticelURL
+			});
+		} else {
+			window.open(FullArticelURL);
+		}			
 	},
 	showFullArticle: function(inSender, inEvent) {
 		var FullArticelURL = this.ArticleURL[this.RecentArticleIndex];
@@ -1696,5 +1741,11 @@ enyo.kind({
 		if (gblBB10) {		
 			navigator.vibrate(100);
 		};
+	},
+	catchtaponlink: function(inSender, inEvent) {
+		console.log(inEvent.target.href);
+		console.log("tapped");
+		inEvent.preventDefault();
+		return true;		
 	}
 });

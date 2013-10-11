@@ -39,6 +39,9 @@
   <feature id="blackberry.ui.dialog"/>
   <feature id="blackberry.app.event"/>
   <feature id="blackberry.invoke"/>
+  <feature id="blackberry.app.orientation">
+    <param name="mode" value="portrait" />
+    </feature>
   <access uri="*" subdomains="true" browserOnly="true" />
 
   <!-- Cordova API -->
