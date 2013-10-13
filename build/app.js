@@ -4610,20 +4610,66 @@ fit: !0
 } ]
 } ]
 }, {
-kind: "onyx.Toolbar",
-style: "background: #252525;",
+kind: "FittableColumns",
+showing: !0,
+style: "width:100%; height: 60px; background: #252525;",
 components: [ {
-kind: "onyx.Button",
-content: "Setup",
-ontap: "LoginTap"
-}, {
-kind: "onyx.Button",
-content: "Add Feed",
-ontap: "addFeedClick"
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 52px; padding-left: 10px",
+ontap: "LoginTap",
+components: [ {
+style: "height: 6px"
 }, {
 kind: "onyx.IconButton",
-src: "assets/menu-icon-refresh.png",
-ontap: "clickRefresh"
+src: "assets/bb10settings.png",
+style: "height: 32px; width: 40px",
+showing: !0
+}, {
+style: "height: 2px"
+}, {
+content: "Settings",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
+}, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 64px; padding-left: 10px",
+ontap: "addFeedClick",
+components: [ {
+style: "height: 6px"
+}, {
+kind: "onyx.IconButton",
+src: "assets/bb10add64.png",
+style: "height: 32px; width: 64px",
+showing: !0
+}, {
+style: "height: 2px"
+}, {
+content: "Add feed",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
+}, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 52px; padding-left: 10px",
+ontap: "clickRefresh",
+components: [ {
+style: "height: 6px"
+}, {
+kind: "onyx.IconButton",
+src: "assets/bb10refresh.png",
+style: "height: 32px; width: 40px",
+showing: !0
+}, {
+style: "height: 2px"
+}, {
+content: "Refresh",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
 } ]
 } ]
 }, {
@@ -4736,8 +4782,8 @@ onSelect: "MarkFeedReadClick",
 style: "width: 100px; height: 24px",
 components: [ {
 kind: "onyx.IconButton",
-src: "assets/bb10mark.png",
-style: "height: 32px; width: 40px; margin-top: -3px"
+src: "assets/bb10mark2.png",
+style: "height: 32px; width: 40px; margin-top: -9px"
 }, {
 kind: "onyx.Menu",
 components: [ {
@@ -4760,7 +4806,42 @@ style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
 style: "height: 4px"
 } ]
 }, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 54px; padding-left: 6px",
+ontap: "UpdateFeedClick",
+components: [ {
+kind: "onyx.IconButton",
+src: "assets/bb10refresh.png",
+style: "height: 32px; width: 40px; margin-top: -9px"
+}, {
+style: "height: 2px"
+}, {
+content: "Refresh",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
+}, {
 style: "width: 100%"
+}, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 48px; padding-left: 8px",
+ontap: "UpdateFeedClick",
+components: [ {
+style: "height: 6px"
+}, {
+kind: "onyx.IconButton",
+src: "assets/bb10refresh.png",
+style: "height: 32px; width: 40px",
+showing: !0
+}, {
+style: "height: 2px"
+}, {
+content: "Refresh",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
 }, {
 kind: "onyx.IconButton",
 style: "height: 32px; margin-top: 15px",
@@ -5407,7 +5488,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-gblBB10 = !0, BetaDate = "20131130", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr * 100 + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), alert("Sorry, beta period expired 11/30/2013"), window.close(), gblBB10 && blackberry.app.exit()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? this.LoginTap() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), this.$.autoLockPanels.setShowing(!1), gblBB10 ? (this.$.bb10articleviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1), this.$.setupinstapaper.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.chkArticleRead.applyStyle("height", "20px"), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png")) : (this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.bb10btnshare.setShowing(!1), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.chkArticleRead.setShowing(!0));
+BetaDate = "20131130", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr * 100 + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), alert("Sorry, beta period expired 11/30/2013"), window.close(), gblBB10 && blackberry.app.exit()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? this.LoginTap() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), this.$.autoLockPanels.setShowing(!1), gblBB10 || gblFirefox ? (this.$.bb10articleviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1), this.$.setupinstapaper.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.chkArticleRead.applyStyle("height", "20px"), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png")) : (this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.bb10btnshare.setShowing(!1), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.chkArticleRead.setShowing(!0));
 },
 resizeHandler: function() {
 this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
@@ -5776,6 +5857,7 @@ r.response(function() {}), r.go();
 shareArticlebb10: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
 ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
+if (gblBB10) {
 var r = {
 action: "bb.action.SHARE",
 mimeType: "text/plain",
@@ -5788,6 +5870,8 @@ console.log("success");
 }, function(e) {
 console.log("error: " + e);
 });
+}
+gblFirefox && window.open("http://www.twitter.com/share?text=Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + n);
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;

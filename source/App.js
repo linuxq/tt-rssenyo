@@ -59,10 +59,39 @@ enyo.kind({
 						{name: "left2blank", fit: true}
 					]}
 				]},
-				{kind: "onyx.Toolbar", style: "background: #252525;", components: [
-					{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
-					{kind: "onyx.Button", content: "Add Feed", ontap: "addFeedClick"},
-					{kind: "onyx.IconButton" , src: "assets/menu-icon-refresh.png", ontap: "clickRefresh"}
+				//{kind: "onyx.Toolbar", style: "background: #252525;", components: [
+				{kind: "FittableColumns", showing: true, style: "width:100%; height: 60px; background: #252525;", components:[
+					//{kind: "onyx.Button", content: "Setup", ontap: "LoginTap"},
+					//{kind: "onyx.Button", content: "Add Feed", ontap: "addFeedClick"},
+
+					//{kind: "onyx.IconButton" , src: "assets/bb10add.png", ontap: "addFeedClick"},
+
+					{kind: "FittableRows", style: "height: 60px; background: #252525; width: 52px; padding-left: 10px", ontap: "LoginTap", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton", src: "assets/bb10settings.png", style: "height: 32px; width: 40px", showing:true},
+						{style: "height: 2px"},
+						{content: "Settings", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},					
+					
+					{kind: "FittableRows", style: "height: 60px; background: #252525; width: 64px; padding-left: 10px", ontap: "addFeedClick", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton", src: "assets/bb10add64.png", style: "height: 32px; width: 64px", showing:true},
+						{style: "height: 2px"},
+						{content: "Add feed", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},
+					
+					{kind: "FittableRows", style: "height: 60px; background: #252525; width: 52px; padding-left: 10px", ontap: "clickRefresh", components:[
+						{style: "height: 6px"},
+						{kind: "onyx.IconButton", src: "assets/bb10refresh.png", style: "height: 32px; width: 40px", showing:true},
+						{style: "height: 2px"},
+						{content: "Refresh", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+						{style: "height: 4px"}
+					]},					
+					
+					
+					//{kind: "onyx.IconButton" , src: "assets/bb10refresh.png", ontap: "clickRefresh"}
 				]}
 			]},
 			{name: "middle", kind: "FittableRows", fit: true, style: "width:400px;", classes: "panels-theme-light", components: [
@@ -115,7 +144,7 @@ enyo.kind({
 							{kind: "FittableRows", name: "bb10marklist", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "toggleArticleStarred", components:[
 								//{style: "height: 6px"},
 								{kind: "onyx.MenuDecorator", onSelect: "MarkFeedReadClick", style: "width: 100px; height: 24px", components: [
-									{kind: "onyx.IconButton", src: "assets/bb10mark.png", style: "height: 32px; width: 40px; margin-top: -3px"},
+									{kind: "onyx.IconButton", src: "assets/bb10mark2.png", style: "height: 32px; width: 40px; margin-top: -9px"},
 									{kind: "onyx.Menu", components: [
 										{content: "read until current", name: "current"},
 										{content: "list read", name: "list"},
@@ -125,7 +154,15 @@ enyo.kind({
 								{style: "height: 2px"},
 								{content: "Mark", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 								{style: "height: 4px"}
-							]},													
+							]},
+							
+							{kind: "FittableRows", style: "height: 60px; background: #252525; width: 54px; padding-left: 6px", ontap: "UpdateFeedClick", components:[
+								//{style: "height: 6px"},
+								{kind: "onyx.IconButton", src: "assets/bb10refresh.png", style: "height: 32px; width: 40px; margin-top: -9px"},
+								{style: "height: 2px"},
+								{content: "Refresh", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+								{style: "height: 4px"}
+							]},							
 							
 							/*{kind: "onyx.MenuDecorator", style: "width: 100px", onSelect: "MarkFeedReadClick", components: [
 								{kind: "onyx.Button", content: "Mark"},
@@ -137,6 +174,14 @@ enyo.kind({
 							]},
 							*/
 							{style: "width: 100%"},
+							{kind: "FittableRows", style: "height: 60px; background: #252525; width: 48px; padding-left: 8px", ontap: "UpdateFeedClick", components:[
+								{style: "height: 6px"},
+								{kind: "onyx.IconButton", src: "assets/bb10refresh.png", style: "height: 32px; width: 40px", showing:true},
+								{style: "height: 2px"},
+								{content: "Refresh", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+								{style: "height: 4px"}
+							]},							
+							
 							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
 							{style: "width: 10px"},
 							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
@@ -401,7 +446,8 @@ enyo.kind({
 	startapp: function(inSender,inEvent) {
 		
 		//Debug
-		gblBB10 = true;
+		//gblBB10 = false;//true;
+		//gblFirefox = true;
 		
 		//Beta Laufzeit bis 31.12.2013
 		BetaDate = "20131130"; 
@@ -494,8 +540,9 @@ enyo.kind({
 		}
 		this.$.useJsonpRequest.setShowing(false);
 		this.$.autoLockPanels.setShowing(false);
+		
 		//BB10 Scaling / UI
-		if (gblBB10) {
+		if (gblBB10 || gblFirefox) {
 			//this.$.bb10articleviewgrabber.setShowing(false);
 			//this.$.btnUnlockPanels.setShowing(true);			
 			this.$.bb10articleviewgrabber.setShowing(true);
@@ -928,6 +975,7 @@ enyo.kind({
 		this.$.articleViewScroller.setShowing(false);
 		this.$.articlePreviewScroller.setShowing(true);
 		this.$.articlePreview.setContent(inEvent[0].content);
+		console.log(inEvent[0].content);
 		this.$.articlePreviewScroller.setScrollTop(0);
 		this.$.articlePreviewScroller.setScrollLeft(0);
 		//Checkbox ReadStatus setzen
@@ -1582,28 +1630,45 @@ enyo.kind({
 	shareArticlebb10: function(inSender, inEvent){
 		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
 		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
-		var request = {
-		  action: 'bb.action.SHARE',
-		  mimeType: "text/plain",		
-		  // for a file
-		  uri: ShareUrl,
-		  // for text you'd use 'data'
-		  data: ShareText + " " + ShareUrl + " via #ttrssenyo",
 		
-		  target_type: ["APPLICATION", "VIEWER", "CARD"]
+		if (gblBB10) {
+			var request = {
+			  action: 'bb.action.SHARE',
+			  mimeType: "text/plain",		
+			  // for a file
+			  uri: ShareUrl,
+			  // for text you'd use 'data'
+			  data: ShareText + " " + ShareUrl + " via #ttrssenyo",
+			
+			  target_type: ["APPLICATION", "VIEWER", "CARD"]
+			};
+			blackberry.invoke.card.invokeTargetPicker(request, "Share",
+			
+			    // success callback
+			    function() {
+				console.log('success');
+			    },
+			
+			    // error callback
+			    function(e) {
+				console.log('error: ' + e);
+			    }
+			);					
 		};
-		blackberry.invoke.card.invokeTargetPicker(request, "Share",
-		
-		    // success callback
-		    function() {
-			console.log('success');
-		    },
-		
-		    // error callback
-		    function(e) {
-			console.log('error: ' + e);
-		    }
-		);		
+		if (gblFirefox) {
+			/*console.log("SHARE FIREFOX");//code
+			var activity = new MozActivity({
+			  // Ask for the "pick" activity
+			  name: "pick",
+			
+			  // Provide the data required by the filters of the activity
+			  data: {
+			    type: "image/jpeg"
+			  }
+			});
+			*/
+			window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
+		}
 	},	
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");

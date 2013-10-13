@@ -21,14 +21,6 @@
 			"description":		"Required to post notifications of new messages"
 		}
 	},
-	"activities": {
-		"share": {
-			"href":				"/index.html",
-			"disposition":		"window",
-			"returnValue":		false
-		}
-	},
-
 	"type":						"privileged",
 	"installs_allowed_from": ["*"],
 	"default_locale": "en"

@@ -68,6 +68,7 @@ window.onload = function () {
 	gblDesktop = false;
 	gblBB10 = false;
 	gblWebos = false;
+	gblFirefox = false;
 	if (navigator.userAgent.indexOf("Android") > -1) {
 		gblAndroid = true;
 	}
