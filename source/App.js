@@ -21,7 +21,8 @@ enyo.kind({
 			]},
 			{name: "left2", kind: "FittableRows", classes: "panels-theme-light", style: "width:260px; background-color:#fff;", components: [
 				{kind: "onyx.Toolbar", components: [
-					{content: "TT-RSS Reader"},
+					//{kind: "enyo.Image", fit: false, src: "icon24.png", style: "height:24px;"},
+					{content: "TinyEnyo Reader"},
 					{fit: true},
 					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
@@ -138,7 +139,7 @@ enyo.kind({
 					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
 						{style: "height: 14px"},
 						{kind: "FittableColumns", style: "height: 32px; background: #252525;", fit: true, components:[
-							{kind: "onyx.Grabber", name: "listviewgrabber", style: "height: 30px"},
+							{kind: "onyx.Grabber", name: "listviewgrabber", style: "height: 30px", ontap: "bb10backmain"},
 							{style: "width: 10px"},
 							
 							{kind: "FittableRows", name: "bb10marklist", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "toggleArticleStarred", components:[
@@ -174,15 +175,9 @@ enyo.kind({
 							]},
 							*/
 							{style: "width: 100%"},
-							{kind: "FittableRows", style: "height: 60px; background: #252525; width: 48px; padding-left: 8px", ontap: "UpdateFeedClick", components:[
-								{style: "height: 6px"},
-								{kind: "onyx.IconButton", src: "assets/bb10refresh.png", style: "height: 32px; width: 40px", showing:true},
-								{style: "height: 2px"},
-								{content: "Refresh", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
-								{style: "height: 4px"}
-							]},							
+
 							
-							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
+							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", showing: false, src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
 							{style: "width: 10px"},
 							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
 							{style: "width: 10px"},
@@ -237,7 +232,7 @@ enyo.kind({
 					]},
 					{kind: "FittableRows", name: "bb10btnfull", style: "height: 60px; background: #252525; width: 44px; padding-left: 6px", ontap: "openArticle", components:[
 						{style: "height: 6px"},
-						{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/browser2.png", style: "height: 32px; width: 40px",},
+						{kind: "onyx.IconButton" , name: "btnbrowser", src: "assets/bb10browser.png", style: "height: 32px; width: 40px",},
 						{style: "height: 2px"},
 						{content: "Open", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 						{style: "height: 4px"}
@@ -266,7 +261,7 @@ enyo.kind({
 							{style: "width: 5px"},
 							{kind: "onyx.Button", name: "btnPrevArticle", style: "width: 40px", content: "<", ontap: "prevArticle"},
 							{style: "width: 5px"},
-							{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", onchange: "toggleArticleRead", checked: false},
+							{kind:"onyx.Checkbox", style: "height: 29px", name: "chkArticleRead", showing: false, onchange: "toggleArticleRead", checked: false},
 							//{style: "width: 5px"},
 							//{kind: "onyx.IconButton", name: "bb10btnread", src: "assets/bb10readoff.png", showing:true, ontap: "markreadbb10"},
 							{style: "width: 8px"},							
@@ -542,51 +537,23 @@ enyo.kind({
 		this.$.autoLockPanels.setShowing(false);
 		
 		//BB10 Scaling / UI
-		if (gblBB10 || gblFirefox) {
-			//this.$.bb10articleviewgrabber.setShowing(false);
-			//this.$.btnUnlockPanels.setShowing(true);			
-			this.$.bb10articleviewgrabber.setShowing(true);
-			this.$.btnUnlockPanels.setShowing(false);
-			
-			this.$.listviewgrabber.setShowing(false);
-			this.$.bb10listviewgrabber.setShowing(true);
-			this.$.bb10btnshare.setShowing(true);
-			this.$.btnshare.setShowing(false);
-			this.$.bb10btnread.setShowing(true);
-			this.$.chkArticleRead.setShowing(false);
-			this.$.setupinstapaper.setShowing(false);
-			this.$.btnNextArticle.setShowing(false);
-			this.$.btnPrevArticle.setShowing(false);
-			
-			
-			this.$.grabberArticleView.setShowing(false);
-			//this.$.btnbb10share.setShowing(true);
-			//this.$.mnuShare.setShowing(false);
-			//this.$.btnUnlockPanels.applyStyle("width", "20px");
-			this.$.chkArticleRead.applyStyle("height", "20px");
-			//this.$.mnuShare.applyStyle("height", "20px");
-			this.staredon =  "assets/bb10staron.png";
-			this.staredoff = "assets/bb10staroff.png";
-			this.$.iconStarred.setSrc(this.staredoff);
-			this.publishedon = "assets/bb10publishon.png";
-			this.publishedoff = "assets/bb10publishoff.png";
-			this.$.btnbrowser.setSrc("assets/bb10browser.png");						
-		} else {
-			this.$.grabberArticleView.setShowing(true);
-			this.$.bb10articleviewgrabber.setShowing(false);
-			this.$.btnUnlockPanels.setShowing(true);
-			this.$.listviewgrabber.setShowing(true);
-			this.$.bb10listviewgrabber.setShowing(false);
-			this.$.bb10btnshare.setShowing(false);
-			this.$.btnshare.setShowing(true);
-			this.$.bb10btnread.setShowing(false);
-			this.$.chkArticleRead.setShowing(true);
-			
-			//this.$.bb10listviewtoolbar.setShowing(false);
-			//this.$.listviewtoolbar.setShowing(true);						
-			
-			//this.$.btnbb10share.setShowing(false);
-			//this.$.mnuShare.setShowing(true);
+		if (gblBB10) {
+			console.log("PLATFORM: Blackberry 10");
+			this.setViewBB10();					
+		} else if (gblFirefox) {
+			console.log("PLATFORM: FirefoxOS");
+			//this.setViewFFOS();
+			this.setViewBB10();	
+		} else if (gblWebos) {
+			console.log("PLATFORM: webOS");
+			//this.setViewWebOS();
+			this.setViewBB10();	
+		} else if (gblDesktop) {
+			console.log("PLATFORM: Desktop");
+			this.setViewDesktop();					
+		} else 
+		{
+			this.setViewDesktop();
 		}
 	},
 	resizeHandler: function() {
@@ -637,6 +604,65 @@ enyo.kind({
 		this.$.body.reflow();
 		this.resized();
 	},
+	setViewBB10: function(){
+			//Setup Popup
+			//Hide Instapaper Setup
+			this.$.setupinstapaper.setShowing(false);			
+					
+			//List View bar
+			this.$.listviewgrabber.setShowing(false);
+			this.$.bb10listviewgrabber.setShowing(true);
+			
+			//ArticleView bar
+			this.$.btnUnlockPanels.setShowing(false);
+			this.$.bb10articleviewgrabber.setShowing(true);
+			this.$.grabberArticleView.setShowing(false);
+			this.$.bb10btnshare.setShowing(true);
+			this.$.btnshare.setShowing(false);
+			//this.$.mnuShare.setShowing(false);
+			//this.$.btnUnlockPanels.applyStyle("width", "20px");
+			this.$.bb10btnread.setShowing(true);
+			this.$.chkArticleRead.applyStyle("height", "20px");
+			this.$.chkArticleRead.setShowing(false);
+			//this.$.mnuShare.applyStyle("height", "20px");
+			this.staredon =  "assets/bb10staron.png";
+			this.staredoff = "assets/bb10staroff.png";
+			this.$.iconStarred.setSrc(this.staredoff);
+			this.publishedon = "assets/bb10publishon.png";
+			this.publishedoff = "assets/bb10publishoff.png";
+			this.$.btnbrowser.setSrc("assets/bb10browser.png");
+			//Swipe as default - hide arrows
+			this.$.btnNextArticle.setShowing(false);
+			this.$.btnPrevArticle.setShowing(false);			
+	},
+	setViewFFOS: function(){
+		
+	},
+	setViewWebOS: function(){
+		
+	},
+	setViewDesktop: function(){
+			//List View bar
+			this.$.listviewgrabber.setShowing(true);
+			this.$.bb10listviewgrabber.setShowing(false);
+		
+			//Article View bar
+			this.$.btnUnlockPanels.setShowing(true);
+			this.$.grabberArticleView.setShowing(true);
+			this.$.bb10articleviewgrabber.setShowing(false);			
+			this.staredon =  "assets/bb10staron.png";
+			this.staredoff = "assets/bb10staroff.png";
+			this.$.iconStarred.setSrc(this.staredoff);
+			this.publishedon = "assets/bb10publishon.png";
+			this.publishedoff = "assets/bb10publishoff.png";
+			this.$.btnbrowser.setSrc("assets/bb10browser.png");
+			
+			this.$.bb10btnshare.setShowing(false);
+			this.$.btnshare.setShowing(true);
+			this.$.bb10btnread.setShowing(false);
+			this.$.bb10btnread.setShowing(true);
+			this.$.chkArticleRead.setShowing(false);			
+	},		
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
 	},
@@ -782,7 +808,7 @@ enyo.kind({
 		ttrssGetCategories(this.ttrssURL, this.ttrss_SID, getUnreadOnly, enyo.bind(this, "processGetCategoriesSuccess"), enyo.bind(this, "processGetCategoriesError"));
 	},
 	processGetCategoriesSuccess: function(inEvent) {
-		console.error("processGetCategoriesSuccess");
+		//console.error("processGetCategoriesSuccess");
 		if (inEvent.length == 0) {
 			console.log("GetCategories: NO Categories");
 			this.setLoadbar(false);
@@ -906,7 +932,7 @@ enyo.kind({
 		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.$.feedID.getValue(), false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 	},
 	processGetHeadlinesSuccess: function(inEvent){
-		console.log(inEvent.length);
+		//console.log(inEvent.length);
 		this.Articles.length = 0; //Artikelliste leeren
 		//this.ArticleContent.length = 0;
 		this.ArticleData.length = 0;
@@ -974,8 +1000,12 @@ enyo.kind({
 		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
 		this.$.articleViewScroller.setShowing(false);
 		this.$.articlePreviewScroller.setShowing(true);
-		this.$.articlePreview.setContent(inEvent[0].content);
-		console.log(inEvent[0].content);
+		//DEBUG
+		//helperimage = "<img alt=%22HTC One Max.%22 class=%22lightbox2 imagecache-w680h550 aligncenter%22 src=%22http://www.androidcentral.com/sites/androidcentral.com/files/imagecache/w680h550/postimages/108579/max23.jpg%22 />";
+		helperimage = ""; //"<img alt=\"HTC One Max.\"  src=\"http://www.androidcentral.com/sites/androidcentral.com/files/imagecache/w680h550/postimages/108579/max23.jpg\" width=\"100\" /> <br>";
+		this.$.articlePreview.setContent(helperimage  + inEvent[0].content);
+		console.log(inEvent[0]);
+		console.log(helperimage);
 		this.$.articlePreviewScroller.setScrollTop(0);
 		this.$.articlePreviewScroller.setScrollLeft(0);
 		//Checkbox ReadStatus setzen
@@ -1125,7 +1155,7 @@ enyo.kind({
 		//console.log(inEvent);
 	},
 	toggleArticleStarred: function(inSender, inEvent) {
-		console.log(this.staredon);
+		//console.log(this.staredon);
 		if (this.$.iconStarred.src == this.staredoff) { //"assets/starred-footer.png") {
 			//STARREN
 			ttrssMarkArticleStarred(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], true,  enyo.bind(this, "processMarkArticleStarredSuccess"), enyo.bind(this, "processMarkArticleStarredError"));
@@ -1460,7 +1490,7 @@ enyo.kind({
 			this.$.viewPanels.setIndex(3);
 			this.$.left2.setShowing(false);
 			this.$.middle.setShowing(false);
-			if (gblBB10) {
+			if (gblBB10 || gblWebos) {
 				this.$.btnUnlockPanels.setShowing(false);
 			} else {
 				this.$.btnUnlockPanels.setShowing(true);	
@@ -1516,7 +1546,7 @@ enyo.kind({
 				this.$.viewPanels.setIndex(3);
 				this.$.left2.setShowing(false);
 				this.$.middle.setShowing(false);
-				if (gblBB10) {
+				if (gblBB10 || gblWebos) {
 					this.$.btnUnlockPanels.setShowing(false);
 				} else {
 					this.$.btnUnlockPanels.setShowing(true);	
@@ -1759,33 +1789,37 @@ enyo.kind({
 		}
 	},
 	titleDragStart: function(inSender, inEvent){
-		//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
-		this.dragStartPanelIndex = this.$.viewPanels.getIndex();
-		//console.log("DRAGSTART");
+		if (!gblDesktop) {
+			//Remember Panel Index to prevent Article swiching when draggin form 2 to 3!
+			this.dragStartPanelIndex = this.$.viewPanels.getIndex();
+			//console.log("DRAGSTART");				
+		}
 	},
 	titleDragFinish: function(inSender, inEvent){
-		console.log("DRAGSTOP " + inEvent.dx);
-		this.resize();
-		  if (+inEvent.dx < -80) {
-			if (this.dragStartPanelIndex == 3) {
-				//console.log("NEXT");
-				if (this.$.viewPanels.getIndex() == 3) {
-					//Only if Article Panel is shown alone! To prevent switching with dragging panel!
-					this.nextArticle();
+		if (!gblDesktop) {
+			console.log("DRAGSTOP " + inEvent.dx);
+			this.resize();
+			  if (+inEvent.dx < -80) {
+				if (this.dragStartPanelIndex == 3) {
+					//console.log("NEXT");
+					if (this.$.viewPanels.getIndex() == 3) {
+						//Only if Article Panel is shown alone! To prevent switching with dragging panel!
+						this.nextArticle();
+					}
 				}
-			}
-		  };
-		  if (+inEvent.dx > 80) {
-			  if (this.$.btnUnlockPanels.getShowing()) {
-				this.prevArticle();
-				//this.$.viewPanels.setIndex(3);
 			  };
-			  if (this.$.bb10articleviewgrabber.getShowing()) {
-				this.prevArticle();
-				//this.$.viewPanels.setIndex(3);
-			  }			  
-		  }
-		  this.resize();
+			  if (+inEvent.dx > 80) {
+				  if (this.$.btnUnlockPanels.getShowing()) {
+					this.prevArticle();
+					//this.$.viewPanels.setIndex(3);
+				  };
+				  if (this.$.bb10articleviewgrabber.getShowing()) {
+					this.prevArticle();
+					//this.$.viewPanels.setIndex(3);
+				  }			  
+			  }
+			  this.resize();				
+		}
 	},
 	bb10backmain: function (){
 		this.$.viewPanels.setIndex(1);
@@ -1803,9 +1837,9 @@ enyo.kind({
 	},
 	vibrate: function (){
 		//BB10
-		if (gblBB10) {		
+		//if (gblBB10) {		
 			navigator.vibrate(100);
-		};
+		//};
 	},
 	catchtaponlink: function(inSender, inEvent) {
 		console.log(inEvent.target.href);

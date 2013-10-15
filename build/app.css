@@ -1430,6 +1430,11 @@
 	box-shadow: -4px 0 4px rgba(0,0,0,0.3);
 }
 
+
+.panels-sample-sliding-content > img {
+    width: 120px;
+}
+
 .panels-sample-sliding-item {
 	padding: 10px;
 	border-bottom: 1px solid black;
@@ -1438,6 +1443,12 @@
 .panels-sample-sliding-content {
 	text-align: left;
 	padding: 10px;
+}
+
+.img-responsive {
+  display: block;
+  height: auto;
+  max-width: 100%;
 }
 
 /* source/DividerDrawer.css */

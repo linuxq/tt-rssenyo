@@ -1,7 +1,7 @@
 {
-	"version": "0.0.1",
-	"name": "Tiny RSS Reader",
-	"description": "Enyo based TT-RSS Reader",
+	"version": "1.0.0",
+	"name": "TE-Reader",
+	"description": "TinyEnyo Reader for TT-RSS",
 	"launch_path": "/index.html",
 	"icons": {
 		"32": "/icon32.png",

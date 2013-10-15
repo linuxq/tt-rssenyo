@@ -63,7 +63,7 @@ window.onload = function () {
 	document.addEventListener("exit", onExit, false);
 
 	console.log("window.onload");
-	console.log(navigator.userAgent);
+	//console.log(navigator.userAgent);
 	gblAndroid = false;
 	gblDesktop = false;
 	gblBB10 = false;
@@ -108,6 +108,7 @@ window.onload = function () {
 		// call stageReady on webos
 		window.PalmSystem.stageReady();
 		gblWebos = true;
+		
 		onDeviceReady();
 	}
 }

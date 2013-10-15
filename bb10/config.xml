@@ -24,12 +24,12 @@
 
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:rim="http://www.blackberry.com/ns/widgets"
-	version="0.0.2.5" id="com.meissel.ttrssreader">
+	version="1.0.0.0" id="com.meissel.ttrssreader">
 
-  <name>TTRSS Enyo</name>
+  <name>TE-Reader</name>
 
   <description>
-      Tiny Tiny RSS Reader
+      TinyEnyo Reader for TT-RSS
   </description>
   <author>Marcel Meissel</author>
 
@@ -100,6 +100,8 @@
     <rim:transitionEffect type="fadeOut" />
   </rim:loadingScreen>
 
+  <rim:splash src="splash.png" />
+  
   <content src="index.html" />
 
   <feature id="blackberry.app">
