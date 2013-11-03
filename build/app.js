@@ -5120,6 +5120,8 @@ content: "App.net"
 content: "G+"
 }, {
 content: "Instapaper"
+}, {
+content: "ReadOnTouch"
 } ]
 } ]
 }, {
@@ -5529,6 +5531,16 @@ ontap: "shareArticle2"
 tag: "br"
 }, {
 kind: "onyx.Button",
+name: "btnreadontouch",
+content: "ReadOnTouch",
+classes: "onyx-negative",
+style: "width: 150px; margin: 5px;",
+ontap: "shareArticle2",
+showing: !1
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
 content: "Cancel",
 style: "width: 150px; margin: 5px;",
 ontap: "closesharePopup"
@@ -5578,7 +5590,7 @@ create: function() {
 this.inherited(arguments);
 },
 startapp: function(e, t) {
-BetaDate = "20131130", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr * 100 + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), alert("Sorry, beta period expired 11/30/2013"), window.close(), gblBB10 && blackberry.app.exit()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? this.LoginTap() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), this.$.autoLockPanels.setShowing(!1), gblBB10 ? (console.log("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (console.log("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (console.log("PLATFORM: webOS"), this.setViewBB10()) : gblDesktop ? (console.log("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
+BetaDate = "20131130", jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr * 100 + Monat + Tag, Datum > BetaDate && (console.log("BETA abgelaufen"), alert("Sorry, beta period expired 11/30/2013"), window.close(), gblBB10 && blackberry.app.exit()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? this.LoginTap() : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), this.$.autoLockPanels.setShowing(!1), gblBB10 ? (console.log("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (console.log("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (console.log("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (console.log("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
 },
 resizeHandler: function() {
 this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
@@ -5590,7 +5602,9 @@ setViewBB10: function() {
 this.$.setupinstapaper.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.bb10articleviewgrabber.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.applyStyle("height", "20px"), this.$.chkArticleRead.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1);
 },
 setViewFFOS: function() {},
-setViewWebOS: function() {},
+setViewWebOS: function() {
+this.$.btnreadontouch.setShowing(!0), this.setViewBB10();
+},
 setViewDesktop: function() {
 this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
 },
@@ -5601,7 +5615,7 @@ LoginSave: function(e, t) {
 this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 },
 LoginTap: function(e, t) {
-this.$.serverAddress.setValue(this.ttrssURL), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
+this.ttrssURL ? this.$.serverAddress.setValue(this.ttrssURL) : this.$.serverAddress.setValue("http://"), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
 switch (this.ViewMode) {
 case "0":
 this.$.pickViewMode.setSelected(this.$.VM0);
@@ -5949,6 +5963,9 @@ url: "https://www.instapaper.com/api/add?username=" + this.instapaperUser + "&pa
 method: "GET"
 });
 r.response(function() {}), r.go();
+break;
+case "ReadOnTouch":
+console.log("ROTouch");
 }
 },
 shareArticlebb10: function(e, t) {
@@ -5967,7 +5984,7 @@ console.log("success");
 console.log("error: " + e);
 });
 }
-gblFirefox && this.$.sharePopup.show(), gblDesktop && this.$.sharePopup.show();
+gblFirefox && this.$.sharePopup.show(), gblWebos && this.$.sharePopup.show(), gblDesktop && this.$.sharePopup.show();
 },
 shareArticle2: function(e, t) {
 ShareText = this.ShareText + "%20" + encodeURIComponent(this.ShareUrl);
@@ -5983,6 +6000,23 @@ window.open("https://plus.google.com/share?url=" + encodeURIComponent(this.Share
 break;
 case "App.net":
 window.open("https://alpha.app.net/intent/post?text=" + this.ShareText + "&url=" + encodeURIComponent(this.ShareUrl));
+break;
+case "ReadOnTouch":
+console.log("ReadOnTouch");
+var n = new enyo.ServiceRequest({
+service: "palm://com.palm.applicationManager",
+method: "open",
+subscribe: !1,
+resubscribe: !1
+}), r = {
+id: "com.sven-ziegler.readontouch",
+params: {
+action: "addLink",
+title: this.ShareText,
+url: this.ShareUrl
+}
+};
+n.go(r);
 }
 return this.$.sharePopup.hide(), this.resize(), !0;
 },
@@ -6797,5 +6831,60 @@ return this.open = !this.$["switch"].value, this.$["switch"].value = this.open, 
 caption: this.getCaption(),
 open: this.getOpen()
 }), !0;
+}
+});
+
+// ServiceRequest.js
+
+enyo.kind({
+name: "enyo.ServiceRequest",
+kind: enyo.Async,
+resubscribeDelay: 1e4,
+published: {
+service: "",
+method: "",
+subscribe: !1,
+resubscribe: !1
+},
+constructor: function(e) {
+enyo.mixin(this, e), this.inherited(arguments), enyo._serviceCounter == undefined ? enyo._serviceCounter = 1 : enyo._serviceCounter++, this.id = enyo._serviceCounter;
+},
+go: function(e) {
+if (!PalmServiceBridge) return this.fail({
+errorCode: -1,
+errorText: "Invalid device for Palm services. PalmServiceBridge not found."
+}), undefined;
+this.params = e || {}, this.bridge = new PalmServiceBridge, this.bridge.onservicecallback = this.clientCallback = enyo.bind(this, "serviceCallback");
+var t = this.service;
+return this.method.length > 0 && (t.charAt(t.length - 1) != "/" && (t += "/"), t += this.method), this.subscribe && (this.params.subscribe = this.subscribe), this.bridge.call(t, enyo.json.stringify(this.params)), this;
+},
+cancel: function() {
+this.cancelled = !0, this.responders = [], this.errorHandlers = [], this.resubscribeJob && enyo.job.stop(this.resubscribeJob), this.bridge && (this.bridge.cancel(), this.bridge = undefined);
+},
+serviceCallback: function(e) {
+var t, n;
+if (this.cancelled) return;
+try {
+t = enyo.json.parse(e);
+} catch (r) {
+var n = {
+errorCode: -1,
+errorText: e
+};
+this.serviceFailure(n);
+return;
+}
+t.errorCode || t.returnValue === !1 ? this.serviceFailure(t) : this.serviceSuccess(t);
+},
+serviceSuccess: function(e) {
+var t = undefined;
+this.responders.length > 0 && (t = this.responders[0]), this.respond(e), this.subscribe && t && this.response(t);
+},
+serviceFailure: function(e) {
+var t = undefined;
+this.errorHandlers.length > 0 && (t = this.errorHandlers[0]), this.fail(e), this.resubscribe && this.subscribe && (t && this.error(t), this.resubscribeJob = this.id + "resubscribe", enyo.job(this.resubscribeJob, enyo.bind(this, "goAgain"), this.resubscribeDelay));
+},
+goAgain: function() {
+this.go(this.params);
 }
 });

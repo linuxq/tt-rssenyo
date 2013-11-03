@@ -286,7 +286,8 @@ enyo.kind({
 									//{classes: "onyx-menu-divider"},
 									{content: "App.net"},
 									{content: "G+"},
-									{content: "Instapaper"}
+									{content: "Instapaper"},
+									{content: "ReadOnTouch"}
 									//{content: "ReadItLater", active: false},
 								]}
 							]},							
@@ -419,10 +420,12 @@ enyo.kind({
 			{kind:"onyx.Button", name: "facebook", content: "Facebook", style: "background-color: blue; color: #FFFFFF; width: 150px; margin: 5px;", ontap:"shareArticle2"},
 			{tag: "br", content: " ", style: "height: 10px",},
 			{kind:"onyx.Button", name: "gplus", content: "G+", classes: "onyx-negative", style: "width: 150px; margin: 5px;", ontap:"shareArticle2"},
-			{tag: "br"},			
+			{tag: "br"},
+			{kind:"onyx.Button", name: "btnreadontouch", content: "ReadOnTouch", classes: "onyx-negative", style: "width: 150px; margin: 5px;", ontap:"shareArticle2", showing: false},
+			{tag: "br"},						
 			{kind:"onyx.Button", content: "Cancel", style: "width: 150px; margin: 5px;", ontap:"closesharePopup"},
 			]
-		}		
+		},
 	],
 	FeedID: [],
 	FeedUnread: [],
@@ -580,8 +583,8 @@ enyo.kind({
 			this.setViewBB10();	
 		} else if (gblWebos) {
 			console.log("PLATFORM: webOS");
-			//this.setViewWebOS();
-			this.setViewBB10();	
+			this.setViewWebOS();
+			//this.setViewBB10();	
 		} else if (gblDesktop) {
 			console.log("PLATFORM: Desktop");
 			this.setViewDesktop();					
@@ -673,7 +676,8 @@ enyo.kind({
 		
 	},
 	setViewWebOS: function(){
-		
+			this.$.btnreadontouch.setShowing(true);
+			this.setViewBB10();
 	},
 	setViewDesktop: function(){
 			//List View bar
@@ -727,7 +731,11 @@ enyo.kind({
 		//this.$.LoginPopup.hide();
 	},
 	LoginTap: function(inSender, inEvent) {
-		this.$.serverAddress.setValue(this.ttrssURL);
+		if (this.ttrssURL) {
+			this.$.serverAddress.setValue(this.ttrssURL);
+		} else {
+			this.$.serverAddress.setValue("http://");
+		};
 		this.$.serverUser.setValue(this.ttrssUser);
 		this.$.serverPassword.setValue(this.ttrssPassword);
 		switch (this.ViewMode) {
@@ -1695,6 +1703,38 @@ enyo.kind({
 				request.go();				
 				//TODO Get Response!
 				break;
+			case "ReadOnTouch":
+				console.log("ROTouch");
+						/*
+						this.readontouchappid = "com.sven-ziegler.readontouch";
+						this.controller.serviceRequest("palm://com.palm.applicationManager", {
+							method: 'open',
+							parameters: {
+								id: this.readontouchappid,
+								params: {action: 'addLink', title: this.currentTitle, url: this.currentUrl}
+							},
+							onFailure:function(){
+								this.controller.showAlertDialog({
+									onChoose: function(value){
+										if (value=="yes"){
+											this.controller.serviceRequest('palm://com.palm.applicationManager', { 
+												method:'open',
+												parameters:{
+													target: "http://developer.palm.com/appredirect/?packageid=" + this.readontouchappid
+												}
+											});
+										}
+									},
+									preventCancel: false,
+									title: $L("ReadOnTouch not Installed"),
+									message: $L("ReadOnTouch is not installed. Would you like to download it?"),
+									choices:[
+										{label:$L('Yes'), value:"yes", type:'affirmative'},
+										{label:$L('No'), value:"no", type:'dismissal'}
+									]
+								});
+							}*/
+				break;
 		};
 
 	},
@@ -1730,6 +1770,10 @@ enyo.kind({
 			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
 			this.$.sharePopup.show();			
 		};
+		if (gblWebos) {
+			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
+			this.$.sharePopup.show();			
+		};		
 		if (gblDesktop) {
 			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
 			this.$.sharePopup.show();			
@@ -1754,7 +1798,23 @@ enyo.kind({
 				//window.open("https://alpha.app.net/intent/post?text=" + ShareText);// + "%20" + ShareUrl);
 				window.open("https://alpha.app.net/intent/post?text=" + this.ShareText + "&url=" + encodeURIComponent(this.ShareUrl));// + "%20" + ShareUrl);
 				https://alpha.app.net/intent/post/?text=App.net%20social%20buttons%20are%20here%3A&url=http%3A%2F%2Fblog.app.net%2F2013%2F05%2F28%2Fapp-net-social-buttons-are-herd%2F
-				break;			
+				break;
+			case 'ReadOnTouch':
+				console.log("ReadOnTouch");
+				var request = new enyo.ServiceRequest({
+					service: "palm://com.palm.applicationManager",
+					method: "open",
+					subscribe: false,
+					resubscribe: false
+				});
+				//request.response(function() {});
+				var Params = {
+					id: "com.sven-ziegler.readontouch",
+					params: {action: 'addLink', title: this.ShareText, url: this.ShareUrl}
+				}
+				request.go(Params);
+				//this.$.webosServiceRequestROT.go();
+				break;
 		};
 		this.$.sharePopup.hide();
 		this.resize();	
