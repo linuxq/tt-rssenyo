@@ -15,8 +15,9 @@
 }
 
 
-.panels-sample-sliding-content > img {
-    width: 120px;
+.panels-sample-sliding-content img {
+    max-width: 100%!important;
+    height: auto;
 }
 
 .panels-sample-sliding-item {

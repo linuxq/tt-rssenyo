@@ -4823,6 +4823,22 @@ style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
 style: "height: 4px"
 } ]
 }, {
+kind: "FittableRows",
+style: "height: 60px; background: #252525; width: 54px; padding-left: 6px",
+ontap: "showUnsubscribe",
+components: [ {
+kind: "onyx.IconButton",
+src: "assets/bb10delete.png",
+style: "height: 32px; width: 40px; margin-top: -9px"
+}, {
+style: "height: 2px"
+}, {
+content: "Remove",
+style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
+}, {
+style: "height: 4px"
+} ]
+}, {
 style: "width: 100%"
 }, {
 kind: "onyx.IconButton",
@@ -5248,12 +5264,12 @@ kind: "onyx.Picker",
 name: "pickViewMode",
 onSelect: "handleViewModeChange",
 components: [ {
-content: "Standard 3 Columns View",
+content: "Standard 3 views mode",
 value: "0",
 name: "VM0",
 active: !0
 }, {
-content: "Alternative 2 Columns view",
+content: "Preview list mode",
 value: "1",
 name: "VM1"
 } ]
@@ -5429,6 +5445,94 @@ content: "No",
 ontap: "MarkFeedReadClose",
 style: "width:100%;"
 } ]
+}, {
+name: "UnsubscribePopup",
+kind: "onyx.Popup",
+centered: !0,
+modal: !0,
+floating: !0,
+components: [ {
+content: "Really unsubscribe current feed?"
+}, {
+tag: "div",
+style: "height:10px;"
+}, {
+kind: "onyx.Button",
+classes: "onyx-negative",
+content: "Yes",
+ontap: "UnsubscribeYes",
+style: "width:100%;"
+}, {
+tag: "div",
+style: "height:2px;"
+}, {
+kind: "onyx.Button",
+content: "No",
+ontap: "UnsubscribeClose",
+style: "width:100%;"
+} ]
+}, {
+name: "sharePopup",
+kind: "onyx.Popup",
+centered: !0,
+floating: !0,
+classes: "onyx-sample-popup",
+style: "padding: 10px;",
+components: [ {
+content: "Share via",
+classes: "enyo-center"
+}, {
+tag: "br"
+}, {
+content: "",
+name: "shareText",
+style: "width: 150px; font-size: 10px"
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+name: "tweet",
+content: "Twitter",
+classes: "onyx-blue",
+style: "width: 150px; margin: 5px;",
+ontap: "shareArticle2"
+}, {
+tag: "br",
+content: " ",
+style: "height: 10px"
+}, {
+kind: "onyx.Button",
+name: "adnshare",
+content: "App.net",
+style: "background-color: grey; color: #FFFFFF; width: 150px; margin: 5px;",
+ontap: "shareArticle2"
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+name: "facebook",
+content: "Facebook",
+style: "background-color: blue; color: #FFFFFF; width: 150px; margin: 5px;",
+ontap: "shareArticle2"
+}, {
+tag: "br",
+content: " ",
+style: "height: 10px"
+}, {
+kind: "onyx.Button",
+name: "gplus",
+content: "G+",
+classes: "onyx-negative",
+style: "width: 150px; margin: 5px;",
+ontap: "shareArticle2"
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "Cancel",
+style: "width: 150px; margin: 5px;",
+ontap: "closesharePopup"
+} ]
 } ],
 FeedID: [],
 FeedUnread: [],
@@ -5465,6 +5569,8 @@ AutoLoadFirstFeed: !1,
 AutoLockPanels: !0,
 AutoLoadAllArticles: !1,
 dragStartPanelIndex: null,
+ShareText: "",
+ShareUrl: "",
 rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 10);
 },
@@ -5486,7 +5592,7 @@ this.$.setupinstapaper.setShowing(!1), this.$.listviewgrabber.setShowing(!1), th
 setViewFFOS: function() {},
 setViewWebOS: function() {},
 setViewDesktop: function() {
-this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!1), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
+this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
 },
 LoginClose: function(e, t) {
 this.$.LoginPopup.hide();
@@ -5702,10 +5808,10 @@ var n = this.ttrssIconPath + this.FeedID[e] + ".ico";
 this.$.feedTitleIcon.setShowing(!0), this.$.feedTitleIcon.setSrc(n);
 } else this.$.feedTitleIcon.setShowing(!1);
 var r = this.$.toggleFeedUnread.getValue(), i = !1;
-e == "0" && (i = !0), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, r, this.FeedID[e], i, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
+e == "0" && (i = !0), this.currentFeedID = this.FeedID[e], ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, r, this.FeedID[e], i, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && this.$.viewPanels.setIndex(2);
 },
 addFeedClick: function(e, t) {
-this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show();
+this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show(), gblBB10 && (console.log("IN CLIPBOARD: " + community.clipboard.getText()), this.$.AddFeedURL.setValue(community.clipboard.getText()));
 },
 addFeedSave: function(e, t) {
 ttrssSubscribeToFeed(this.ttrssURL, this.ttrss_SID, this.$.AddFeedURL.getValue(), this.CategoryID[this.currentCategoryIndex], enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError")), this.$.AddFeedPopup.hide();
@@ -5714,7 +5820,7 @@ addFeedClose: function(e, t) {
 this.$.AddFeedPopup.hide();
 },
 addFeedSuccess: function(e) {
-this.getCategories();
+this.clickRefresh(), this.$.viewPanels.setIndex(0), this.getCategories();
 },
 addFeedError: function(e) {
 console.log(e), this.$.main.setContent(e);
@@ -5846,23 +5952,42 @@ r.response(function() {}), r.go();
 }
 },
 shareArticlebb10: function(e, t) {
-var n = this.ArticleURL[this.RecentArticleIndex];
-ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
+this.ShareUrl = this.ArticleURL[this.RecentArticleIndex], this.ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 if (gblBB10) {
-var r = {
+var n = {
 action: "bb.action.SHARE",
 mimeType: "text/plain",
-uri: n,
-data: ShareText + " " + n + " via #ttrssenyo",
+uri: this.ShareUrl,
+data: this.ShareText + " " + this.ShareUrl + " via #ttrssenyo",
 target_type: [ "APPLICATION", "VIEWER", "CARD" ]
 };
-blackberry.invoke.card.invokeTargetPicker(r, "Share", function() {
+blackberry.invoke.card.invokeTargetPicker(n, "Share", function() {
 console.log("success");
 }, function(e) {
 console.log("error: " + e);
 });
 }
-gblFirefox && window.open("http://www.twitter.com/share?text=Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + n);
+gblFirefox && this.$.sharePopup.show(), gblDesktop && this.$.sharePopup.show();
+},
+shareArticle2: function(e, t) {
+ShareText = this.ShareText + "%20" + encodeURIComponent(this.ShareUrl);
+switch (e.content) {
+case "Twitter":
+window.open("http://www.twitter.com/share?text=" + ShareText);
+break;
+case "Facebook":
+window.open("http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(this.ShareUrl));
+break;
+case "G+":
+window.open("https://plus.google.com/share?url=" + encodeURIComponent(this.ShareUrl));
+break;
+case "App.net":
+window.open("https://alpha.app.net/intent/post?text=" + this.ShareText + "&url=" + encodeURIComponent(this.ShareUrl));
+}
+return this.$.sharePopup.hide(), this.resize(), !0;
+},
+closesharePopup: function(e, t) {
+return this.$.sharePopup.hide(), !0;
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
@@ -5927,6 +6052,21 @@ gblDesktop || (console.log("DRAGSTOP " + t.dx), this.resize(), +t.dx < -80 && th
 },
 bb10backmain: function() {
 this.$.viewPanels.setIndex(1);
+},
+showUnsubscribe: function(e, t) {
+this.$.UnsubscribePopup.show();
+},
+UnsubscribeYes: function(e, t) {
+ttrssUnsubscribeFeed(this.ttrssURL, this.ttrss_SID, this.currentFeedID, enyo.bind(this, "unsubscribeFeedSuccess"), enyo.bind(this, "unsubscribeFeedError")), this.$.UnsubscribePopup.hide();
+},
+UnsubscribeClose: function(e, t) {
+this.$.UnsubscribePopup.hide();
+},
+unsubscribeFeedError: function(e, t) {
+console.log("Unsubscribe Error: " + t), this.clickRefresh();
+},
+unsubscribeFeedSuccess: function(e, t) {
+console.log("Unsubscribe Success: " + t), this.clickRefresh(), this.$.viewPanels.setIndex(0);
 },
 setLoadbar: function(e) {
 e ? (this.$.loadbar.setShowing(!0), this.$.loadbarBlank.setShowing(!1)) : (this.$.loadbar.setShowing(!1), this.$.loadbarBlank.setShowing(!0));

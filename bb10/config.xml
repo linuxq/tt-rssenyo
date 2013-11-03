@@ -108,7 +108,8 @@
    <param name="websecurity" value="disable" />
   </feature>
   
-   <feature id="blackberry.invoke.card" />  
+   <feature id="blackberry.invoke.card" />
+   <feature id="community.clipboard" required="true" version="1.0.0.0"/>
   
   <rim:permissions>
   </rim:permissions>

@@ -163,7 +163,15 @@ enyo.kind({
 								{style: "height: 2px"},
 								{content: "Refresh", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 								{style: "height: 4px"}
-							]},							
+							]},
+							
+							{kind: "FittableRows", style: "height: 60px; background: #252525; width: 54px; padding-left: 6px", ontap: "showUnsubscribe", components:[
+								//{style: "height: 6px"},
+								{kind: "onyx.IconButton", src: "assets/bb10delete.png", style: "height: 32px; width: 40px; margin-top: -9px"},
+								{style: "height: 2px"},
+								{content: "Remove", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+								{style: "height: 4px"}
+							]},									
 							
 							/*{kind: "onyx.MenuDecorator", style: "width: 100px", onSelect: "MarkFeedReadClick", components: [
 								{kind: "onyx.Button", content: "Mark"},
@@ -332,8 +340,8 @@ enyo.kind({
 					{kind: "onyx.PickerDecorator", style: "width:100%;", components: [
 						{style: "width:100%;", classes: "onyx-blue"}, // A content-less PickerButton
 						{kind: "onyx.Picker", name: "pickViewMode", onSelect: "handleViewModeChange", components: [
-							{content: "Standard 3 Columns View", value: "0", name: "VM0", active: true},
-							{content: "Alternative 2 Columns view", value: "1", name: "VM1"},
+							{content: "Standard 3 views mode", value: "0", name: "VM0", active: true},
+							{content: "Preview list mode", value: "1", name: "VM1"},
 							//{content: "Alternative 3 Columns view", value: "2", name: "VM2"}
 						]}
 					]}
@@ -390,7 +398,31 @@ enyo.kind({
 			{kind: "onyx.Button", classes: "onyx-negative", content: "Yes", ontap: "MarkFeedRead", style: "width:100%;"},
 			{tag: "div", style: "height:2px;"},
 			{kind: "onyx.Button", content: "No", ontap: "MarkFeedReadClose", style: "width:100%;"}
-		]}
+		]},
+		{name: "UnsubscribePopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, components: [
+			{content: "Really unsubscribe current feed?"},
+			{tag: "div", style: "height:10px;"},
+			{kind: "onyx.Button", classes: "onyx-negative", content: "Yes", ontap: "UnsubscribeYes", style: "width:100%;"},
+			{tag: "div", style: "height:2px;"},
+			{kind: "onyx.Button", content: "No", ontap: "UnsubscribeClose", style: "width:100%;"}
+		]},		
+		{name: "sharePopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px;", components: [
+			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
+			{content: "Share via", classes: "enyo-center"},
+			{tag: "br"},					
+			{content: "", name: "shareText", style: "width: 150px; font-size: 10px"},
+			{tag: "br"},
+			{kind:"onyx.Button", name: "tweet", content: "Twitter", classes: "onyx-blue", style: "width: 150px; margin: 5px;",  ontap:"shareArticle2"},
+			{tag: "br", content: " ", style: "height: 10px",},
+			{kind:"onyx.Button", name: "adnshare", content: "App.net", style: "background-color: grey; color: #FFFFFF; width: 150px; margin: 5px;", ontap:"shareArticle2"},
+			{tag: "br"},			
+			{kind:"onyx.Button", name: "facebook", content: "Facebook", style: "background-color: blue; color: #FFFFFF; width: 150px; margin: 5px;", ontap:"shareArticle2"},
+			{tag: "br", content: " ", style: "height: 10px",},
+			{kind:"onyx.Button", name: "gplus", content: "G+", classes: "onyx-negative", style: "width: 150px; margin: 5px;", ontap:"shareArticle2"},
+			{tag: "br"},			
+			{kind:"onyx.Button", content: "Cancel", style: "width: 150px; margin: 5px;", ontap:"closesharePopup"},
+			]
+		}		
 	],
 	FeedID: [],
 	FeedUnread: [],
@@ -431,6 +463,8 @@ enyo.kind({
 
 	// Merkvariablen
 	dragStartPanelIndex: null,
+	ShareText: "",
+	ShareUrl: "",
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
 		window.setTimeout(enyo.bind(this, "startapp"), 10);
@@ -657,7 +691,7 @@ enyo.kind({
 			this.publishedoff = "assets/bb10publishoff.png";
 			this.$.btnbrowser.setSrc("assets/bb10browser.png");
 			
-			this.$.bb10btnshare.setShowing(false);
+			this.$.bb10btnshare.setShowing(true);
 			this.$.btnshare.setShowing(true);
 			this.$.bb10btnread.setShowing(false);
 			this.$.bb10btnread.setShowing(true);
@@ -1333,6 +1367,7 @@ enyo.kind({
 		if (index == "0") {
 			isCategory = true;
 		};
+		this.currentFeedID = this.FeedID[index];
 		ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, this.FeedID[index], isCategory, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
 		if (window.innerWidth < 1024) {
 			this.$.viewPanels.setIndex(2);
@@ -1341,6 +1376,10 @@ enyo.kind({
 	addFeedClick: function(inSender, inEvent) {
 		this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]);
 		this.$.AddFeedPopup.show();
+		if (gblBB10) {
+			console.log("IN CLIPBOARD: " + community.clipboard.getText());
+			this.$.AddFeedURL.setValue(community.clipboard.getText());
+		}
 	},
 	addFeedSave: function(inSender, inEvent) {
 		ttrssSubscribeToFeed(this.ttrssURL, this.ttrss_SID, this.$.AddFeedURL.getValue(), this.CategoryID[this.currentCategoryIndex], enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError"));
@@ -1350,6 +1389,8 @@ enyo.kind({
 		this.$.AddFeedPopup.hide();
 	},
 	addFeedSuccess: function(inEvent) {
+		this.clickRefresh();
+		this.$.viewPanels.setIndex(0);
 		this.getCategories();
 	},
 	addFeedError: function(inEvent) {
@@ -1623,9 +1664,9 @@ enyo.kind({
 	},
 	shareArticle: function(inSender, inEvent){
 		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
-        if (ShareUrl.indexOf("www.zeit.de") > 0) {
-            ShareUrl = ShareUrl.replace("www.zeit.de", "mobil.zeit.de");   
-        }
+		if (ShareUrl.indexOf("www.zeit.de") > 0) {
+		    ShareUrl = ShareUrl.replace("www.zeit.de", "mobil.zeit.de");   
+		}
 		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 		switch (inEvent.originator.content) {
 			case "Twitter":
@@ -1658,17 +1699,17 @@ enyo.kind({
 
 	},
 	shareArticlebb10: function(inSender, inEvent){
-		var ShareUrl = this.ArticleURL[this.RecentArticleIndex];
-		ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
+		this.ShareUrl = this.ArticleURL[this.RecentArticleIndex];
+		this.ShareText = this.ArticleData[this.RecentArticleIndex][0].title;
 		
 		if (gblBB10) {
 			var request = {
 			  action: 'bb.action.SHARE',
 			  mimeType: "text/plain",		
 			  // for a file
-			  uri: ShareUrl,
+			  uri: this.ShareUrl,
 			  // for text you'd use 'data'
-			  data: ShareText + " " + ShareUrl + " via #ttrssenyo",
+			  data: this.ShareText + " " + this.ShareUrl + " via #ttrssenyo",
 			
 			  target_type: ["APPLICATION", "VIEWER", "CARD"]
 			};
@@ -1686,20 +1727,43 @@ enyo.kind({
 			);					
 		};
 		if (gblFirefox) {
-			/*console.log("SHARE FIREFOX");//code
-			var activity = new MozActivity({
-			  // Ask for the "pick" activity
-			  name: "pick",
-			
-			  // Provide the data required by the filters of the activity
-			  data: {
-			    type: "image/jpeg"
-			  }
-			});
-			*/
-			window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
-		}
-	},	
+			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
+			this.$.sharePopup.show();			
+		};
+		if (gblDesktop) {
+			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
+			this.$.sharePopup.show();			
+		};		
+	},
+	shareArticle2 : function(inSender, inEvent) {
+		ShareText = this.ShareText + "%20" + encodeURIComponent(this.ShareUrl);
+		switch (inSender.content) {
+			case 'Twitter':
+				window.open("http://www.twitter.com/share?text=" + ShareText);// + " " + ShareUrl); //"&url=" + ShareUrl);
+				break;
+			case 'Facebook':
+				//window.open("http://www.facebook.com/sharer/sharer.php?u=" + PCastsUrl[PCMerker.index] + "&t=Interessanter%20Podcast");
+				window.open("http://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(this.ShareUrl)); //+ "&i=http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png" );
+				//http://cdn.detektor.fm/assets/bilder/detektor-fm-webradio.png
+				break;
+			case 'G+':
+				//window.open("https://m.google.com/app/plus/x/?v=compose&content=" + ShareText );//+ "%20" + ShareUrl);
+				window.open("https://plus.google.com/share?url=" + encodeURIComponent(this.ShareUrl));//+ "%20" + ShareUrl);
+				break;
+			case 'App.net':
+				//window.open("https://alpha.app.net/intent/post?text=" + ShareText);// + "%20" + ShareUrl);
+				window.open("https://alpha.app.net/intent/post?text=" + this.ShareText + "&url=" + encodeURIComponent(this.ShareUrl));// + "%20" + ShareUrl);
+				https://alpha.app.net/intent/post/?text=App.net%20social%20buttons%20are%20here%3A&url=http%3A%2F%2Fblog.app.net%2F2013%2F05%2F28%2Fapp-net-social-buttons-are-herd%2F
+				break;			
+		};
+		this.$.sharePopup.hide();
+		this.resize();	
+		return true;
+	},
+	closesharePopup: function(inSender, inEvent){
+		this.$.sharePopup.hide();
+		return true;
+	},
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
@@ -1824,6 +1888,25 @@ enyo.kind({
 	bb10backmain: function (){
 		this.$.viewPanels.setIndex(1);
 	},
+	showUnsubscribe: function (inSender, inEvent){
+		this.$.UnsubscribePopup.show();	
+	},
+	UnsubscribeYes: function(inSender, inEvent) {
+		ttrssUnsubscribeFeed(this.ttrssURL, this.ttrss_SID, this.currentFeedID , enyo.bind(this, "unsubscribeFeedSuccess"), enyo.bind(this, "unsubscribeFeedError"));		
+		this.$.UnsubscribePopup.hide();
+	},
+	UnsubscribeClose: function(inSender, inEvent) {
+		this.$.UnsubscribePopup.hide();
+	},
+	unsubscribeFeedError: function (inSender, inEvent) {
+		console.log("Unsubscribe Error: " + inEvent);
+		this.clickRefresh();
+	},
+	unsubscribeFeedSuccess: function (inSender, inEvent) {
+		console.log("Unsubscribe Success: " + inEvent);
+		this.clickRefresh();
+		this.$.viewPanels.setIndex(0);		
+	},	
 	setLoadbar: function (status){
 		if (status) {
 			this.$.loadbar.setShowing(true);
