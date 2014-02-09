@@ -5601,6 +5601,40 @@ content: "Cancel",
 style: "width: 150px; margin: 5px;",
 ontap: "closesharePopup"
 } ]
+}, {
+name: "HelpPopup",
+kind: "onyx.Popup",
+centered: !0,
+floating: !0,
+classes: "onyx-sample-popup",
+style: "padding: 10px; height: auto",
+components: [ {
+kind: "Scroller",
+name: "articlePreviewScroller",
+horizontal: "hidden",
+fit: !0,
+touch: !0,
+ondragfinish: "titleDragFinish",
+ondragstart: "titleDragStart",
+components: [ {
+classes: "panels-sample-sliding-content",
+allowHtml: !0,
+onclick: "catchtaponlink",
+content: "TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the work and help of Henk Jonas. <br> It is a feed reader that's based on TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>). You need to have acces to an installation of TinyTiny-RSS to use the app. The app was developed using the JavaScript framework EnyoJS (<a href=http://www.enyojs.com>enyojs.com</a>)."
+} ]
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "Mail Developer",
+style: "width: 150px; margin: 5px;",
+ontap: "mailDeveloper"
+}, {
+kind: "onyx.Button",
+content: "Close",
+style: "width: 150px; margin: 5px;",
+ontap: "closeHelpPopup"
+} ]
 } ],
 FeedID: [],
 FeedUnread: [],
@@ -6090,6 +6124,12 @@ return this.$.sharePopup.hide(), this.resize(), !0;
 closesharePopup: function(e, t) {
 return this.$.sharePopup.hide(), !0;
 },
+showHelp: function(e, t) {
+this.$.HelpPopup.show();
+},
+closeHelpPopup: function(e, t) {
+this.$.HelpPopup.hide(), this.resize();
+},
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
 switch (n) {
@@ -6180,6 +6220,13 @@ navigator.vibrate(100);
 },
 catchtaponlink: function(e, t) {
 return this.debugconsole(t.target.href), this.debugconsole("tapped"), t.preventDefault(), !0;
+},
+mailDeveloper: function() {
+gblBB10 && blackberry.invoke.card.invokeEmailComposer({
+subject: "TE-Reader support BB10",
+body: "",
+to: [ "apps@meissel.com" ]
+});
 }
 });
 

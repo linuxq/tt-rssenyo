@@ -1,0 +1,27 @@
+{
+	"version": "1.0.0",
+	"name": "TE-Reader",
+	"description": "TinyEnyo Reader for TT-RSS",
+	"launch_path": "/index.html",
+	"icons": {
+		"32": "/icon32.png",
+		"48": "/icon48.png",
+		"64": "/icon64.png",
+		"128": "/icon128.png"
+	},
+	"permissions": {
+		"systemXHR":			{
+			"description":		"Required to access twitter.com and app.net"
+		},
+
+		"geolocation":			{
+			"description":		"Required to geo-tag posts"
+		},
+		"desktop-notification":	{
+			"description":		"Required to post notifications of new messages"
+		}
+	},
+	"type":						"privileged",
+	"installs_allowed_from": ["*"],
+	"default_locale": "en"
+}

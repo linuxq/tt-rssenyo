@@ -24,12 +24,12 @@
 
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:rim="http://www.blackberry.com/ns/widgets"
-	version="0.0.2.5" id="com.meissel.ttrssreader">
+	version="1.0.0.0" id="com.meissel.ttrssreader">
 
-  <name>TTRSS Enyo</name>
+  <name>TE-Reader</name>
 
   <description>
-      Tiny Tiny RSS Reader
+      TinyEnyo Reader for TT-RSS
   </description>
   <author>Marcel Meissel</author>
 
@@ -37,45 +37,37 @@
   </license>
 
   <feature id="blackberry.ui.dialog"/>
-  <feature id="blackberry.app.event"/>
   <feature id="blackberry.invoke"/>
+  <feature id="blackberry.app">
+    <param name="orientation" value="portrait" />
+  </feature>
   <access uri="*" subdomains="true" browserOnly="true" />
 
   <!-- Cordova API -->
   <feature id="blackberry.system" required="true" version="1.0.0.0" />
+  <feature id="blackberry.app" required="true" version="1.0.0.0" />
+
+  <!--
+  <feature id="blackberry.media.camera" />
+  <feature id="blackberry.media.microphone" required="true" version="1.0.0.0"/>
   <feature id="org.apache.cordova" required="true" version="1.0.0" />
   <feature id="blackberry.find" required="true" version="1.0.0.0" />
   <feature id="blackberry.identity" required="true" version="1.0.0.0" />
   <feature id="blackberry.pim.Address" required="true" version="1.0.0.0" />
-  <feature id="blackberry.pim.Contact" required="true" version="1.0.0.0" />
-  <feature id="blackberry.io.file" required="true" version="1.0.0.0" />
-  <feature id="blackberry.utils" required="true" version="1.0.0.0" />
-  <feature id="blackberry.io.dir" required="true" version="1.0.0.0" />
-  <feature id="blackberry.app" required="true" version="1.0.0.0" />
-  <feature id="blackberry.app.event" required="true" version="1.0.0.0" />
-  <feature id="blackberry.system.event" required="true" version="1.0.0.0"/>
-  <feature id="blackberry.widgetcache" required="true" version="1.0.0.0"/>
-  <feature id="blackberry.media.camera" />
+  <feature id="blackberry.pim.Contact" required="true" version="1.0.0.0" />  
+  -->
   <feature id="blackberry.ui.dialog" />
-  <feature id="blackberry.media.microphone" required="true" version="1.0.0.0"/>
+  
 
   <!-- Cordova API -->
   <access subdomains="true" uri="file:///store/home" />
   <access subdomains="true" uri="file:///SDCard" />
-
-  <access subdomains="false" uri="http://cdn.peoplemesh.net" />
-  <access subdomains="false" uri="http://cdn.peoplemesh.net:80000" />
-
-  <!-- Expose access to all URIs, including the file and http protocols -->
-  <access subdomains="true" uri="http://detektor.fm" />
-  <access subdomains="true" uri="http://feedburner.com" />
-  <access subdomains="true" uri="http://audioscrobbler.com" />
-  <access subdomains="true" uri="http://last.fm" />
-  <access subdomains="true" uri="http://images.amazon.com" />
-  <access subdomains="true" uri="https://twitter.com" />
-  <access subdomains="true" uri="http://twimg.com" />
-  <access subdomains="true" uri="http://twitter.com" />
+<!--  
   <access subdomains="true" uri="http://rss.meissel.com" />
+  <access subdomains="true" uri="http://michote.no-ip.org" />
+  <access subdomains="true" uri="https://henze-online.de" />
+-->
+
   <access subdomains="true" uri="*" />
 
   <icon rim:hover="false" src="icon114.png" />
@@ -87,8 +79,22 @@
     <rim:transitionEffect type="fadeOut" />
   </rim:loadingScreen>
 
+  <rim:splash src="splash.png" />
+  
   <content src="index.html" />
 
+    <feature id="blackberry.app">
+      <param name="websecurity" value="disable" />
+    </feature>
+    <feature id="blackberry.invoke.card" />
+    <feature id="blackberry.ui.toast" />
+    <feature id="blackberry.ui.contextmenu"/>
+  <feature id="blackberry.app">
+    <param name="orientation" value="portrait" />
+  </feature>    
+   
+   <feature id="community.clipboard" required="true" version="1.0.0.0"/>
+  
   <rim:permissions>
   </rim:permissions>
 

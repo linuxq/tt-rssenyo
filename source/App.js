@@ -443,6 +443,16 @@ enyo.kind({
 			{kind:"onyx.Button", content: "Cancel", style: "width: 150px; margin: 5px;", ontap:"closesharePopup"},
 			]
 		},
+		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
+			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
+			{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
+				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the work and help of Henk Jonas. <br> It is a feed reader that's based on TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>). You need to have acces to an installation of TinyTiny-RSS to use the app. The app was developed using the JavaScript framework EnyoJS (<a href=http://www.enyojs.com>enyojs.com</a>)."}
+			]},			
+			{tag: "br"},
+			{kind:"onyx.Button", content: "Mail Developer", style: "width: 150px; margin: 5px;", ontap:"mailDeveloper"},
+			{kind:"onyx.Button", content: "Close", style: "width: 150px; margin: 5px;", ontap:"closeHelpPopup"},
+			]
+		},		
 	],
 	FeedID: [],
 	FeedUnread: [],
@@ -1921,6 +1931,15 @@ enyo.kind({
 		this.$.sharePopup.hide();
 		return true;
 	},
+	showHelp: function(inSender, inEvent) {
+		//this.$.left.setShowing(true);
+		//this.$.viewPanels.setIndex(0);
+		this.$.HelpPopup.show();
+	},
+	closeHelpPopup: function(inSender, inEvent) {
+		this.$.HelpPopup.hide();
+		this.resize();
+	},
 	handleKeyDown: function(inSender, inEvent){
 		//console.error("KeyDown: " + inEvent.keyIdentifier + "-" + inEvent.keyCode+".");
 		var KeyCode = inEvent.keyCode;
@@ -2106,5 +2125,14 @@ enyo.kind({
 		this.debugconsole("tapped");
 		inEvent.preventDefault();
 		return true;		
+	},
+	mailDeveloper: function(){
+		if (gblBB10) {
+			blackberry.invoke.card.invokeEmailComposer({
+			    subject: "TE-Reader support BB10",
+			    body: "",
+			    to: ["apps@meissel.com"]
+			})			
+		}
 	}
 });
