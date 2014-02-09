@@ -4455,6 +4455,7 @@ this.setShowing(!1);
 MarkReadTimer = "", gblUseJsonpRequest = !1, gblApiLevel = 0, enyo.kind({
 name: "App",
 kind: "FittableRows",
+style: "background-color: #333333",
 handlers: {
 onmousemove: "handleGlobalMouseMove",
 onmousedown: "handleGlobalMouseDown",
@@ -4462,10 +4463,15 @@ onmouseup: "handleGlobalMouseUp"
 },
 fit: !0,
 components: [ {
-kind: "FittableColumns",
+kind: "FittableRows",
 name: "bb10TopMenu",
-style: "background-color: #000000",
+style: "background-color: #333333; height: 100%",
 showing: !1,
+ontap: "swipeup",
+components: [ {
+kind: "FittableColumns",
+style: "background-color: #000000; height: 60px",
+showing: !0,
 ontap: "swipeup",
 components: [ {
 kind: "FittableRows",
@@ -4508,6 +4514,47 @@ style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
 }, {
 style: "height: 4px"
 } ]
+}, {
+content: "",
+style: "width: 10px"
+} ]
+}, {
+content: "",
+fit: !0
+} ]
+}, {
+name: "HelpPopup",
+kind: "onyx.Popup",
+centered: !0,
+floating: !0,
+classes: "onyx-sample-popup",
+style: "padding: 10px; height: auto",
+components: [ {
+kind: "Scroller",
+name: "articlePreviewScroller",
+horizontal: "hidden",
+fit: !0,
+touch: !0,
+ondragfinish: "titleDragFinish",
+ondragstart: "titleDragStart",
+components: [ {
+classes: "panels-sample-sliding-content",
+allowHtml: !0,
+onclick: "catchtaponlink",
+content: "TE-Reader is a native BB10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."
+} ]
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "Mail Developer",
+style: "width: 150px; margin: 5px;",
+ontap: "mailDeveloper"
+}, {
+kind: "onyx.Button",
+content: "Close",
+style: "width: 150px; margin: 5px;",
+ontap: "closeHelpPopup"
 } ]
 }, {
 kind: "Panels",
@@ -4516,6 +4563,7 @@ fit: !0,
 classes: "panels-sample-sliding-panels",
 arrangerKind: "CollapsingArranger",
 ondragfinish: "verticalswipefinish",
+ondragstart: "verticalswipestart",
 wrap: !1,
 components: [ {
 name: "left",
@@ -4539,7 +4587,7 @@ style: "width:260px; background-color:#fff;",
 components: [ {
 kind: "onyx.Toolbar",
 components: [ {
-content: "TinyEnyo Reader"
+content: "TE-Reader for Tiny Tiny RSS"
 }, {
 fit: !0
 }, {
@@ -5601,40 +5649,6 @@ content: "Cancel",
 style: "width: 150px; margin: 5px;",
 ontap: "closesharePopup"
 } ]
-}, {
-name: "HelpPopup",
-kind: "onyx.Popup",
-centered: !0,
-floating: !0,
-classes: "onyx-sample-popup",
-style: "padding: 10px; height: auto",
-components: [ {
-kind: "Scroller",
-name: "articlePreviewScroller",
-horizontal: "hidden",
-fit: !0,
-touch: !0,
-ondragfinish: "titleDragFinish",
-ondragstart: "titleDragStart",
-components: [ {
-classes: "panels-sample-sliding-content",
-allowHtml: !0,
-onclick: "catchtaponlink",
-content: "TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the work and help of Henk Jonas. <br> It is a feed reader that's based on TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>). You need to have acces to an installation of TinyTiny-RSS to use the app. The app was developed using the JavaScript framework EnyoJS (<a href=http://www.enyojs.com>enyojs.com</a>)."
-} ]
-}, {
-tag: "br"
-}, {
-kind: "onyx.Button",
-content: "Mail Developer",
-style: "width: 150px; margin: 5px;",
-ontap: "mailDeveloper"
-}, {
-kind: "onyx.Button",
-content: "Close",
-style: "width: 150px; margin: 5px;",
-ontap: "closeHelpPopup"
-} ]
 } ],
 FeedID: [],
 FeedUnread: [],
@@ -5674,6 +5688,7 @@ dragStartPanelIndex: null,
 ShareText: "",
 ShareUrl: "",
 swipedownstartindex: 1,
+swipedownstarty: 300,
 rendered: function(e, t) {
 this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 10);
 },
@@ -5682,13 +5697,13 @@ this.inherited(arguments);
 },
 resume: function() {},
 swipedown: function() {
-console.log(this.$.viewPanels.getIndex()), this.swipedownstartindex = this.$.viewPanels.getIndex(), this.$.bb10TopMenu.setShowing(!0), this.$.viewPanels.setDraggable(!1), this.$.left.setShowing(!0), this.$.viewPanels.setIndex(0), this.$.scrollermainview.setShowing(!1), this.resize();
+console.log(this.$.viewPanels.getIndex()), this.$.bb10TopMenu.setShowing(!0), this.resize();
 },
 swipeup: function() {
-this.$.bb10TopMenu.setShowing(!1), this.$.viewPanels.setDraggable(!0), this.$.left.setShowing(!1), this.$.viewPanels.setIndex(this.swipedownstartindex), this.$.scrollermainview.setShowing(!0), this.resize();
+this.$.bb10TopMenu.setShowing(!1), this.resize();
 },
 startapp: function(e, t) {
-this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), gblDebug && this.debugconsole("DEBUGMODE: ON"), BetaDate = "20140430", this.debugconsole("Beta valid till: " + BetaDate), jetzt = new Date, Tag = jetzt.getDate(), Tag = Tag < 10 ? "0" + Tag : Tag, Monat = jetzt.getMonth() + 1, Monat = Monat < 10 ? "0" + Monat : Monat, Jahr = jetzt.getYear() + 1900, Datum = Jahr * 100 + Monat + Tag, Datum > BetaDate && (this.debugconsole("BETA abgelaufen"), alert("Sorry, beta period expired 11/30/2013"), window.close(), gblBB10 && blackberry.app.exit()), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? gblBB10 || setTimeout(enyo.bind(this, "LoginTap"), 500) : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
+gblBB10 = !0, gblDesktop = !1, this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), gblDebug && this.debugconsole("DEBUGMODE: ON"), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? gblBB10 || setTimeout(enyo.bind(this, "LoginTap"), 500) : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
 },
 debugconsole: function(e) {
 gblDebug && console.log(e);
@@ -5710,10 +5725,18 @@ setViewDesktop: function() {
 this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
 },
 LoginClose: function(e, t) {
-this.$.LoginPopup.hide(), this.swipeup();
+this.$.LoginPopup.hide(), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.swipeup();
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW);
+if (gblBB10 && this.AutoLockPanels) {
+var n = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", r = "Ok", i, s = {
+buttonText: r,
+timeout: 15e3
+};
+i = blackberry.ui.toast.show(n, s);
+}
+this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
 },
 LoginTap: function(e, t) {
 console.log("LOGINTAP called"), this.ttrssURL ? (this.$.serverAddress.setValue(this.ttrssURL), this.$.autoLockPanels.setValue(this.AutoLockPanels)) : (this.$.serverAddress.setValue("http://"), this.$.autoLockPanels.setValue(!0)), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
@@ -5744,7 +5767,7 @@ break;
 case "0":
 this.$.pickMarkReadTimeout.setSelected(this.$.Toff);
 }
-this.$.instapaperUser.setValue(this.instapaperUser), this.$.instapaperPW.setValue(this.instapaperPW), this.$.LoginPopup.show();
+this.$.instapaperUser.setValue(this.instapaperUser), this.$.instapaperPW.setValue(this.instapaperPW), this.$.viewPanels.setShowing(!1), this.$.LoginPopup.show();
 },
 handleViewModeChange: function(e, t) {
 this.ViewMode = t.selected.value, this.selectFeed(this.currentFeedIndex), this.changeViewMode();
@@ -6125,10 +6148,10 @@ closesharePopup: function(e, t) {
 return this.$.sharePopup.hide(), !0;
 },
 showHelp: function(e, t) {
-this.$.HelpPopup.show();
+this.$.viewPanels.setShowing(!1), this.$.HelpPopup.show();
 },
 closeHelpPopup: function(e, t) {
-this.$.HelpPopup.hide(), this.resize();
+this.$.HelpPopup.hide(), this.$.viewPanels.setShowing(!0), this.resize();
 },
 handleKeyDown: function(e, t) {
 var n = t.keyCode;
@@ -6189,10 +6212,13 @@ titleDragStart: function(e, t) {
 gblDesktop || (this.dragStartPanelIndex = this.$.viewPanels.getIndex(), this.dragStartPanelIndex == 3 && this.debugconsole("DRAGSTART"));
 },
 titleDragFinish: function(e, t) {
-gblDesktop || (this.debugconsole("DRAGSTOP " + t.dx), this.resize(), +t.dx < -80 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 80 && (this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.$.bb10articleviewgrabber.getShowing() && this.prevArticle()), this.resize());
+gblDesktop || (this.debugconsole("DRAGSTOP " + t.dx), this.resize(), +t.dx < -120 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 120 && (this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.$.bb10articleviewgrabber.getShowing() && this.prevArticle()), this.resize());
+},
+verticalswipestart: function(e, t) {
+this.swipedownstarty = t.clientY;
 },
 verticalswipefinish: function(e, t) {
-console.log("VSWIPE finish"), gblBB10 && (+t.dy < -100 && (this.swipeup(), console.log("SWIPE UP")), +t.dy > 100 && (this.swipedown(), console.log("SWIPE UP")));
+gblBB10 && (+t.dy < -100 && this.$.bb10TopMenu.getShowing() && (this.swipeup(), console.log("SWIPE UP")), +t.dy > 100 && this.swipedownstarty <= 5 && (this.swipedown(), console.log("SWIPE DOWN"))), this.swipedownstarty = 300;
 },
 bb10backmain: function() {
 this.$.viewPanels.setIndex(1), this.debugconsole("SETPANEL 15");

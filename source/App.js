@@ -5,6 +5,7 @@ gblApiLevel = 0;
 enyo.kind({
 	name: "App",
 	kind: "FittableRows",
+	style: "background-color: #333333",
 	handlers: {
 		//oncontextmenu: "handleContextMenu",
 		onmousemove: "handleGlobalMouseMove",
@@ -13,24 +14,38 @@ enyo.kind({
 	},
 	fit: true,
 	components:[
-		{kind: "FittableColumns", name: "bb10TopMenu", style: "background-color: #000000", showing: false, ontap: "swipeup", components: [
-			{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "showHelp", components:[
-				{style: "height: 6px"},
-				{kind: "onyx.IconButton", src: "assets/bb10help.png", style: "height: 32px; width: 40px", showing:true},
-				{style: "height: 2px"},
-				{content: "Help", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
-				{style: "height: 4px"}
+		{kind: "FittableRows", name: "bb10TopMenu", style: "background-color: #333333; height: 100%", showing: false, ontap: "swipeup", components: [
+			{kind: "FittableColumns", style: "background-color: #000000; height: 60px", showing: true, ontap: "swipeup", components: [
+				{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "showHelp", components:[
+					{style: "height: 6px"},
+					{kind: "onyx.IconButton", src: "assets/bb10help.png", style: "height: 32px; width: 40px", showing:true},
+					{style: "height: 2px"},
+					{content: "Help", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+					{style: "height: 4px"}
+				]},
+				{content: "", fit:true},
+				{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "LoginTap", components:[
+					{style: "height: 6px"},
+					{kind: "onyx.IconButton", src: "assets/bb10settings.png", style: "height: 32px; width: 40px", showing:true},
+					{style: "height: 2px"},
+					{content: "Settings", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
+					{style: "height: 4px"}
+				]},
+				{content: "", style: "width: 10px"}
 			]},
-			{content: "", fit:true},
-			{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "LoginTap", components:[
-				{style: "height: 6px"},
-				{kind: "onyx.IconButton", src: "assets/bb10settings.png", style: "height: 32px; width: 40px", showing:true},
-				{style: "height: 2px"},
-				{content: "Settings", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
-				{style: "height: 4px"}
-			]}			
+			{content: "", fit:true}
 		]},
-		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", ondragfinish: "verticalswipefinish", wrap: false, components: [
+		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
+			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
+			{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
+				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader is a native BB10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."}
+			]},			
+			{tag: "br"},
+			{kind:"onyx.Button", content: "Mail Developer", style: "width: 150px; margin: 5px;", ontap:"mailDeveloper"},
+			{kind:"onyx.Button", content: "Close", style: "width: 150px; margin: 5px;", ontap:"closeHelpPopup"},
+			]
+		},	
+		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", ondragfinish: "verticalswipefinish", ondragstart: "verticalswipestart", wrap: false, components: [
 			{name: "left", style: "background-color: #333333", showing: false, components: [
 				{kind: "enyo.Scroller", fit: true, showing: false, components: [
 					{name: "main", classes: "nice-padding", allowHtml: true}
@@ -39,7 +54,7 @@ enyo.kind({
 			{name: "left2", kind: "FittableRows", classes: "panels-theme-light", style: "width:260px; background-color:#fff;", components: [
 				{kind: "onyx.Toolbar", components: [
 					//{kind: "enyo.Image", fit: false, src: "icon24.png", style: "height:24px;"},
-					{content: "TinyEnyo Reader"},
+					{content: "TE-Reader for Tiny Tiny RSS"},
 					{fit: true},
 					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
@@ -442,17 +457,7 @@ enyo.kind({
 			{tag: "br"},						
 			{kind:"onyx.Button", content: "Cancel", style: "width: 150px; margin: 5px;", ontap:"closesharePopup"},
 			]
-		},
-		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
-			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
-			{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
-				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the work and help of Henk Jonas. <br> It is a feed reader that's based on TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>). You need to have acces to an installation of TinyTiny-RSS to use the app. The app was developed using the JavaScript framework EnyoJS (<a href=http://www.enyojs.com>enyojs.com</a>)."}
-			]},			
-			{tag: "br"},
-			{kind:"onyx.Button", content: "Mail Developer", style: "width: 150px; margin: 5px;", ontap:"mailDeveloper"},
-			{kind:"onyx.Button", content: "Close", style: "width: 150px; margin: 5px;", ontap:"closeHelpPopup"},
-			]
-		},		
+		}
 	],
 	FeedID: [],
 	FeedUnread: [],
@@ -496,6 +501,7 @@ enyo.kind({
 	ShareText: "",
 	ShareUrl: "",
 	swipedownstartindex: 1,
+	swipedownstarty: 300,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
 		window.setTimeout(enyo.bind(this, "startapp"), 10);
@@ -511,33 +517,33 @@ enyo.kind({
 		/*if (this.$.viewPanels.getIndex() != 1) {
 			this.$.viewPanels.setIndex(1);
 		};*/
-		this.swipedownstartindex = this.$.viewPanels.getIndex();
+		//this.swipedownstartindex = this.$.viewPanels.getIndex();
 		this.$.bb10TopMenu.setShowing(true);
-		this.$.viewPanels.setDraggable(false);
-		this.$.left.setShowing(true);
-		this.$.viewPanels.setIndex(0);
-		this.$.scrollermainview.setShowing(false);		
+		//this.$.viewPanels.setDraggable(false);
+		//this.$.left.setShowing(true);
+		//this.$.viewPanels.setIndex(0);
+		//this.$.scrollermainview.setShowing(false);		
 		this.resize();
 	},
 	swipeup: function() {
 		this.$.bb10TopMenu.setShowing(false);
-		this.$.viewPanels.setDraggable(true);
-		this.$.left.setShowing(false);		
-		this.$.viewPanels.setIndex(this.swipedownstartindex);
-		this.$.scrollermainview.setShowing(true);
+		//this.$.viewPanels.setDraggable(true);
+		//this.$.left.setShowing(false);		
+		//this.$.viewPanels.setIndex(this.swipedownstartindex);
+		//this.$.scrollermainview.setShowing(true);
 		this.resize();
 	},
 	startapp: function(inSender,inEvent) {
 		//Debug
-		//gblBB10 = true;//true;
-		//gblDesktop = false;
+		gblBB10 = true;//true;
+		gblDesktop = false;
 		//gblFirefox = true;
 		this.$.left.setShowing(false);	
 		this.$.viewPanels.setIndex(1);
 		if (gblDebug) {
 			this.debugconsole("DEBUGMODE: ON");
 		}		
-		
+		/*
 		//Beta Laufzeit bis 31.12.2013
 		BetaDate = "20140430";
 		this.debugconsole("Beta valid till: " + BetaDate);
@@ -559,7 +565,7 @@ enyo.kind({
 				blackberry.app.exit();
 			}
 		}
-		
+		*/
 
 		this.ttrssURL = localStorage.getItem("ttrssurl");
 		if (this.ttrssURL == "") {
@@ -780,7 +786,9 @@ enyo.kind({
 	},		
 	LoginClose: function(inSender, inEvent){
 		this.$.LoginPopup.hide();
+		this.$.viewPanels.setShowing(true);
 		this.swipeup();
+		this.resize();
 	},
 	LoginSave: function(inSender, inEvent) {
 		this.ttrssURL = this.$.serverAddress.getValue();
@@ -804,9 +812,24 @@ enyo.kind({
 		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
 		localStorage.setItem("instapaperUser", this.instapaperUser);
 		localStorage.setItem("instapaperPW", this.instapaperPW);
+
+		//Notification
+		if (gblBB10 && this.AutoLockPanels) {
+			var message = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.",
+			    buttonText = "Ok",
+			    toastId,
+			    options = {
+			      buttonText : buttonText,
+			      timeout : 15000
+			    };
+		toastId = blackberry.ui.toast.show(message, options);
+		};
+		
 		this.$.LoginPopup.hide();
 		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+		this.$.viewPanels.setShowing(true);
 		this.swipeup();
+		this.resize();
 		//this.$.LoginPopup.hide();
 	},
 	LoginTap: function(inSender, inEvent) {
@@ -854,6 +877,7 @@ enyo.kind({
 		};
 		this.$.instapaperUser.setValue(this.instapaperUser);
 		this.$.instapaperPW.setValue(this.instapaperPW);
+		this.$.viewPanels.setShowing(false);
 		this.$.LoginPopup.show();
 		//ttrssLogin(ttrssURL, ttrssUser, ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 		//this.debugconsole("Antwort: " + ttlogin.status + " - " + ttlogin.sessionid + " - " + ttlogin.error);
@@ -1933,11 +1957,12 @@ enyo.kind({
 	},
 	showHelp: function(inSender, inEvent) {
 		//this.$.left.setShowing(true);
-		//this.$.viewPanels.setIndex(0);
+		this.$.viewPanels.setShowing(false); //Index(0);
 		this.$.HelpPopup.show();
 	},
 	closeHelpPopup: function(inSender, inEvent) {
 		this.$.HelpPopup.hide();
+		this.$.viewPanels.setShowing(true);
 		this.resize();
 	},
 	handleKeyDown: function(inSender, inEvent){
@@ -2044,7 +2069,7 @@ enyo.kind({
 		if (!gblDesktop) {
 			this.debugconsole("DRAGSTOP " + inEvent.dx);
 			this.resize();
-			  if (+inEvent.dx < -80) {
+			  if (+inEvent.dx < -120) {
 				if (this.dragStartPanelIndex == 3) {
 					//this.debugconsole("NEXT");
 					if (this.$.viewPanels.getIndex() == 3) {
@@ -2053,7 +2078,7 @@ enyo.kind({
 					}
 				}
 			  };
-			  if (+inEvent.dx > 80) {
+			  if (+inEvent.dx > 120) {
 				  if (this.$.btnUnlockPanels.getShowing()) {
 					this.prevArticle();
 					//this.$.viewPanels.setIndex(3);
@@ -2066,18 +2091,25 @@ enyo.kind({
 			  this.resize();				
 		}
 	},
+	verticalswipestart: function(inSender, inEvent) {
+		this.swipedownstarty = inEvent.clientY;
+		//console.log("VSWIPE start: " + this.swipedownstarty);
+	},
 	verticalswipefinish: function(inSender, inEvent) {
-		console.log("VSWIPE finish");
+		//console.log("VSWIPE finish");
+		//console.log(inEvent);	
 		if (gblBB10) {
-			if (+inEvent.dy < -100) {
+			if (+inEvent.dy<-100 && this.$.bb10TopMenu.getShowing()) {
 				this.swipeup();
-				console.log ("SWIPE UP")
+				console.log ("SWIPE UP");
+				//console.log (this.$.bb10TopMenu.getShowing());
 			};
-			if (+inEvent.dy > 100) {
+			if (+inEvent.dy>100 && this.swipedownstarty <= 5) {
 				this.swipedown();
-				console.log ("SWIPE UP")
+				console.log ("SWIPE DOWN")
 			};			
-		}
+		};
+		this.swipedownstarty = 300;
 	},
 	bb10backmain: function (){
 		this.$.viewPanels.setIndex(1);
