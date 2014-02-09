@@ -14,27 +14,16 @@ enyo.kind({
 	fit: true,
 	components:[
 		{kind: "FittableColumns", name: "bb10TopMenu", style: "background-color: #000000", showing: false, ontap: "swipeup", components: [
-			{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "showHelp", components:[
-				{style: "height: 6px"},
-				{kind: "onyx.IconButton", src: "assets/bb10help.png", style: "height: 32px; width: 40px", showing:true},
-				{style: "height: 2px"},
-				{content: "Help", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
-				{style: "height: 4px"}
-			]},
-			{content: "", fit:true},
 			{kind: "FittableRows", style: "height: 60px; background: #000000; width: 52px; padding-left: 10px", ontap: "LoginTap", components:[
 				{style: "height: 6px"},
 				{kind: "onyx.IconButton", src: "assets/bb10settings.png", style: "height: 32px; width: 40px", showing:true},
 				{style: "height: 2px"},
 				{content: "Settings", style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"},
 				{style: "height: 4px"}
-			]}			
+			]},
 		]},
 		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", ondragfinish: "verticalswipefinish", wrap: false, components: [
 			{name: "left", style: "background-color: #333333", showing: false, components: [
-				{kind: "enyo.Scroller", fit: true, showing: false, components: [
-					{name: "main", classes: "nice-padding", allowHtml: true}
-				]}
 			]},
 			{name: "left2", kind: "FittableRows", classes: "panels-theme-light", style: "width:260px; background-color:#fff;", components: [
 				{kind: "onyx.Toolbar", components: [
@@ -485,7 +474,6 @@ enyo.kind({
 	dragStartPanelIndex: null,
 	ShareText: "",
 	ShareUrl: "",
-	swipedownstartindex: 1,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
 		window.setTimeout(enyo.bind(this, "startapp"), 10);
@@ -498,29 +486,27 @@ enyo.kind({
 	swipedown: function(){
 		//this.LoginTap();
 		console.log(this.$.viewPanels.getIndex());
-		/*if (this.$.viewPanels.getIndex() != 1) {
-			this.$.viewPanels.setIndex(1);
-		};*/
-		this.swipedownstartindex = this.$.viewPanels.getIndex();
-		this.$.bb10TopMenu.setShowing(true);
-		this.$.viewPanels.setDraggable(false);
-		this.$.left.setShowing(true);
-		this.$.viewPanels.setIndex(0);
-		this.$.scrollermainview.setShowing(false);		
+		if (this.$.viewPanels.getIndex() == 1) {
+			this.$.bb10TopMenu.setShowing(true);
+			this.$.viewPanels.setDraggable(false);
+			this.$.left.setShowing(true);
+			this.$.viewPanels.setIndex(0);
+			this.$.scrollermainview.setShowing(false);
+		};
 		this.resize();
 	},
 	swipeup: function() {
 		this.$.bb10TopMenu.setShowing(false);
 		this.$.viewPanels.setDraggable(true);
 		this.$.left.setShowing(false);		
-		this.$.viewPanels.setIndex(this.swipedownstartindex);
+		this.$.viewPanels.setIndex(1);
 		this.$.scrollermainview.setShowing(true);
 		this.resize();
 	},
 	startapp: function(inSender,inEvent) {
 		//Debug
-		//gblBB10 = true;//true;
-		//gblDesktop = false;
+		gblBB10 = true;//true;
+		gblDesktop = false;
 		//gblFirefox = true;
 		this.$.left.setShowing(false);	
 		this.$.viewPanels.setIndex(1);
@@ -1027,7 +1013,6 @@ enyo.kind({
 		//this.debugconsole(inEvent);
 		this.$.LoginPopup.hide();
 		this.ttrssIconPath = this.ttrssURL + "/" + inEvent.icons_url + "/";
-		console.log(inEvent.icons_url);
 		//this.debugconsole(this.ttrssIconPath);
 	},
 	processGetConfigError: function(inEvent){
@@ -1363,7 +1348,6 @@ enyo.kind({
 			feedlist.$.unread.applyStyle("font-weight", "normal");
 		}
 		if (this.FeedIcon[index]) {
-			console.log(this.ttrssIconPath);
 			feedlist.$.icon.setSrc(this.ttrssIconPath + this.FeedID[index] + ".ico");
 		}
 		//feedlist.$.titel.setContent(this.FeedTitle[index] + " (" + this.FeedUnread[index] + ")");

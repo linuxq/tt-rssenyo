@@ -104,11 +104,16 @@
   
   <content src="index.html" />
 
+    <feature id="blackberry.app">
+      <param name="websecurity" value="disable" />
+    </feature>
+    <feature id="blackberry.invoke.card" />
+    <feature id="blackberry.ui.toast" />
+    <feature id="blackberry.ui.contextmenu"/>
   <feature id="blackberry.app">
-   <param name="websecurity" value="disable" />
-  </feature>
-  
-   <feature id="blackberry.invoke.card" />
+    <param name="orientation" value="portrait" />
+  </feature>    
+   
    <feature id="community.clipboard" required="true" version="1.0.0.0"/>
   
   <rim:permissions>

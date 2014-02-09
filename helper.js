@@ -17,7 +17,7 @@ function onDeviceReady(e) {
 	console.log("deviceready event fired!");
 	document.addEventListener("resume", onResume, false);
 	document.addEventListener("backbutton", onBackButton, false);
-	document.addEventListener("menubutton", onMenuButton, false);
+	//document.addEventListener("menubutton", onMenuButton, false);
 	document.addEventListener("keyboard", function() {}, false);
 	document.addEventListener("keyboardHidden", function() {}, false);
 	document.addEventListener("orientation", function() {}, false);
@@ -46,9 +46,9 @@ function onBackButton(e) {
 	console.log("backbutton event fired!");
 	mt.backButton();
 };
-function onMenuButton(e) {
+function onSwipeDown(e) {
 	console.log("menubutton event fired!");
-	mt.openAboutBox();
+	mt.swipedown();
 };
 
 Mojo = window.Mojo || {};
@@ -64,6 +64,7 @@ window.onload = function () {
 
 	console.log("window.onload");
 	//console.log(navigator.userAgent);
+	gblDebug = true;
 	gblAndroid = false;
 	gblDesktop = false;
 	gblBB10 = false;
@@ -102,6 +103,8 @@ window.onload = function () {
 	}
 	if (navigator.userAgent.indexOf("BB10") > -1) {
 		gblBB10 = true;
+		blackberry.event.addEventListener("resume", onResume);
+		blackberry.event.addEventListener("swipedown", onSwipeDown, false);		
 		onDeviceReady();
 	}
 	if (window.PalmSystem) {
