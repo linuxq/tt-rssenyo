@@ -535,8 +535,8 @@ enyo.kind({
 	},
 	startapp: function(inSender,inEvent) {
 		//Debug
-		gblBB10 = true;//true;
-		gblDesktop = false;
+		//gblBB10 = true;//true;
+		//gblDesktop = false;
 		//gblFirefox = true;
 		this.$.left.setShowing(false);	
 		this.$.viewPanels.setIndex(1);
