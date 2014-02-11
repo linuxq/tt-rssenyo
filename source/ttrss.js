@@ -1,3 +1,24 @@
+//***************** Check URL ****************
+function CheckUrl(chkurl) {
+    var xhr = new XMLHttpRequest();
+    var file = chkurl; //
+    var randomNum = Math.round(Math.random() * 10000);
+     
+    xhr.open('HEAD', file + "?rand=" + randomNum, false);
+     
+    try {
+        xhr.send();
+         
+        if (xhr.status >= 200 && xhr.status < 304) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        return false;
+    }
+};
+
 //**************** Login ********************
 function ttrssLogin(ttrssurl, ttrssuser, ttrsspassword, successCallback, errorCallback) {
 	var data = {

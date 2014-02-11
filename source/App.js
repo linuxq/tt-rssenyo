@@ -592,31 +592,31 @@ enyo.kind({
 			if (gblBB10 && startcount>=2) {
 				//setTimeout(enyo.bind(this, "LoginTap"), 500);
 				//blackberry.ui.toast.show("No TinyTinyRSS-Server set up!");
-				var message = "IMPORTANT!\n\n No Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org",
-				    buttonText = "Ok",
-				    toastId,
-				    options = {
-				      buttonText : buttonText,
-				      timeout : 15000
-				    };
-				toastId = blackberry.ui.toast.show(message, options);
+				this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15000);
 				setTimeout(enyo.bind(this, "LoginTap"), 500);	
 			} else if (!gblBB10) {
+				this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15000);
 				setTimeout(enyo.bind(this, "LoginTap"), 500);	
 			};
 			startcount++;
-			//this.LoginTap();
-			//this.$.LoginPopup.show();
 		} else {
-			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-			/*var getUnreadOnly = this.$.toggleUnread.getValue();
-			if (this.AutoLoadAllArticles) {
-				ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, -4, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-			} else
-			{
-				ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, getUnreadOnly, 29, false, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError"));
-			}
-			*/
+			chkURL = CheckUrl(this.ttrssURL);
+			if (!chkURL) {
+				if (gblBB10 && startcount>=2) {
+					this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);
+					setTimeout(enyo.bind(this, "LoginTap"), 500);
+				} else if (!gblBB10) {
+					this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);
+					setTimeout(enyo.bind(this, "LoginTap"), 500);
+				};
+			} else {
+				if (gblBB10 && startcount>=2) {
+					ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+				} else if (!gblBB10) {
+					ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+				};
+			};
+			startcount++;
 		};
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
@@ -797,8 +797,9 @@ enyo.kind({
 			this.$.chkArticleRead.setShowing(false);			
 	},		
 	LoginClose: function(inSender, inEvent){
-		if (this.ttrssURL=="") {
-			alert("Caution: No Url specified!");
+		console.log("URL:" + this.ttrssURL + ":");
+		if (this.ttrssURL=="" || !this.ttrssURL) {
+			this.multialert("Caution: No Url specified!", "Login error", 5000);
 		};
 		this.$.LoginPopup.hide();
 		this.$.viewPanels.setShowing(true);
@@ -810,8 +811,9 @@ enyo.kind({
 		this.ttrssUser = this.$.serverUser.getValue();
 		this.ttrssPassword = this.$.serverPassword.getValue();		
 		if (this.ttrssURL=="" || this.ttrssUser=="" || this.ttrssPassword=="") {
-			alert("You must enter Url, user and password!");
-		} else {		
+			this.multialert("You must enter Url, user and password!", "Caution", 15000);
+		} else {
+			console.log(this.ViewMode);
 			this.ViewMode = this.$.pickViewMode.getSelected().value;
 			this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 			this.AutoLockPanels = this.$.autoLockPanels.getValue();
@@ -831,23 +833,20 @@ enyo.kind({
 			localStorage.setItem("instapaperUser", this.instapaperUser);
 			localStorage.setItem("instapaperPW", this.instapaperPW);
 	
-			//Notification
-			if (gblBB10 && this.AutoLockPanels) {
-				var message = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.",
-				    buttonText = "Ok",
-				    toastId,
-				    options = {
-				      buttonText : buttonText,
-				      timeout : 15000
-				    };
-				toastId = blackberry.ui.toast.show(message, options);
-			};
-			
-			this.$.LoginPopup.hide();
-			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-			this.$.viewPanels.setShowing(true);
-			this.swipeup();
-			this.resize();
+			chkURL = CheckUrl(this.ttrssURL);
+			if (!chkURL) {
+				this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);	
+			} else {
+				//Notification
+				if (gblBB10 && this.AutoLockPanels && this.ViewMode==0) {
+					this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15000);
+				};
+				this.$.LoginPopup.hide();
+				ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+				this.$.viewPanels.setShowing(true);
+				this.swipeup();
+				this.resize();
+			}
 		}
 	},
 	LoginTap: function(inSender, inEvent) {
@@ -906,6 +905,9 @@ enyo.kind({
 		this.changeViewMode();
 	},
 	changeViewMode: function(inSender, inEvent) {
+		if (gblBB10) {
+			this.$.autoLockPanels.setShowing(false);
+		};
 		if (this.ViewMode == "1") {
 			this.$.articlePreviewScroller.setShowing(true);
 			this.$.articleViewScroller.setShowing(false);
@@ -913,6 +915,7 @@ enyo.kind({
 			if (gblBB10) {
 				this.$.FeedListPageUpButton.setShowing(false);
 				this.$.FeedListPageDownButton.setShowing(false);
+				this.$.autoLockPanels.setShowing(false);
 			} else {
 				this.$.FeedListPageUpButton.setShowing(true);
 				this.$.FeedListPageDownButton.setShowing(true);				
@@ -960,12 +963,12 @@ enyo.kind({
 	processLoginError: function(LoginResponse) {
 		//LoginResponse = inResponse;
 		console.error("LOGIN Error: " + LoginResponse.error);
-		alert("LOGIN Error: " + LoginResponse.error);
+		this.multialert("LOGIN Error: " + LoginResponse.error, "Login Error", 10000);
 		this.$.main.setContent("LOGIN ERROR: " + LoginResponse.error);
 		setTimeout(enyo.bind(this, "LoginTap"), 500);
 	},
 	clickRefresh: function(inSender, inEvent){
-		console.error("clickRefresh");
+		//console.error("clickRefresh");
 		this.getCategories();
 	},
 	getCategories: function (inSender){
@@ -981,7 +984,7 @@ enyo.kind({
 		if (inEvent.length == 0) {
 			this.debugconsole("GetCategories: NO Categories");
 			this.setLoadbar(false);
-			alert("Sorry, no news!");
+			this.multialert("Sorry, no news!", " ", 5000);
 			this.setLoadbar(false);
 			return;
 		};	
@@ -1036,7 +1039,7 @@ enyo.kind({
 	processGetCategoriesError: function(inEvent){
 		console.error("processGetCategoriesError");
 		console.error(inEvent);
-		alert(inEvent);
+		this.multialert(inEvent, "Get Categories Error", 10000);
 		this.setLoadbar(false);
 	},
 	getFeeds: function(inSender, inEvent){
@@ -1515,11 +1518,15 @@ enyo.kind({
 		}
 	},
 	addFeedClick: function(inSender, inEvent) {
-		this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]);
-		this.$.AddFeedPopup.show();
-		if (gblBB10) {
-			this.debugconsole("IN CLIPBOARD: " + community.clipboard.getText());
-			this.$.AddFeedURL.setValue(community.clipboard.getText());
+		if (this.currentCategoryIndex==0) {
+			this.multialert("Select category first","",5000);
+		} else {
+			this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]);
+			this.$.AddFeedPopup.show();
+			if (gblBB10) {
+				this.debugconsole("IN CLIPBOARD: " + community.clipboard.getText());
+				this.$.AddFeedURL.setValue(community.clipboard.getText());
+			}
 		}
 	},
 	addFeedSave: function(inSender, inEvent) {
@@ -2184,6 +2191,21 @@ enyo.kind({
 			    body: "",
 			    to: ["apps@meissel.com"]
 			})			
+		}
+	},
+	multialert: function (message, titel, timeout) {
+		if (gblBB10) {
+			var bbmessage = message,
+			    buttonText = "Ok",
+			    toastId,
+			    options = {
+			      buttonText : buttonText,
+			      timeout : timeout
+			    };
+			toastId = blackberry.ui.toast.show(message, options);			
+			
+		} else{
+			alert(message);
 		}
 	}
 });
