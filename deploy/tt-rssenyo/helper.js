@@ -26,7 +26,7 @@ function onDeviceReady(e) {
 	startApp();
 };
 function startApp() {
-	console.log("startApp");
+	console.log("startApp in helper.js");
 	window.PalmSystem && window.PalmSystem.setWindowOrientation("free");
 	window.PalmSystem && window.PalmSystem.stageReady();
 	if (!window.App) {
@@ -64,7 +64,7 @@ window.onload = function () {
 
 	console.log("window.onload");
 	//console.log(navigator.userAgent);
-	gblDebug = true;
+	gblDebug = false;//true;
 	gblAndroid = false;
 	gblDesktop = false;
 	gblBB10 = false;

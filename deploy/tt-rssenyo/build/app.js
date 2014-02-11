@@ -4452,7 +4452,7 @@ this.setShowing(!1);
 
 // App.js
 
-MarkReadTimer = "", gblUseJsonpRequest = !1, gblApiLevel = 0, enyo.kind({
+MarkReadTimer = "", gblUseJsonpRequest = !1, gblApiLevel = 0, startcount = 1, enyo.kind({
 name: "App",
 kind: "FittableRows",
 style: "background-color: #333333",
@@ -4531,12 +4531,9 @@ classes: "onyx-sample-popup",
 style: "padding: 10px; height: auto",
 components: [ {
 kind: "Scroller",
-name: "articlePreviewScroller",
 horizontal: "hidden",
 fit: !0,
 touch: !0,
-ondragfinish: "titleDragFinish",
-ondragstart: "titleDragStart",
 components: [ {
 classes: "panels-sample-sliding-content",
 allowHtml: !0,
@@ -5689,8 +5686,9 @@ ShareText: "",
 ShareUrl: "",
 swipedownstartindex: 1,
 swipedownstarty: 300,
+startcount: 1,
 rendered: function(e, t) {
-this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 10);
+this.inherited(arguments), window.setTimeout(enyo.bind(this, "startapp"), 100);
 },
 create: function() {
 this.inherited(arguments);
@@ -5703,7 +5701,18 @@ swipeup: function() {
 this.$.bb10TopMenu.setShowing(!1), this.resize();
 },
 startapp: function(e, t) {
-gblBB10 = !0, gblDesktop = !1, this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), gblDebug && this.debugconsole("DEBUGMODE: ON"), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? gblBB10 || setTimeout(enyo.bind(this, "LoginTap"), 500) : ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
+console.log("startApp"), this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode();
+if (this.ttrssURL == null) {
+if (gblBB10 && startcount >= 2) {
+var n = "IMPORTANT!\n\n No Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", r = "Ok", i, s = {
+buttonText: r,
+timeout: 15e3
+};
+i = blackberry.ui.toast.show(n, s), setTimeout(enyo.bind(this, "LoginTap"), 500);
+} else gblBB10 || setTimeout(enyo.bind(this, "LoginTap"), 500);
+startcount++;
+} else ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
 },
 debugconsole: function(e) {
 gblDebug && console.log(e);
@@ -5725,10 +5734,12 @@ setViewDesktop: function() {
 this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
 },
 LoginClose: function(e, t) {
-this.$.LoginPopup.hide(), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
+this.ttrssURL == "" && alert("Caution: No Url specified!"), this.$.LoginPopup.hide(), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW);
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue();
+if (this.ttrssURL == "" || this.ttrssUser == "" || this.ttrssPassword == "") alert("You must enter Url, user and password!"); else {
+this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW);
 if (gblBB10 && this.AutoLockPanels) {
 var n = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", r = "Ok", i, s = {
 buttonText: r,
@@ -5737,6 +5748,7 @@ timeout: 15e3
 i = blackberry.ui.toast.show(n, s);
 }
 this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
+}
 },
 LoginTap: function(e, t) {
 console.log("LOGINTAP called"), this.ttrssURL ? (this.$.serverAddress.setValue(this.ttrssURL), this.$.autoLockPanels.setValue(this.AutoLockPanels)) : (this.$.serverAddress.setValue("http://"), this.$.autoLockPanels.setValue(!0)), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
@@ -5784,7 +5796,7 @@ var t = this.$.toggleUnread.getValue();
 this.AutoLoadAllArticles && (this.$.lblFeedTitle.setContent("All articles"), this.$.feedTitleIcon.setShowing(!1), ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, t, -4, !1, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && (this.$.viewPanels.setIndex(2), this.debugconsole("SETPANEL 1")));
 },
 processLoginError: function(e) {
-console.error("LOGIN Error: " + e.error), alert("LOGIN Error: " + e.error), this.$.main.setContent("LOGIN ERROR: " + e.error);
+console.error("LOGIN Error: " + e.error), alert("LOGIN Error: " + e.error), this.$.main.setContent("LOGIN ERROR: " + e.error), setTimeout(enyo.bind(this, "LoginTap"), 500);
 },
 clickRefresh: function(e, t) {
 console.error("clickRefresh"), this.getCategories();

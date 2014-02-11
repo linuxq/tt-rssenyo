@@ -1,6 +1,7 @@
 MarkReadTimer = "";
 gblUseJsonpRequest = false;
 gblApiLevel = 0;
+startcount = 1;
 
 enyo.kind({
 	name: "App",
@@ -37,7 +38,7 @@ enyo.kind({
 		]},
 		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
 			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
-			{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
+			{kind: "Scroller",  horizontal:"hidden", fit: true, touch: true, components: [
 				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader is a native BB10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."}
 			]},			
 			{tag: "br"},
@@ -502,9 +503,11 @@ enyo.kind({
 	ShareUrl: "",
 	swipedownstartindex: 1,
 	swipedownstarty: 300,
+	startcount: 1,
 	rendered: function(inSender, inEvent) {
 		this.inherited(arguments);
-		window.setTimeout(enyo.bind(this, "startapp"), 10);
+		window.setTimeout(enyo.bind(this, "startapp"), 100);
+		//this.startapp();
 	},
 	create: function(){		
 		this.inherited(arguments);
@@ -534,15 +537,14 @@ enyo.kind({
 		this.resize();
 	},
 	startapp: function(inSender,inEvent) {
+		console.log("startApp");
 		//Debug
 		//gblBB10 = true;//true;
 		//gblDesktop = false;
 		//gblFirefox = true;
 		this.$.left.setShowing(false);	
 		this.$.viewPanels.setIndex(1);
-		if (gblDebug) {
-			this.debugconsole("DEBUGMODE: ON");
-		}		
+		
 		/*
 		//Beta Laufzeit bis 31.12.2013
 		BetaDate = "20140430";
@@ -587,12 +589,22 @@ enyo.kind({
 		this.changeViewMode();
 
 		if (this.ttrssURL == null) {
-			if (gblBB10) {
+			if (gblBB10 && startcount>=2) {
 				//setTimeout(enyo.bind(this, "LoginTap"), 500);
 				//blackberry.ui.toast.show("No TinyTinyRSS-Server set up!");
-			} else {
+				var message = "IMPORTANT!\n\n No Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org",
+				    buttonText = "Ok",
+				    toastId,
+				    options = {
+				      buttonText : buttonText,
+				      timeout : 15000
+				    };
+				toastId = blackberry.ui.toast.show(message, options);
 				setTimeout(enyo.bind(this, "LoginTap"), 500);	
-			}
+			} else if (!gblBB10) {
+				setTimeout(enyo.bind(this, "LoginTap"), 500);	
+			};
+			startcount++;
 			//this.LoginTap();
 			//this.$.LoginPopup.show();
 		} else {
@@ -785,6 +797,9 @@ enyo.kind({
 			this.$.chkArticleRead.setShowing(false);			
 	},		
 	LoginClose: function(inSender, inEvent){
+		if (this.ttrssURL=="") {
+			alert("Caution: No Url specified!");
+		};
 		this.$.LoginPopup.hide();
 		this.$.viewPanels.setShowing(true);
 		this.swipeup();
@@ -793,44 +808,47 @@ enyo.kind({
 	LoginSave: function(inSender, inEvent) {
 		this.ttrssURL = this.$.serverAddress.getValue();
 		this.ttrssUser = this.$.serverUser.getValue();
-		this.ttrssPassword = this.$.serverPassword.getValue();
-		this.ViewMode = this.$.pickViewMode.getSelected().value;
-		this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
-		this.AutoLockPanels = this.$.autoLockPanels.getValue();
-		this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue();
-		this.instapaperUser = this.$.instapaperUser.getValue();
-		this.instapaperPW = this.$.instapaperPW.getValue();
-		gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
-		localStorage.setItem("ttrssurl", this.ttrssURL);
-		localStorage.setItem("ttrssuser", this.ttrssUser);
-		localStorage.setItem("ttrsspassword", this.ttrssPassword);
-		localStorage.setItem("ViewMode", this.ViewMode);
-		localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
-		localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles);
-		localStorage.setItem("AutoLockPanels", this.AutoLockPanels);
-		localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
-		localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
-		localStorage.setItem("instapaperUser", this.instapaperUser);
-		localStorage.setItem("instapaperPW", this.instapaperPW);
-
-		//Notification
-		if (gblBB10 && this.AutoLockPanels) {
-			var message = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.",
-			    buttonText = "Ok",
-			    toastId,
-			    options = {
-			      buttonText : buttonText,
-			      timeout : 15000
-			    };
-		toastId = blackberry.ui.toast.show(message, options);
-		};
-		
-		this.$.LoginPopup.hide();
-		ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
-		this.$.viewPanels.setShowing(true);
-		this.swipeup();
-		this.resize();
-		//this.$.LoginPopup.hide();
+		this.ttrssPassword = this.$.serverPassword.getValue();		
+		if (this.ttrssURL=="" || this.ttrssUser=="" || this.ttrssPassword=="") {
+			alert("You must enter Url, user and password!");
+		} else {		
+			this.ViewMode = this.$.pickViewMode.getSelected().value;
+			this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
+			this.AutoLockPanels = this.$.autoLockPanels.getValue();
+			this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue();
+			this.instapaperUser = this.$.instapaperUser.getValue();
+			this.instapaperPW = this.$.instapaperPW.getValue();
+			gblUseJsonpRequest = this.$.useJsonpRequest.getValue();
+			localStorage.setItem("ttrssurl", this.ttrssURL);
+			localStorage.setItem("ttrssuser", this.ttrssUser);
+			localStorage.setItem("ttrsspassword", this.ttrssPassword);
+			localStorage.setItem("ViewMode", this.ViewMode);
+			localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed);
+			localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles);
+			localStorage.setItem("AutoLockPanels", this.AutoLockPanels);
+			localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest);
+			localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead);
+			localStorage.setItem("instapaperUser", this.instapaperUser);
+			localStorage.setItem("instapaperPW", this.instapaperPW);
+	
+			//Notification
+			if (gblBB10 && this.AutoLockPanels) {
+				var message = "You selected 'swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.",
+				    buttonText = "Ok",
+				    toastId,
+				    options = {
+				      buttonText : buttonText,
+				      timeout : 15000
+				    };
+				toastId = blackberry.ui.toast.show(message, options);
+			};
+			
+			this.$.LoginPopup.hide();
+			ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
+			this.$.viewPanels.setShowing(true);
+			this.swipeup();
+			this.resize();
+		}
 	},
 	LoginTap: function(inSender, inEvent) {
 		//this.$.LoginPopup.hide();
@@ -944,6 +962,7 @@ enyo.kind({
 		console.error("LOGIN Error: " + LoginResponse.error);
 		alert("LOGIN Error: " + LoginResponse.error);
 		this.$.main.setContent("LOGIN ERROR: " + LoginResponse.error);
+		setTimeout(enyo.bind(this, "LoginTap"), 500);
 	},
 	clickRefresh: function(inSender, inEvent){
 		console.error("clickRefresh");
