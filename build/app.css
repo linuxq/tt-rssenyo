@@ -1,5 +1,5 @@
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/fittable/source/FittableLayout.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/fittable/source/FittableLayout.css */
 
 .enyo-fittable-rows-layout {
 	position: relative;
@@ -71,7 +71,7 @@
 	margin-bottom: 0 !important;
 }
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/list/source/List.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/list/source/List.css */
 
 .enyo-list {
 	position: relative;
@@ -118,7 +118,7 @@
 	-o-transition: top 0.1s linear, left 0.1s linear;
 }
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/list/source/PulldownList.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/list/source/PulldownList.css */
 
 .enyo-list-pulldown {
 	position: absolute;
@@ -181,7 +181,7 @@
 	-ms-transform: rotate(180deg);
 }
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/panels/source/arrangers/Arranger.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/panels/source/arrangers/Arranger.css */
 
 .enyo-arranger {
 	position: relative;
@@ -212,7 +212,7 @@
 }
 
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/panels/source/Panels.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/panels/source/Panels.css */
 
 .enyo-panels {
 }
@@ -227,7 +227,7 @@
 	}
 }
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/tree/source/Node.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/tree/source/Node.css */
 
 .enyo-node {
 	cursor: default;
@@ -261,7 +261,7 @@
 }
 
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/imageview/source/ImageViewPin.css */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/imageview/source/ImageViewPin.css */
 
 
 .pinDebug {
@@ -269,7 +269,7 @@
 	border:1px solid yellow;
 }
 
-/* /home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/css/onyx.less */
+/* /media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/css/onyx.less */
 
 /* Onyx default parameters defined here */
 /* Fonts */
@@ -1592,7 +1592,7 @@ background-color:#000000;
 }
 
 100%{
-background-color:#FFFFFF;
+background-color:#0299cb; 
 }
 
 }

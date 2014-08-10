@@ -1,7 +1,7 @@
 
 // minifier: path aliases
 
-enyo.path.addPaths({layout: "/home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/", onyx: "/home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/", onyx: "/home/marcel/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/source/"});
+enyo.path.addPaths({layout: "/media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/layout/", onyx: "/media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/", onyx: "/media/daten/Dropbox/webOS-Apps/Enyo2/tt-rssenyo/enyo/../lib/onyx/source/"});
 
 // FittableLayout.js
 
@@ -4521,38 +4521,20 @@ style: "width: 10px"
 }, {
 content: "",
 fit: !0
+}, {
+content: "",
+style: "height: 30px"
 } ]
 }, {
-name: "HelpPopup",
-kind: "onyx.Popup",
-centered: !0,
-floating: !0,
-classes: "onyx-sample-popup",
-style: "padding: 10px; height: auto",
-components: [ {
-kind: "Scroller",
-horizontal: "hidden",
-fit: !0,
-touch: !0,
-components: [ {
-classes: "panels-sample-sliding-content",
-allowHtml: !0,
-onclick: "catchtaponlink",
-content: "TE-Reader is a native BB10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."
-} ]
+name: "loadbar",
+content: "",
+classes: "squaresWaveG",
+style: "position: relative; width: auto; height:5px",
+showing: !1
 }, {
-tag: "br"
-}, {
-kind: "onyx.Button",
-content: "Mail Developer",
-style: "width: 150px; margin: 5px;",
-ontap: "mailDeveloper"
-}, {
-kind: "onyx.Button",
-content: "Close",
-style: "width: 150px; margin: 5px;",
-ontap: "closeHelpPopup"
-} ]
+name: "loadbarBlank",
+content: "",
+style: "position: relative; width: auto; height:5px; background: #000000"
 }, {
 kind: "Panels",
 name: "viewPanels",
@@ -4584,7 +4566,8 @@ style: "width:260px; background-color:#fff;",
 components: [ {
 kind: "onyx.Toolbar",
 components: [ {
-content: "TE-Reader for Tiny Tiny RSS"
+content: "TE-Reader for Tiny Tiny RSS",
+style: "color: #0299cb; font-weight:bold"
 }, {
 fit: !0
 }, {
@@ -4778,19 +4761,29 @@ fit: !0,
 style: "width:400px;",
 classes: "panels-theme-light",
 components: [ {
-kind: "onyx.Toolbar",
+kind: "FittableRows",
+style: "height: 45px; background: #444444;",
 components: [ {
+style: "height: 4px"
+}, {
+kind: "FittableColumns",
+style: "height: 37px;",
+components: [ {
+style: "width: 10px"
+}, {
 kind: "enyo.Image",
 name: "feedTitleIcon",
 fit: !1,
 src: "",
-style: "height:30px;"
+style: "height:30px; width: 30px; padding-top: 4px;"
+}, {
+style: "width: 10px"
 }, {
 name: "lblFeedTitle",
 content: "Feed",
-style: "font-size:1.2em; font-weight:bold;"
+style: "font-size:1.4em; padding-top: 4px; color:white; height:30px; font-weight:bold; width:85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
 }, {
-fit: !0
+style: "width: 10px"
 }, {
 kind: "onyx.ToggleIconButton",
 name: "toggleFeedUnread",
@@ -4798,6 +4791,9 @@ onChange: "UpdateFeedClick",
 style: " position:fixed; right:5px;",
 value: !0,
 src: "assets/menu-icon-bookmark.png"
+} ]
+}, {
+style: "height: 4px"
 } ]
 }, {
 kind: "Scroller",
@@ -4938,8 +4934,6 @@ style: "height: 15px; color: #ffffff; font-size: 11px; text-align: center"
 style: "height: 4px"
 } ]
 }, {
-style: "width: 100%"
-}, {
 kind: "onyx.IconButton",
 style: "height: 32px; margin-top: 15px",
 showing: !1,
@@ -4950,7 +4944,7 @@ style: "width: 10px"
 }, {
 kind: "onyx.Button",
 name: "FeedListPageUpButton",
-content: "Up",
+content: "\u25b2",
 onmousedown: "FeedListPageUpDown",
 onmouseup: "FeedListPageUpUp",
 showing: !1,
@@ -4960,7 +4954,7 @@ style: "width: 10px"
 }, {
 kind: "onyx.Button",
 name: "FeedListPageDownButton",
-content: "Dwn",
+content: "\u25bc",
 onmousedown: "FeedListPageDownDown",
 onmouseup: "FeedListPageDownUp",
 showing: !1,
@@ -4986,7 +4980,7 @@ ondragstart: "titleDragStart"
 }, {
 kind: "FittableColumns",
 fit: !1,
-style: "height: 40px; padding: 5px",
+style: "height: 60px; padding: 5px",
 ontap: "enablePanels",
 components: [ {
 kind: "enyo.Image",
@@ -4995,9 +4989,16 @@ fit: !1,
 src: "",
 style: "height:30px; width:30px;"
 }, {
+kind: "FittableRows",
+components: [ {
 name: "articleViewTitle2",
 content: "",
-style: "height: auto; font-size: 0.8em; padding: 5px; word-wrap: break-word"
+style: "height: auto; font-size: 0.8em; padding-left: 8px; word-wrap: break-word"
+}, {
+name: "articleViewTitle3",
+content: "",
+style: "height: auto; font-size: 0.8em; padding-left: 8px; word-wrap: break-word"
+} ]
 } ]
 }, {
 content: "",
@@ -5044,6 +5045,8 @@ fit: !1,
 src: "assets/bb10panelBack.png",
 style: "height:60px;",
 ontap: "enablePanels"
+}, {
+style: "width: 10px"
 }, {
 kind: "onyx.Grabber",
 name: "grabberArticleView",
@@ -5167,6 +5170,7 @@ style: "height: 4px"
 } ]
 }, {
 kind: "FittableRows",
+name: "articletoolbarright",
 style: "height: 60px; background: #252525;",
 components: [ {
 style: "height: 14px"
@@ -5245,16 +5249,6 @@ style: "height: 14px"
 } ]
 } ]
 } ]
-}, {
-name: "loadbar",
-content: "",
-classes: "squaresWaveG",
-style: "position: relative; width: auto; height:5px",
-showing: !1
-}, {
-name: "loadbarBlank",
-content: "",
-style: "position: relative; width: auto; height:5px; background: #000000"
 }, {
 kind: enyo.Signals,
 onkeyup: "handleKeyUp",
@@ -5523,6 +5517,65 @@ ontap: "addFeedClose",
 style: "width:100%;"
 } ]
 }, {
+name: "HelpPopup",
+kind: "onyx.Popup",
+centered: !0,
+floating: !0,
+classes: "onyx-sample-popup",
+style: "padding: 10px; height: auto",
+components: [ {
+kind: "Scroller",
+horizontal: "hidden",
+fit: !0,
+touch: !0,
+components: [ {
+classes: "panels-sample-sliding-content",
+allowHtml: !0,
+onclick: "catchtaponlink",
+content: "TE-Reader is a BlackBerry 10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."
+} ]
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "Mail Developer",
+style: "width: 150px; margin: 5px;",
+ontap: "mailDeveloper"
+}, {
+kind: "onyx.Button",
+content: "Close",
+style: "width: 150px; margin: 5px;",
+ontap: "closeHelpPopup"
+} ]
+}, {
+name: "InfoPopup",
+kind: "onyx.Popup",
+showAtPostion: top,
+centered: !0,
+floating: !0,
+classes: "onyx-sample-popup",
+style: "padding: 10px; height: auto",
+components: [ {
+kind: "Scroller",
+horizontal: "hidden",
+fit: !0,
+touch: !0,
+components: [ {
+classes: "panels-sample-sliding-content",
+name: "InfoPopupText",
+allowHtml: !0,
+onclick: "catchtaponlink",
+content: ""
+} ]
+}, {
+tag: "br"
+}, {
+kind: "onyx.Button",
+content: "ok",
+style: "width: 150px; margin: 5px;",
+ontap: "closeInfoPopup"
+} ]
+}, {
 name: "MarkFeedReadPopup",
 kind: "onyx.Popup",
 centered: !0,
@@ -5654,7 +5707,7 @@ FeedIcon: [],
 CategoryID: [],
 CategoryUnread: [],
 CategoryTitle: [],
-currentCategoryIndex: 0,
+currentCategoryIndex: -1,
 currentFeedIndex: 0,
 currentFeedID: "",
 currentFeed: "",
@@ -5701,23 +5754,32 @@ swipeup: function() {
 this.$.bb10TopMenu.setShowing(!1), this.resize();
 },
 startapp: function(e, t) {
-console.log("startApp"), this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? (gblBB10 && startcount >= 2 ? (this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)) : gblBB10 || (this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)), startcount++) : (chkURL = CheckUrl(this.ttrssURL), chkURL ? gblBB10 && startcount >= 2 ? ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")) : gblBB10 || ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")) : gblBB10 && startcount >= 2 ? (this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)) : gblBB10 || (this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)), startcount++), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewBB10()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
+console.log("startApp"), this.setLoadbar(!0), this.$.left.setShowing(!1), this.$.viewPanels.setIndex(1), this.ttrssURL = localStorage.getItem("ttrssurl"), this.ttrssURL == "" ? this.AutoLockPanels = !0 : this.AutoLockPanels = localStorage.getItem("AutoLockPanels") == "true", this.ttrssPassword = localStorage.getItem("ttrsspassword"), this.ttrssUser = localStorage.getItem("ttrssuser"), this.ttrssAutoMarkRead = localStorage.getItem("ttrssautomarkreadtimeout"), this.ViewMode = localStorage.getItem("ViewMode"), this.AutoLoadFirstFeed = localStorage.getItem("AutoLoadFirstFeed") == "true", this.AutoLoadAllArticles = localStorage.getItem("AutoLoadAllArticles") == "true", gblUseJsonpRequest = localStorage.getItem("UseJsonpRequest") == "true", this.instapaperUser = localStorage.getItem("instapaperUser"), this.instapaperPW = localStorage.getItem("instapaperPW"), this.changeViewMode(), this.ttrssURL == null ? (gblBB10 && startcount >= 2 ? (this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)) : gblBB10 || (this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15e3), gblWebos || setTimeout(enyo.bind(this, "LoginTap"), 500)), startcount++) : (chkURL = CheckUrl(this.ttrssURL), chkURL ? gblBB10 && startcount >= 2 ? ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")) : gblBB10 || ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")) : gblBB10 && startcount >= 2 ? (this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3), setTimeout(enyo.bind(this, "LoginTap"), 500)) : !gblBB10 && !gblFirefox ? (this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3), gblWebos || setTimeout(enyo.bind(this, "LoginTap"), 500)) : gblFirefox && ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), startcount++);
+var n = window.innerWidth - 100 + "px";
+this.debugconsole("Width: " + window.innerWidth + " - " + n), this.$.lblFeedTitle.applyStyle("width", n), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em"), this.$.articleViewTitle3.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"), this.$.articleViewTitle3.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1)), this.AutoLockPanels && (this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1)), this.$.useJsonpRequest.setShowing(!1), gblBB10 ? (this.debugconsole("PLATFORM: Blackberry 10"), this.setViewBB10()) : gblPlaybook ? (this.debugconsole("PLATFORM: PlaybookOS"), this.setViewPlaybook()) : gblFirefox ? (this.debugconsole("PLATFORM: FirefoxOS"), this.setViewFFOS()) : gblWebos ? (this.debugconsole("PLATFORM: webOS"), this.setViewWebOS()) : gblDesktop ? (this.debugconsole("PLATFORM: Desktop"), this.setViewDesktop()) : this.setViewDesktop();
 },
 debugconsole: function(e) {
 gblDebug && console.log(e);
 },
 resizeHandler: function() {
-this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
+this.inherited(arguments), window.innerWidth < 1024 ? (this.$.btnFullArticle.setShowing(!1), window.innerWidth > 400 ? (this.$.categoryRepeater.applyStyle("font-size", "1.8em"), this.$.feedRepeater.applyStyle("font-size", "1.8em"), this.$.articleRepeater.applyStyle("font-size", "1.8em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewScroller.applyStyle("font-size", "1.8em"), this.$.articleViewTitle.applyStyle("font-size", "2.0em"), this.$.articleViewTitle2.applyStyle("font-size", "1.6em"), this.$.articleViewTitle3.applyStyle("font-size", "1.6em")) : (this.$.categoryRepeater.applyStyle("font-size", "1.2em"), this.$.feedRepeater.applyStyle("font-size", "1.2em"), this.$.articleRepeater.applyStyle("font-size", "1.2em"), this.$.articlePreviewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewScroller.applyStyle("font-size", "1.2em"), this.$.articleViewTitle.applyStyle("font-size", "1.4em"), this.$.articleViewTitle2.applyStyle("font-size", "1.0em"), this.$.articleViewTitle3.applyStyle("font-size", "1.0em"))) : (this.$.viewPanels.layout.peekWidth = 40, this.ViewMode == "0" ? this.$.btnFullArticle.setShowing(!0) : this.$.btnFullArticle.setShowing(!1));
 },
 resize: function() {
-this.$.left2.reflow(), this.$.middle.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow(), this.resized();
+this.$.left2.reflow(), this.$.middle.reflow(), this.$.left2blank.reflow(), this.$.feedRepeater.reflow(), this.$.body.reflow();
+var e = window.innerWidth - 100 + "px";
+this.debugconsole("Width: " + window.innerWidth + " - " + e), this.$.lblFeedTitle.applyStyle("width", e), this.resized();
 },
 setViewBB10: function() {
 this.$.btnSettings.setShowing(!1), this.$.setupinstapaper.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.bb10articleviewgrabber.setShowing(!0), this.$.grabberArticleView.setShowing(!1), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.applyStyle("height", "20px"), this.$.chkArticleRead.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1);
 },
-setViewFFOS: function() {},
+setViewPlaybook: function() {
+this.$.btnSettings.setShowing(!0), this.$.setupinstapaper.setShowing(!1), this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!1), this.$.bb10articleviewgrabber.setShowing(!1), this.$.grabberArticleView.setShowing(!0), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.applyStyle("height", "20px"), this.$.chkArticleRead.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.btnNextArticle.setShowing(!0), this.$.btnPrevArticle.setShowing(!0);
+},
+setViewFFOS: function() {
+this.$.btnSettings.setShowing(!0), this.$.setupinstapaper.setShowing(!1), this.$.listviewgrabber.setShowing(!1), this.$.bb10listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setSrc("assets/ffxospanelBack.png"), this.$.btnUnlockPanels.setShowing(!1), this.$.bb10articleviewgrabber.setShowing(!0), this.$.bb10articleviewgrabber.setSrc("assets/ffxospanelBack.png"), this.$.grabberArticleView.setShowing(!1), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!1), this.$.articletoolbarright.setShowing(!1), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.applyStyle("height", "20px"), this.$.chkArticleRead.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.btnNextArticle.setShowing(!1), this.$.btnPrevArticle.setShowing(!1);
+},
 setViewWebOS: function() {
-this.$.btnreadontouch.setShowing(!0), this.setViewBB10();
+this.$.btnreadontouch.setShowing(!0), this.setViewBB10(), this.$.btnSettings.setShowing(!0), this.$.btnNextArticle.setShowing(!0), this.$.btnPrevArticle.setShowing(!0);
 },
 setViewDesktop: function() {
 this.$.listviewgrabber.setShowing(!0), this.$.bb10listviewgrabber.setShowing(!1), this.$.btnUnlockPanels.setShowing(!0), this.$.grabberArticleView.setShowing(!0), this.$.bb10articleviewgrabber.setShowing(!1), this.staredon = "assets/bb10staron.png", this.staredoff = "assets/bb10staroff.png", this.$.iconStarred.setSrc(this.staredoff), this.publishedon = "assets/bb10publishon.png", this.publishedoff = "assets/bb10publishoff.png", this.$.btnbrowser.setSrc("assets/bb10browser.png"), this.$.bb10btnshare.setShowing(!0), this.$.btnshare.setShowing(!0), this.$.bb10btnread.setShowing(!1), this.$.bb10btnread.setShowing(!0), this.$.chkArticleRead.setShowing(!1);
@@ -5726,7 +5788,13 @@ LoginClose: function(e, t) {
 console.log("URL:" + this.ttrssURL + ":"), (this.ttrssURL == "" || !this.ttrssURL) && this.multialert("Caution: No Url specified!", "Login error", 5e3), this.$.LoginPopup.hide(), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ttrssURL == "" || this.ttrssUser == "" || this.ttrssPassword == "" ? this.multialert("You must enter Url, user and password!", "Caution", 15e3) : (console.log(this.ViewMode), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), chkURL = CheckUrl(this.ttrssURL), chkURL ? (gblBB10 && this.AutoLockPanels && this.ViewMode == 0 && this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15e3), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize()) : this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3));
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ttrssURL == "" || this.ttrssUser == "" || this.ttrssPassword == "" ? this.multialert("You must enter Url, user and password!", "Caution", 15e3) : (console.log(this.ViewMode), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), gblFirefox || (chkURL = CheckUrl(this.ttrssURL)), this.AutoLockPanels && this.ViewMode == 0 && this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15e3), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize());
+},
+processCheckUrlSuccess: function(e, t) {
+console.log("CHECKURL SUCCESS");
+},
+processCheckUrlError: function(e, t) {
+console.log("CHECKURL ERROR");
 },
 LoginTap: function(e, t) {
 console.log("LOGINTAP called"), this.ttrssURL ? (this.$.serverAddress.setValue(this.ttrssURL), this.$.autoLockPanels.setValue(this.AutoLockPanels)) : (this.$.serverAddress.setValue("http://"), this.$.autoLockPanels.setValue(!0)), this.$.serverUser.setValue(this.ttrssUser), this.$.serverPassword.setValue(this.ttrssPassword);
@@ -5763,7 +5831,7 @@ handleViewModeChange: function(e, t) {
 this.ViewMode = t.selected.value, this.selectFeed(this.currentFeedIndex), this.changeViewMode();
 },
 changeViewMode: function(e, t) {
-gblBB10 && this.$.autoLockPanels.setShowing(!1), this.ViewMode == "1" ? (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!1), gblBB10 ? (this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1), this.$.autoLockPanels.setShowing(!1)) : (this.$.FeedListPageUpButton.setShowing(!0), this.$.FeedListPageDownButton.setShowing(!0))) : this.ViewMode == "2" ? (this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1)) : (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1));
+gblBB10 && this.$.autoLockPanels.setShowing(!1), this.ViewMode == "1" ? (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!1), gblBB10 ? (this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1), this.$.autoLockPanels.setShowing(!1)) : gblFirefox ? (this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1), this.$.autoLockPanels.setShowing(!1)) : (this.$.FeedListPageUpButton.setShowing(!0), this.$.FeedListPageDownButton.setShowing(!0))) : this.ViewMode == "2" ? (this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1)) : (this.$.articlePreviewScroller.setShowing(!0), this.$.articleViewScroller.setShowing(!1), this.$.body.setShowing(!0), this.$.FeedListPageUpButton.setShowing(!1), this.$.FeedListPageDownButton.setShowing(!1));
 },
 changeMarkReadTimeout: function(e, t) {
 this.ttrssAutoMarkRead = t.selected.value;
@@ -5854,11 +5922,11 @@ this.setLoadbar(!0), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.$.artic
 },
 processGetArticleSuccess: function(e) {
 var t = "", n = e[0].updated, r = new Date(n * 1e3), i = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), s = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), o = i[r.getDay()] + " " + s[r.getMonth()] + " " + r.getDate() + ", " + r.getFullYear() + " " + r.getHours() + ":" + format_number(r.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(e[0].author) + " - " + o), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), helperimage = "", this.$.articlePreview.setContent(helperimage + e[0].content), this.debugconsole(e[0]), this.debugconsole(helperimage), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), this.$.bb10iconread.setSrc("assets/bb10readoff.png"), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : (this.$.chkArticleRead.setChecked(!0), this.$.bb10iconread.setSrc("assets/bb10readon.png")), e[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), e[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(e[0].title)), this.$.articleViewTitle2.setContent(o), this.$.articleViewTitle3.setContent(html_entity_decode(e[0].author)), this.$.articleViewScroller.setShowing(!1), this.$.articlePreviewScroller.setShowing(!0), helperimage = "", this.$.articlePreview.setContent(helperimage + e[0].content), this.debugconsole(e[0]), this.debugconsole(helperimage), this.$.articlePreviewScroller.setScrollTop(0), this.$.articlePreviewScroller.setScrollLeft(0), e[0].unread ? (this.$.chkArticleRead.setChecked(!1), this.$.bb10iconread.setSrc("assets/bb10readoff.png"), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : (this.$.chkArticleRead.setChecked(!0), this.$.bb10iconread.setSrc("assets/bb10readon.png")), e[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), e[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + e[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetFullArticleSuccess: function(e) {
 var t = this.ArticleData[this.RecentArticleIndex], n = "", r = t[0].updated, i = new Date(r * 1e3), s = new Array("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"), o = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"), u = s[i.getDay()] + " " + o[i.getMonth()] + " " + i.getDate() + ", " + i.getFullYear() + " " + i.getHours() + ":" + format_number(i.getMinutes(), 2, "0");
-this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(html_entity_decode(t[0].author) + " - " + u), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), t[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
+this.$.articleViewTitle.setContent(html_entity_decode(t[0].title)), this.$.articleViewTitle2.setContent(u), this.$.articleViewTitle3.setContent(html_entity_decode(t[0].author)), this.$.articlePreviewScroller.setShowing(!1), this.$.articleViewScroller.setShowing(!0), this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], e), this.$.articleViewScroller.setScrollTop(0), this.$.articleViewScroller.setScrollLeft(0), t[0].unread ? (this.$.chkArticleRead.setChecked(!1), clearTimeout(this.MarkReadTimer), this.ttrssAutoMarkRead != "0" && (this.MarkReadTimer = setTimeout(enyo.bind(this, "TimedMarkRead"), this.ttrssAutoMarkRead))) : this.$.chkArticleRead.setChecked(!0), t[0].marked ? this.$.iconStarred.setSrc(this.staredon) : this.$.iconStarred.setSrc(this.staredoff), t[0].published ? this.$.iconPublished.setSrc(this.publishedon) : this.$.iconPublished.setSrc(this.publishedoff), this.$.lblArticles1.setContent(this.RecentArticleIndex + 1), this.$.lblArticles2.setContent(this.Articles.length), this.$.articleTitleIcon.setSrc(this.ttrssIconPath + t[0].feed_id + ".ico"), this.resize(), this.setLoadbar(!1);
 },
 processGetArticleError: function(e) {
 this.debugconsole(e), this.setLoadbar(!1);
@@ -5925,7 +5993,7 @@ var n = this.$.toggleUnread.getValue();
 ttrssGetFeeds(this.ttrssURL, this.ttrss_SID, n, this.CategoryID[e], enyo.bind(this, "processGetFeedsSuccess"), enyo.bind(this, "processGetFeedsError")), this.$.viewPanels.setIndex(1), this.debugconsole("SETPANEL 3");
 },
 clickFeed: function(e, t) {
-this.selectFeed(t.index);
+this.selectFeed(t.index), this.setLoadbar(!0);
 },
 selectFeed: function(e) {
 this.setLoadbar(!0);
@@ -5939,7 +6007,7 @@ var r = this.$.toggleFeedUnread.getValue(), i = !1;
 e == "0" && (i = !0), this.currentFeedID = this.FeedID[e], ttrssGetHeadlines(this.ttrssURL, this.ttrss_SID, r, this.FeedID[e], i, enyo.bind(this, "processGetHeadlinesSuccess"), enyo.bind(this, "processGetHeadlinesError")), window.innerWidth < 1024 && (this.$.viewPanels.setIndex(2), this.debugconsole("SETPANEL 4"));
 },
 addFeedClick: function(e, t) {
-this.currentCategoryIndex == 0 ? this.multialert("Select category first", "", 5e3) : (this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show(), gblBB10 && (this.debugconsole("IN CLIPBOARD: " + community.clipboard.getText()), this.$.AddFeedURL.setValue(community.clipboard.getText())));
+this.currentCategoryIndex + 1 <= 0 ? this.multialert("Select category first", "", 5e3) : (this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]), this.$.AddFeedPopup.show(), gblBB10 && (this.debugconsole("IN CLIPBOARD: " + community.clipboard.getText()), this.$.AddFeedURL.setValue(community.clipboard.getText())));
 },
 addFeedSave: function(e, t) {
 ttrssSubscribeToFeed(this.ttrssURL, this.ttrss_SID, this.$.AddFeedURL.getValue(), this.CategoryID[this.currentCategoryIndex], enyo.bind(this, "addFeedSuccess"), enyo.bind(this, "addFeedError")), this.$.AddFeedPopup.hide();
@@ -6027,7 +6095,7 @@ holdItem: function(e, t) {
 window.innerWidth < 1024 && this.ViewMode == 0 && (this.$.viewPanels.setIndex(3), this.debugconsole("SETPANEL 7"), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), gblBB10 || gblWebos ? this.$.btnUnlockPanels.setShowing(!1) : this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.debugconsole("Disable Panels"), this.clickItem(" ", t), this.resize());
 },
 enablePanels: function(e, t) {
-this.debugconsole("ENABLE Panels"), this.UpdateFeedClick(), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.btnPrevArticle.setShowing(!0), this.$.btnNextArticle.setShowing(!0), gblBB10 ? this.$.grabberArticleView.setShowing(!1) : this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.debugconsole("SETPANEL 8"), this.resize(), this.$.viewPanels.setDraggable(!0);
+this.debugconsole("ENABLE Panels"), this.UpdateFeedClick(), this.$.left2.setShowing(!0), this.$.middle.setShowing(!0), this.$.btnUnlockPanels.setShowing(!1), this.$.btnPrevArticle.setShowing(!0), this.$.btnNextArticle.setShowing(!0), gblBB10 ? this.$.grabberArticleView.setShowing(!1) : gblFirefox ? this.$.grabberArticleView.setShowing(!1) : this.$.grabberArticleView.setShowing(!0), this.$.viewPanels.setIndex(2), this.debugconsole("SETPANEL 8"), this.resize(), this.$.viewPanels.setDraggable(!0);
 },
 clickItem: function(e, t) {
 this.debugconsole("VIEW MODE: " + this.ViewMode), this.RecentArticleIndex = t.index;
@@ -6040,17 +6108,27 @@ this.ViewMode == "2" ? (this.setLoadbar(!0), ttrssGetFullArticle(this.ArticleURL
 },
 openArticle: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
-n.indexOf("www.zeit.de") > 0 && (n = n.replace("www.zeit.de", "mobil.zeit.de")), gblBB10 ? blackberry.invoke.invoke({
+n.indexOf("www.zeit.de") > 0 && (n = n.replace("www.zeit.de", "mobil.zeit.de"));
+if (gblBB10) blackberry.invoke.invoke({
 target: "sys.browser",
 uri: n
-}) : window.open(n);
+}); else if (gblPlaybook) {
+var r = new blackberry.invoke.BrowserArguments(url);
+blackberry.invoke.invoke(blackberry.invoke.APP_BROWSER, r);
+} else if (gblFirefox) var i = new MozActivity({
+name: "view",
+data: {
+type: "url",
+url: n
+}
+}); else window.open(n);
 },
 showFullArticle: function(e, t) {
 var n = this.ArticleURL[this.RecentArticleIndex];
 this.ttrssURL == ".." && (n = "proxy.php?proxy_url=" + n), ttrssGetFullArticle(n, enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")), this.$.viewPanels.setIndex(3), this.debugconsole("SETPANEL 12");
 },
 prevArticle: function(e, t) {
-this.RecentArticleIndex == 0 && (this.UpdateFeedClick(), this.enablePanels()), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError")));
+console.log("prevArticle"), this.RecentArticleIndex == 0 && (this.UpdateFeedClick(), this.enablePanels()), this.RecentArticleIndex >= 1 && (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex - 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))), this.debugconsole(this.RecentArticleIndex);
 },
 nextArticle: function(e, t) {
 this.RecentArticleIndex < this.Articles.length - 1 ? (this.setLoadbar(!0), this.RecentArticleIndex = this.RecentArticleIndex + 1, this.ViewMode != "0" ? ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError")) : ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))) : this.vibrate();
@@ -6098,7 +6176,14 @@ this.debugconsole("success");
 this.debugconsole("error: " + e);
 });
 }
-gblFirefox && this.$.sharePopup.show(), gblWebos && this.$.sharePopup.show(), gblDesktop && this.$.sharePopup.show();
+if (gblFirefox) var r = new MozActivity({
+name: "share",
+data: {
+type: "url",
+url: this.ShareUrl
+}
+});
+gblPlaybook && this.$.sharePopup.show(), gblWebos && this.$.sharePopup.show(), gblDesktop && this.$.sharePopup.show();
 },
 shareArticle2: function(e, t) {
 ShareText = this.ShareText + "%20" + encodeURIComponent(this.ShareUrl);
@@ -6202,7 +6287,7 @@ titleDragStart: function(e, t) {
 gblDesktop || (this.dragStartPanelIndex = this.$.viewPanels.getIndex(), this.dragStartPanelIndex == 3 && this.debugconsole("DRAGSTART"));
 },
 titleDragFinish: function(e, t) {
-gblDesktop || (this.debugconsole("DRAGSTOP " + t.dx), this.resize(), +t.dx < -120 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 120 && (this.$.btnUnlockPanels.getShowing() && this.prevArticle(), this.$.bb10articleviewgrabber.getShowing() && this.prevArticle()), this.resize());
+gblDesktop || (this.debugconsole("DRAGSTOP " + t.dx), this.resize(), +t.dx < -120 && this.dragStartPanelIndex == 3 && this.$.viewPanels.getIndex() == 3 && this.nextArticle(), +t.dx > 120 && (this.$.btnUnlockPanels.getShowing() && !gblFirefox && this.prevArticle(), this.$.bb10articleviewgrabber.getShowing() && this.prevArticle()), this.resize());
 },
 verticalswipestart: function(e, t) {
 this.swipedownstarty = t.clientY;
@@ -6239,7 +6324,7 @@ return this.debugconsole(t.target.href), this.debugconsole("tapped"), t.preventD
 },
 mailDeveloper: function() {
 gblBB10 && blackberry.invoke.card.invokeEmailComposer({
-subject: "TE-Reader support BB10",
+subject: "TE-Reader support BlackBerry 10",
 body: "",
 to: [ "apps@meissel.com" ]
 });
@@ -6251,7 +6336,10 @@ buttonText: i,
 timeout: n
 };
 s = blackberry.ui.toast.show(e, o);
-} else alert(e);
+} else gblWebos ? (this.$.InfoPopup.show(), this.$.InfoPopupText.setContent(e)) : alert(e);
+},
+closeInfoPopup: function() {
+this.$.InfoPopup.hide();
 }
 });
 
@@ -6265,6 +6353,24 @@ return t.send(), t.status >= 200 && t.status < 304 ? !0 : !1;
 } catch (i) {
 return !1;
 }
+}
+
+function ttrssCheckUrlFirefox(e, t, n) {
+console.log("ttrssCeckUrlFirefox");
+var r = {}, i = new enyo.Ajax({
+url: e,
+method: "GET",
+handleAs: "json",
+postBody: JSON.stringify(r)
+});
+i.response(function(e) {
+ttrssCheckUrlFirefoxResponse(JSON.parse(e.xhrResponse.body), t, n);
+}), i.go(r);
+return;
+}
+
+function ttrssCheckUrlFirefoxResponse(e, t, n) {
+console.log("test"), console.log(e);
 }
 
 function ttrssLogin(e, t, n, r, i) {

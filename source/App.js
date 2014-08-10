@@ -34,18 +34,16 @@ enyo.kind({
 				]},
 				{content: "", style: "width: 10px"}
 			]},
-			{content: "", fit:true}
+			{content: "", fit:true},
+			/*{kind: "FittableColumns", style: "background-image: icon314.png", components: [
+				{content: "", style:"width: 10%"},
+				{kind: "enyo.Image", fit: true, src: "icon314.png", style: "width: auto"},	,
+				{content: "", style:"width: 10%"}
+			]},*/
+			{content: "", style: "height: 30px"}
 		]},
-		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
-			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
-			{kind: "Scroller",  horizontal:"hidden", fit: true, touch: true, components: [
-				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader is a native BB10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."}
-			]},			
-			{tag: "br"},
-			{kind:"onyx.Button", content: "Mail Developer", style: "width: 150px; margin: 5px;", ontap:"mailDeveloper"},
-			{kind:"onyx.Button", content: "Close", style: "width: 150px; margin: 5px;", ontap:"closeHelpPopup"},
-			]
-		},	
+		{name: "loadbar", content: "", classes: "squaresWaveG", style: "position: relative; width: auto; height:5px", showing:false},
+		{name: "loadbarBlank", content: "", style: "position: relative; width: auto; height:5px; background: #000000"}, 
 		{kind: "Panels", name: "viewPanels", fit: true, classes: "panels-sample-sliding-panels", arrangerKind: "CollapsingArranger", ondragfinish: "verticalswipefinish", ondragstart: "verticalswipestart", wrap: false, components: [
 			{name: "left", style: "background-color: #333333", showing: false, components: [
 				{kind: "enyo.Scroller", fit: true, showing: false, components: [
@@ -55,7 +53,7 @@ enyo.kind({
 			{name: "left2", kind: "FittableRows", classes: "panels-theme-light", style: "width:260px; background-color:#fff;", components: [
 				{kind: "onyx.Toolbar", components: [
 					//{kind: "enyo.Image", fit: false, src: "icon24.png", style: "height:24px;"},
-					{content: "TE-Reader for Tiny Tiny RSS"},
+					{content: "TE-Reader for Tiny Tiny RSS", style: "color: #0299cb; font-weight:bold"},
 					{fit: true},
 					{kind: "onyx.ToggleIconButton", name: "toggleUnread", onChange: "clickRefresh", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
 				]},
@@ -130,13 +128,20 @@ enyo.kind({
 			]},
 			{name: "middle", kind: "FittableRows", fit: true, style: "width:400px;", classes: "panels-theme-light", components: [
 				//{name: "FeedTitle", content: "Feed"},
-				{kind: "onyx.Toolbar", components: [
-					{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height:30px;"}, //height: 54px"},
-					{name: "lblFeedTitle", content: "Feed", style: "font-size:1.2em; font-weight:bold;"},
-					{fit: true},
-					{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
+				//{kind: "onyx.Toolbar", components: [
+				{kind: "FittableRows", style: "height: 45px; background: #444444;", components: [
+					{style: "height: 4px"},
+					{kind: "FittableColumns", style: "height: 37px;", components: [
+						{style: "width: 10px"},
+						{kind: "enyo.Image", name: "feedTitleIcon", fit: false, src: "", style: "height:30px; width: 30px; padding-top: 4px;"}, //height: 54px"},
+						{style: "width: 10px"},
+						{name: "lblFeedTitle", content: "Feed", style: "font-size:1.4em; padding-top: 4px; color:white; height:30px; font-weight:bold; width:85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"},
+						//{fit: true},
+						{style: "width: 10px"},
+						{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
+					]},
+					{style: "height: 4px"}
 				]},
-
 				/* With "star/unstar" ->  too slow :(
 				{kind: "Scroller", name: "articleScroller", touch:true, fit:true, horizontal:"hidden", classes: "scroller-sample-scroller", components: [
 					{kind: "Repeater", name: "articleRepeater", onSetupItem:"setupArticles", fit: true, components: [
@@ -215,14 +220,12 @@ enyo.kind({
 								]}
 							]},
 							*/
-							{style: "width: 100%"},
-
-							
+							//{style: "width: 100%"},
 							{kind: "onyx.IconButton" , style: "height: 32px; margin-top: 15px", showing: false, src: "assets/menu-icon-refresh.png", ontap: "UpdateFeedClick"},
 							{style: "width: 10px"},
-							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "Up", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
+							{kind: "onyx.Button", name: "FeedListPageUpButton", content: "▲", onmousedown: "FeedListPageUpDown", onmouseup: "FeedListPageUpUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"},
 							{style: "width: 10px"},
-							{kind: "onyx.Button", name: "FeedListPageDownButton", content: "Dwn", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
+							{kind: "onyx.Button", name: "FeedListPageDownButton", content: "▼", onmousedown: "FeedListPageDownDown", onmouseup: "FeedListPageDownUp", showing: false, style: "margin-left:0px; margin-right:0px; width:68px;"}
 						]},
 						{style: "height: 14px"}
 					]}		
@@ -233,9 +236,12 @@ enyo.kind({
 			]},
 			{name: "body", kind: "FittableRows", fit: true, classes: "panels-theme-light", components: [
 				{name: "articleViewTitle", content: "", style: "padding: 5px; font-weight: bold;", ontap: "enablePanels", ondragfinish: "titleDragFinish", ondragstart: "titleDragStart"},
-				{kind: "FittableColumns", fit: false, style: "height: 40px; padding: 5px", ontap: "enablePanels", components: [
+				{kind: "FittableColumns", fit: false, style: "height: 60px; padding: 5px", ontap: "enablePanels", components: [
 					{kind: "enyo.Image", name: "articleTitleIcon", fit: false, src: "", style: "height:30px; width:30px;"}, //height: 54px"},
-					{name: "articleViewTitle2", content: "", style: "height: auto; font-size: 0.8em; padding: 5px; word-wrap: break-word"},
+					{kind: "FittableRows", components:[
+						{name: "articleViewTitle2", content: "", style: "height: auto; font-size: 0.8em; padding-left: 8px; word-wrap: break-word"},
+						{name: "articleViewTitle3", content: "", style: "height: auto; font-size: 0.8em; padding-left: 8px; word-wrap: break-word"}
+					]},
 				]},
 				{content: "", style: "border: 1px solid silver;"},
 				{kind: "Scroller", name: "articlePreviewScroller", horizontal:"hidden", fit: true, touch: true, ondragfinish: "titleDragFinish", ondragstart: "titleDragStart", components: [
@@ -248,7 +254,7 @@ enyo.kind({
 				{kind: "FittableColumns", name: "articleviewtoolbar", showing: true, style: "width:100%; height: 60px; background: #252525;", components:[
 					
 					{kind: "enyo.Image", name: "bb10articleviewgrabber", fit: false, src: "assets/bb10panelBack.png", style: "height:60px;", ontap: "enablePanels"}, //height: 54px"},
-					//{style: "width: 10px"},
+					{style: "width: 10px"},
 					{kind: "onyx.Grabber", name: "grabberArticleView", ontap: "enablePanels"},
 					{kind: "FittableRows", style: "background: #252525; width: 30px; padding-right: 5px;", components:[
 						{style: "height: 16px"},
@@ -294,7 +300,7 @@ enyo.kind({
 					]},					
 					
 					
-					{kind: "FittableRows", style: "height: 60px; background: #252525;", components:[
+					{kind: "FittableRows", name: "articletoolbarright",  style: "height: 60px; background: #252525;", components:[
 						{style: "height: 14px"},
 						{kind: "FittableColumns", style: "height: 32px; background: #252525;", components:[
 							//{style: "width: 5px"},
@@ -342,8 +348,8 @@ enyo.kind({
 				]}
 			]}
 		]},
-		{name: "loadbar", content: "", classes: "squaresWaveG", style: "position: relative; width: auto; height:5px", showing:false},
-		{name: "loadbarBlank", content: "", style: "position: relative; width: auto; height:5px; background: #000000"},
+		//{name: "loadbar", content: "", classes: "squaresWaveG", style: "position: relative; width: auto; height:5px", showing:false},
+		//{name: "loadbarBlank", content: "", style: "position: relative; width: auto; height:5px; background: #000000"},
 		{kind: enyo.Signals, onkeyup: "handleKeyUp", onkeydown: "handleKeyDown", onkeypress: "handleKeyPress"},
 		{kind: "enyo.ApplicationEvents", onBack: "goBack" },
 		{kind: "onyx.Toolbar", showing: false, components: [
@@ -426,6 +432,25 @@ enyo.kind({
 			{tag: "div", style: "height:2px;"},
 			{kind: "onyx.Button", content: "Cancel", ontap: "addFeedClose", style: "width:100%;"}
 		]},
+		{name: "HelpPopup", kind: "onyx.Popup", centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
+			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
+			{kind: "Scroller",  horizontal:"hidden", fit: true, touch: true, components: [
+				{classes: "panels-sample-sliding-content", allowHtml: true, onclick: "catchtaponlink", content: "TE-Reader is a BlackBerry 10 feed reader app. You need to have access to an instance of TinyTiny-RSS (<a href=http://tt-rss.org>tt-rss.org</a>) to use the app! <br><br> TE-Reader was developed by Marcel Meissel and wouldn't have been possible without the contribution of Henk Jonas."}
+			]},			
+			{tag: "br"},
+			{kind:"onyx.Button", content: "Mail Developer", style: "width: 150px; margin: 5px;", ontap:"mailDeveloper"},
+			{kind:"onyx.Button", content: "Close", style: "width: 150px; margin: 5px;", ontap:"closeHelpPopup"},
+			]
+		},
+		{name: "InfoPopup", kind: "onyx.Popup", showAtPostion: top, centered: true, floating: true, classes:"onyx-sample-popup", style: "padding: 10px; height: auto", components: [
+			//{kind:"onyx.Button", content: "Stop Podcast", classes: "onyx-negative", ontap:"stopPodcast"},
+			{kind: "Scroller",  horizontal:"hidden", fit: true, touch: true, components: [
+				{classes: "panels-sample-sliding-content", name: "InfoPopupText", allowHtml: true, onclick: "catchtaponlink", content: ""}
+			]},			
+			{tag: "br"},
+			{kind:"onyx.Button", content: "ok", style: "width: 150px; margin: 5px;", ontap:"closeInfoPopup"},
+			]
+		},		
 		{name: "MarkFeedReadPopup", kind: "onyx.Popup", centered: true, modal: true, floating: true, components: [
 			{content: "Really mark feed as read?"},
 			{tag: "div", style: "height:10px;"},
@@ -467,7 +492,7 @@ enyo.kind({
 	CategoryID: [],
 	CategoryUnread: [],
 	CategoryTitle: [],
-	currentCategoryIndex: 0,
+	currentCategoryIndex: -1,
 	currentFeedIndex: 0,
 	currentFeedID: "",
 	currentFeed: "",
@@ -538,10 +563,12 @@ enyo.kind({
 	},
 	startapp: function(inSender,inEvent) {
 		console.log("startApp");
+		this.setLoadbar(true);
 		//Debug
 		//gblBB10 = true;//true;
 		//gblDesktop = false;
 		//gblFirefox = true;
+		//gblPlaybook = true;
 		this.$.left.setShowing(false);	
 		this.$.viewPanels.setIndex(1);
 		
@@ -596,7 +623,9 @@ enyo.kind({
 				setTimeout(enyo.bind(this, "LoginTap"), 500);	
 			} else if (!gblBB10) {
 				this.multialert("IMPORTANT!\n\nNo Server specified!\n\nPlease enter your TinyTiny RSS Server URL and login credentials. TE-Reader needs access to an instance.\n\nMore info about the open source TinyTiny RSS server can be found at: http://tt-rss.org", "", 15000);
-				setTimeout(enyo.bind(this, "LoginTap"), 500);	
+				if (!gblWebos) {
+					setTimeout(enyo.bind(this, "LoginTap"), 500);
+				}
 			};
 			startcount++;
 		} else {
@@ -605,9 +634,14 @@ enyo.kind({
 				if (gblBB10 && startcount>=2) {
 					this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);
 					setTimeout(enyo.bind(this, "LoginTap"), 500);
-				} else if (!gblBB10) {
+				} else if (!gblBB10 && !gblFirefox) {
 					this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);
-					setTimeout(enyo.bind(this, "LoginTap"), 500);
+					if (!gblWebos) {
+						setTimeout(enyo.bind(this, "LoginTap"), 500);
+					}	
+				} else if (gblFirefox) {
+					//ToDo CheckURL für FirefoxOS!!!
+					ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError"));
 				};
 			} else {
 				if (gblBB10 && startcount>=2) {
@@ -618,6 +652,9 @@ enyo.kind({
 			};
 			startcount++;
 		};
+		var widthhelper = window.innerWidth - 100 + "px";
+		this.debugconsole("Width: " + window.innerWidth + " - " + widthhelper);
+		this.$.lblFeedTitle.applyStyle("width", widthhelper);
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
 			if (window.innerWidth > 400) {
@@ -631,6 +668,7 @@ enyo.kind({
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.6em");
+				this.$.articleViewTitle3.applyStyle("font-size", "1.6em");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
@@ -643,6 +681,7 @@ enyo.kind({
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.0em");
+				this.$.articleViewTitle3.applyStyle("font-size", "1.0em");
 			}
 		} else {
 			this.$.viewPanels.layout.peekWidth = 40;
@@ -663,11 +702,14 @@ enyo.kind({
 		//BB10 Scaling / UI
 		if (gblBB10) {
 			this.debugconsole("PLATFORM: Blackberry 10");
-			this.setViewBB10();					
+			this.setViewBB10();
+		} else if (gblPlaybook) {
+			this.debugconsole("PLATFORM: PlaybookOS");
+			//this.setViewFFOS();
+			this.setViewPlaybook();			
 		} else if (gblFirefox) {
 			this.debugconsole("PLATFORM: FirefoxOS");
-			//this.setViewFFOS();
-			this.setViewBB10();	
+			this.setViewFFOS();
 		} else if (gblWebos) {
 			this.debugconsole("PLATFORM: webOS");
 			this.setViewWebOS();
@@ -703,6 +745,7 @@ enyo.kind({
 				this.$.articleViewScroller.applyStyle("font-size", "1.8em");
 				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.6em");
+				this.$.articleViewTitle3.applyStyle("font-size", "1.6em");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
@@ -715,6 +758,7 @@ enyo.kind({
 				this.$.articleViewScroller.applyStyle("font-size", "1.2em");
 				this.$.articleViewTitle.applyStyle("font-size", "1.4em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.0em");
+				this.$.articleViewTitle3.applyStyle("font-size", "1.0em");
 			}
 		} else {
 			this.$.viewPanels.layout.peekWidth = 40;
@@ -732,6 +776,9 @@ enyo.kind({
 		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
 		this.$.body.reflow();
+		var widthhelper = window.innerWidth - 100 + "px";
+		this.debugconsole("Width: " + window.innerWidth + " - " + widthhelper);
+		this.$.lblFeedTitle.applyStyle("width", widthhelper);		
 		this.resized();
 	},
 	setViewBB10: function(){
@@ -767,12 +814,83 @@ enyo.kind({
 			this.$.btnNextArticle.setShowing(false);
 			this.$.btnPrevArticle.setShowing(false);			
 	},
+	setViewPlaybook: function(){
+			//Setup Popup
+			//Hide Instapaper Setup
+			//this.$.bb10TopMenu.setShowing(true);
+			this.$.btnSettings.setShowing(true);
+			this.$.setupinstapaper.setShowing(false);			
+					
+			//List View bar
+			this.$.listviewgrabber.setShowing(true);
+			this.$.bb10listviewgrabber.setShowing(false);
+			
+			//ArticleView bar
+			this.$.btnUnlockPanels.setShowing(false);
+			this.$.bb10articleviewgrabber.setShowing(false);
+			this.$.grabberArticleView.setShowing(true);
+			this.$.bb10btnshare.setShowing(true);
+			this.$.btnshare.setShowing(false);
+			//this.$.mnuShare.setShowing(false);
+			//this.$.btnUnlockPanels.applyStyle("width", "20px");
+			this.$.bb10btnread.setShowing(true);
+			this.$.chkArticleRead.applyStyle("height", "20px");
+			this.$.chkArticleRead.setShowing(false);
+			//this.$.mnuShare.applyStyle("height", "20px");
+			this.staredon =  "assets/bb10staron.png";
+			this.staredoff = "assets/bb10staroff.png";
+			this.$.iconStarred.setSrc(this.staredoff);
+			this.publishedon = "assets/bb10publishon.png";
+			this.publishedoff = "assets/bb10publishoff.png";
+			this.$.btnbrowser.setSrc("assets/bb10browser.png");
+			//Swipe as default - hide arrows
+			this.$.btnNextArticle.setShowing(true);
+			this.$.btnPrevArticle.setShowing(true);			
+	},	
 	setViewFFOS: function(){
-		
+			//Setup Popup
+			//Hide Instapaper Setup
+			//this.$.bb10TopMenu.setShowing(true);
+			this.$.btnSettings.setShowing(true);
+			this.$.setupinstapaper.setShowing(false);			
+					
+			//List View bar
+			this.$.listviewgrabber.setShowing(false);
+			this.$.bb10listviewgrabber.setShowing(true);
+			this.$.bb10listviewgrabber.setSrc("assets/ffxospanelBack.png");
+			
+			//ArticleView bar
+			this.$.btnUnlockPanels.setShowing(false);
+			this.$.bb10articleviewgrabber.setShowing(true);
+			this.$.bb10articleviewgrabber.setSrc("assets/ffxospanelBack.png");
+			this.$.grabberArticleView.setShowing(false);
+			this.$.bb10btnshare.setShowing(true);
+			this.$.btnshare.setShowing(false);
+			this.$.articletoolbarright.setShowing(false);
+			this.$.FeedListPageUpButton.setShowing(false);
+			this.$.FeedListPageDownButton.setShowing(false);
+			//this.$.mnuShare.setShowing(false);
+			//this.$.btnUnlockPanels.applyStyle("width", "20px");
+			this.$.bb10btnread.setShowing(true);
+			this.$.chkArticleRead.applyStyle("height", "20px");
+			this.$.chkArticleRead.setShowing(false);
+			//this.$.mnuShare.applyStyle("height", "20px");
+			this.staredon =  "assets/bb10staron.png";
+			this.staredoff = "assets/bb10staroff.png";
+			this.$.iconStarred.setSrc(this.staredoff);
+			this.publishedon = "assets/bb10publishon.png";
+			this.publishedoff = "assets/bb10publishoff.png";
+			this.$.btnbrowser.setSrc("assets/bb10browser.png");
+			//Swipe as default - hide arrows
+			this.$.btnNextArticle.setShowing(false);
+			this.$.btnPrevArticle.setShowing(false);					
 	},
 	setViewWebOS: function(){
 			this.$.btnreadontouch.setShowing(true);
 			this.setViewBB10();
+			this.$.btnSettings.setShowing(true);
+			this.$.btnNextArticle.setShowing(true);
+			this.$.btnPrevArticle.setShowing(true);			
 	},
 	setViewDesktop: function(){
 			//List View bar
@@ -833,12 +951,18 @@ enyo.kind({
 			localStorage.setItem("instapaperUser", this.instapaperUser);
 			localStorage.setItem("instapaperPW", this.instapaperPW);
 	
-			chkURL = CheckUrl(this.ttrssURL);
-			if (!chkURL) {
-				this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);	
+			
+			if (gblFirefox) {
+				//ttrssCheckUrlFirefox(this.ttrssURL, enyo.bind(this, "processCheckUrlSuccess"), enyo.bind(this, "processCheckUrlError"));
 			} else {
+				chkURL = CheckUrl(this.ttrssURL);	
+			}
+			//TEST DEBUG
+			//if (!chkURL) {
+			//	this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);	
+			//} else {
 				//Notification
-				if (gblBB10 && this.AutoLockPanels && this.ViewMode==0) {
+				if (this.AutoLockPanels && this.ViewMode==0) {
 					this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15000);
 				};
 				this.$.LoginPopup.hide();
@@ -846,8 +970,14 @@ enyo.kind({
 				this.$.viewPanels.setShowing(true);
 				this.swipeup();
 				this.resize();
-			}
+			//}
 		}
+	},
+	processCheckUrlSuccess: function(inSender, inEvent) {
+		console.log("CHECKURL SUCCESS");
+	},
+	processCheckUrlError: function(inSender, inEvent) {
+		console.log("CHECKURL ERROR");
 	},
 	LoginTap: function(inSender, inEvent) {
 		//this.$.LoginPopup.hide();
@@ -916,7 +1046,12 @@ enyo.kind({
 				this.$.FeedListPageUpButton.setShowing(false);
 				this.$.FeedListPageDownButton.setShowing(false);
 				this.$.autoLockPanels.setShowing(false);
-			} else {
+			} else if (gblFirefox) {
+				this.$.FeedListPageUpButton.setShowing(false);
+				this.$.FeedListPageDownButton.setShowing(false);
+				this.$.autoLockPanels.setShowing(false);
+			}
+			else {
 				this.$.FeedListPageUpButton.setShowing(true);
 				this.$.FeedListPageDownButton.setShowing(true);				
 			};
@@ -969,6 +1104,7 @@ enyo.kind({
 	},
 	clickRefresh: function(inSender, inEvent){
 		//console.error("clickRefresh");
+		//chkURL = CheckUrl(this.ttrssURL);
 		this.getCategories();
 	},
 	getCategories: function (inSender){
@@ -1171,7 +1307,9 @@ enyo.kind({
 		//var pubDate = new Date(timestamp);
 		//this.debugconsole(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
-		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
+		//this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
+		this.$.articleViewTitle2.setContent(formattedDate);
+		this.$.articleViewTitle3.setContent(html_entity_decode(inEvent[0].author));
 		this.$.articleViewScroller.setShowing(false);
 		this.$.articlePreviewScroller.setShowing(true);
 		//DEBUG
@@ -1235,7 +1373,9 @@ enyo.kind({
 		//var pubDate = new Date(timestamp);
 		//this.debugconsole(pubDate);
 		this.$.articleViewTitle.setContent(html_entity_decode(inEvent[0].title));
-		this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
+		//this.$.articleViewTitle2.setContent(html_entity_decode(inEvent[0].author) + " - " + formattedDate);
+		this.$.articleViewTitle2.setContent(formattedDate);
+		this.$.articleViewTitle3.setContent(html_entity_decode(inEvent[0].author));
 		this.$.articlePreviewScroller.setShowing(false);
 		this.$.articleViewScroller.setShowing(true);
 		this.$.articleView.call(this.ArticleURL[this.RecentArticleIndex], inContent);
@@ -1486,6 +1626,7 @@ enyo.kind({
 	},
 	clickFeed: function(inSender, inEvent) {
 		this.selectFeed(inEvent.index);
+		this.setLoadbar(true);
 	},
 	selectFeed: function(index) {
 		this.setLoadbar(true);
@@ -1518,7 +1659,8 @@ enyo.kind({
 		}
 	},
 	addFeedClick: function(inSender, inEvent) {
-		if (this.currentCategoryIndex==0) {
+		//alert(this.currentCategoryIndex);
+		if ((this.currentCategoryIndex+1)<=0) {//(this.currentCategoryIndex==0) {
 			this.multialert("Select category first","",5000);
 		} else {
 			this.$.AddFeedCategory.setContent(this.CategoryTitle[this.currentCategoryIndex]);
@@ -1706,6 +1848,8 @@ enyo.kind({
 		this.$.btnNextArticle.setShowing(true);
 		if (gblBB10) {
 			this.$.grabberArticleView.setShowing(false);
+		} else if (gblFirefox) {
+			this.$.grabberArticleView.setShowing(false);
 		} else {
 			this.$.grabberArticleView.setShowing(true);
 		}
@@ -1784,6 +1928,17 @@ enyo.kind({
 			    target: "sys.browser",
 			    uri: FullArticelURL
 			});
+		} else  if (gblPlaybook) {
+			var args = new blackberry.invoke.BrowserArguments(url);
+			blackberry.invoke.invoke(blackberry.invoke.APP_BROWSER, args);			
+		} else if (gblFirefox) {
+			var openURL = new MozActivity({
+			    name: "view",
+			    data: {
+				type: "url", // Possibly text/html in future versions
+				url: FullArticelURL
+			    }
+			});			//code	
 		} else {
 			window.open(FullArticelURL);
 		}			
@@ -1798,6 +1953,7 @@ enyo.kind({
 		this.debugconsole("SETPANEL 12");
 	},
 	prevArticle: function(inSender, inEvent){
+		console.log("prevArticle");
 		if ((this.RecentArticleIndex == 0)) {
 			this.UpdateFeedClick();
 			this.enablePanels();
@@ -1811,7 +1967,7 @@ enyo.kind({
 				ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[this.RecentArticleIndex], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"));
 			}
 		};
-		//this.debugconsole(RecentArticleIndex);
+		this.debugconsole(this.RecentArticleIndex);
 	},
 	nextArticle: function(inSender, inEvent){
 		if (this.RecentArticleIndex < (this.Articles.length - 1) ){
@@ -1925,8 +2081,18 @@ enyo.kind({
 		};
 		if (gblFirefox) {
 			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
-			this.$.sharePopup.show();			
+			//this.$.sharePopup.show();
+			var openURL = new MozActivity({
+			    name: "share",
+			    data: {
+				type: "url", // Possibly text/html in future versions
+				url: this.ShareUrl
+			    }
+			});			//code			
 		};
+		if (gblPlaybook) {
+			this.$.sharePopup.show();		
+		}
 		if (gblWebos) {
 			//window.open("http://www.twitter.com/share?text=" + "Via%20%23ttrssenyo:%20'" + ShareText + "'&url=" + ShareUrl);
 			this.$.sharePopup.show();			
@@ -2095,6 +2261,7 @@ enyo.kind({
 		if (!gblDesktop) {
 			this.debugconsole("DRAGSTOP " + inEvent.dx);
 			this.resize();
+			//console.log(inEvent.dx);
 			  if (+inEvent.dx < -120) {
 				if (this.dragStartPanelIndex == 3) {
 					//this.debugconsole("NEXT");
@@ -2105,7 +2272,7 @@ enyo.kind({
 				}
 			  };
 			  if (+inEvent.dx > 120) {
-				  if (this.$.btnUnlockPanels.getShowing()) {
+				  if (this.$.btnUnlockPanels.getShowing() && !gblFirefox) {
 					this.prevArticle();
 					//this.$.viewPanels.setIndex(3);
 				  };
@@ -2187,7 +2354,7 @@ enyo.kind({
 	mailDeveloper: function(){
 		if (gblBB10) {
 			blackberry.invoke.card.invokeEmailComposer({
-			    subject: "TE-Reader support BB10",
+			    subject: "TE-Reader support BlackBerry 10",
 			    body: "",
 			    to: ["apps@meissel.com"]
 			})			
@@ -2204,8 +2371,14 @@ enyo.kind({
 			    };
 			toastId = blackberry.ui.toast.show(message, options);			
 			
-		} else{
+		} else if (gblWebos) {
+			this.$.InfoPopup.show(); //Text
+			this.$.InfoPopupText.setContent(message);			
+		} else 	{
 			alert(message);
 		}
+	},
+	closeInfoPopup: function(){
+		this.$.InfoPopup.hide();
 	}
 });

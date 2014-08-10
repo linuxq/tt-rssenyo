@@ -1,6 +1,6 @@
 {
 	"id": "com.meissel.ttrssreader",
-	"version": "1.0.0",
+	"version": "1.0.5",
 	"vendor": "Marcel Meissel",
 	"type": "web",
 	"main": "index.html",

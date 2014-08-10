@@ -24,7 +24,7 @@
 
 <widget xmlns="http://www.w3.org/ns/widgets"
         xmlns:rim="http://www.blackberry.com/ns/widgets"
-	version="1.0.0.4" id="com.meissel.ttrssreader">
+	version="1.0.0.8" id="com.meissel.ttrssreader">
 
   <name>TE-Reader</name>
 
@@ -41,6 +41,7 @@
   <feature id="blackberry.app">
     <param name="orientation" value="portrait" />
   </feature>
+  <feature id="community.templateExt" />
   <access uri="*" subdomains="true" browserOnly="true" />
 
   <!-- Cordova API -->
@@ -89,9 +90,11 @@
     <feature id="blackberry.invoke.card" />
     <feature id="blackberry.ui.toast" />
     <feature id="blackberry.ui.contextmenu"/>
+ <!-- 
   <feature id="blackberry.app">
     <param name="orientation" value="portrait" />
-  </feature>    
+  </feature>
+  -->
    
    <feature id="community.clipboard" required="true" version="1.0.0.0"/>
   
