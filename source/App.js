@@ -931,7 +931,7 @@ enyo.kind({
 		if (this.ttrssURL=="" || this.ttrssUser=="" || this.ttrssPassword=="") {
 			this.multialert("You must enter Url, user and password!", "Caution", 15000);
 		} else {
-			console.log(this.ViewMode);
+			//console.log(this.ViewMode);
 			this.ViewMode = this.$.pickViewMode.getSelected().value;
 			this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue();
 			this.AutoLockPanels = this.$.autoLockPanels.getValue();
@@ -951,16 +951,10 @@ enyo.kind({
 			localStorage.setItem("instapaperUser", this.instapaperUser);
 			localStorage.setItem("instapaperPW", this.instapaperPW);
 	
-			
-			if (gblFirefox) {
-				//ttrssCheckUrlFirefox(this.ttrssURL, enyo.bind(this, "processCheckUrlSuccess"), enyo.bind(this, "processCheckUrlError"));
+			chkURL = CheckUrl(this.ttrssURL);	
+			if (!chkURL) {
+				this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);	
 			} else {
-				chkURL = CheckUrl(this.ttrssURL);	
-			}
-			//TEST DEBUG
-			//if (!chkURL) {
-			//	this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!","", 15000);	
-			//} else {
 				//Notification
 				if (this.AutoLockPanels && this.ViewMode==0) {
 					this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15000);
@@ -970,7 +964,7 @@ enyo.kind({
 				this.$.viewPanels.setShowing(true);
 				this.swipeup();
 				this.resize();
-			//}
+			}
 		}
 	},
 	processCheckUrlSuccess: function(inSender, inEvent) {

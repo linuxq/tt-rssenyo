@@ -5788,7 +5788,7 @@ LoginClose: function(e, t) {
 console.log("URL:" + this.ttrssURL + ":"), (this.ttrssURL == "" || !this.ttrssURL) && this.multialert("Caution: No Url specified!", "Login error", 5e3), this.$.LoginPopup.hide(), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize();
 },
 LoginSave: function(e, t) {
-this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ttrssURL == "" || this.ttrssUser == "" || this.ttrssPassword == "" ? this.multialert("You must enter Url, user and password!", "Caution", 15e3) : (console.log(this.ViewMode), this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), gblFirefox || (chkURL = CheckUrl(this.ttrssURL)), this.AutoLockPanels && this.ViewMode == 0 && this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15e3), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize());
+this.ttrssURL = this.$.serverAddress.getValue(), this.ttrssUser = this.$.serverUser.getValue(), this.ttrssPassword = this.$.serverPassword.getValue(), this.ttrssURL == "" || this.ttrssUser == "" || this.ttrssPassword == "" ? this.multialert("You must enter Url, user and password!", "Caution", 15e3) : (this.ViewMode = this.$.pickViewMode.getSelected().value, this.AutoLoadFirstFeed = this.$.autoLoadFirstFeed.getValue(), this.AutoLockPanels = this.$.autoLockPanels.getValue(), this.AutoLoadAllArticles = this.$.autoLoadAllArticles.getValue(), this.instapaperUser = this.$.instapaperUser.getValue(), this.instapaperPW = this.$.instapaperPW.getValue(), gblUseJsonpRequest = this.$.useJsonpRequest.getValue(), localStorage.setItem("ttrssurl", this.ttrssURL), localStorage.setItem("ttrssuser", this.ttrssUser), localStorage.setItem("ttrsspassword", this.ttrssPassword), localStorage.setItem("ViewMode", this.ViewMode), localStorage.setItem("AutoLoadFirstFeed", this.AutoLoadFirstFeed), localStorage.setItem("AutoLoadAllArticles", this.AutoLoadAllArticles), localStorage.setItem("AutoLockPanels", this.AutoLockPanels), localStorage.setItem("UseJsonpRequest", gblUseJsonpRequest), localStorage.setItem("ttrssautomarkreadtimeout", this.ttrssAutoMarkRead), localStorage.setItem("instapaperUser", this.instapaperUser), localStorage.setItem("instapaperPW", this.instapaperPW), chkURL = CheckUrl(this.ttrssURL), chkURL ? (this.AutoLockPanels && this.ViewMode == 0 && this.multialert("Hint:\n\n'Swipeable article view': In article view you can swipe left and right to load the next or previous article. Simply hit 'Back' to go back to list view.", "", 15e3), this.$.LoginPopup.hide(), ttrssLogin(this.ttrssURL, this.ttrssUser, this.ttrssPassword, enyo.bind(this, "processLoginSuccess"), enyo.bind(this, "processLoginError")), this.$.viewPanels.setShowing(!0), this.swipeup(), this.resize()) : this.multialert("CAUTION:\n\nURL doesn't exist or is not reachable!", "", 15e3));
 },
 processCheckUrlSuccess: function(e, t) {
 console.log("CHECKURL SUCCESS");
@@ -6346,7 +6346,10 @@ this.$.InfoPopup.hide();
 // ttrss.js
 
 function CheckUrl(e) {
-var t = new XMLHttpRequest, n = e, r = Math.round(Math.random() * 1e4);
+if (gblFirefox) var t = new XMLHttpRequest({
+mozSystem: !0
+}); else var t = new XMLHttpRequest;
+var n = e, r = Math.round(Math.random() * 1e4);
 t.open("HEAD", n + "?rand=" + r, !1);
 try {
 return t.send(), t.status >= 200 && t.status < 304 ? !0 : !1;
@@ -6356,17 +6359,15 @@ return !1;
 }
 
 function ttrssCheckUrlFirefox(e, t, n) {
-console.log("ttrssCeckUrlFirefox");
-var r = {}, i = new enyo.Ajax({
-url: e,
-method: "GET",
-handleAs: "json",
-postBody: JSON.stringify(r)
-});
-i.response(function(e) {
-ttrssCheckUrlFirefoxResponse(JSON.parse(e.xhrResponse.body), t, n);
-}), i.go(r);
-return;
+var r = new XMLHttpRequest({
+mozSystem: !0
+}), i = e, s = Math.round(Math.random() * 1e4);
+r.open("HEAD", i + "?rand=" + s, !1);
+try {
+return r.send(), r.status >= 200 && r.status < 304 ? (console.log("CHKURL TRUE"), !0) : (console.log("CHKURL FALSE"), !1);
+} catch (o) {
+return console.log("CHKURL Eroor"), !1;
+}
 }
 
 function ttrssCheckUrlFirefoxResponse(e, t, n) {

@@ -1,6 +1,10 @@
 //***************** Check URL ****************
 function CheckUrl(chkurl) {
-		var xhr = new XMLHttpRequest();
+		if (gblFirefox) {
+			var xhr = new XMLHttpRequest({mozSystem: true});
+		} else {
+			var xhr = new XMLHttpRequest();
+		};
 		var file = chkurl; //
 		var randomNum = Math.round(Math.random() * 10000);
 		 
@@ -17,47 +21,6 @@ function CheckUrl(chkurl) {
 		} catch (e) {
 		    return false;
 		}
-};
-
-function ttrssCheckUrlFirefox(ttrssurl, successCallback, errorCallback) {
-	console.log("ttrssCeckUrlFirefox");
-	var data = {
-		//op: "login",
-		//user: ttrssuser,
-		//password : ttrsspassword
-	};
-		var request = new enyo.Ajax({
-			url: ttrssurl,
-			method: "GET",
-			handleAs: "json",
-			postBody: JSON.stringify(data)
-		});
-		request.response(function(daten) {ttrssCheckUrlFirefoxResponse(JSON.parse(daten.xhrResponse.body), successCallback, errorCallback)});
-	request.go(data);
-
-	return;	
-};
-
-function ttrssCheckUrlFirefoxResponse(response, successCallback, errorCallback) {
-	//console.log (successCallback);
-	/*var loginresult = {
-		status: "99",
-		sessionid: "99",
-		error: "99"
-	};
-	loginresult.status = response.status;
-	if (loginresult.status == 0) {
-		loginresult.sessionid = response.content.session_id;
-		ttsessionID = response.content.session_id;
-		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-		successCallback(loginresult);
-	} else {
-		loginresult.error = response.content.error;
-		//console.log("Login: " + loginresult.status + ", " + response.content.session_id + ", " +response.content.error);
-		errorCallback(loginresult);
-	}*/
-	console.log("test");
-	console.log(response);
 };
 
 //**************** Login ********************

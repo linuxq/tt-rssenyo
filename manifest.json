@@ -19,7 +19,7 @@
 			"local_path": "index.html"
 		}
 	},
-
+	"orientation": ["portrait"],
 	"permissions": [
 		"https://*/",
 		"http://*/",
