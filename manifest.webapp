@@ -1,7 +1,11 @@
 {
 	"version": "1.0.0",
 	"name": "TE-Reader",
-	"description": "TinyEnyo Reader for TT-RSS",
+	"developer":  {
+		"name": "Marcel Meissel",
+		"url": "http://apps.meissel.com"
+	},
+	"description": "TE-Reader for Tiny Tiny RSS",
 	"launch_path": "/index.html",
 	"icons": {
 		"32": "/icon32.png",

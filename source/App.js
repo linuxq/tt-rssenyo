@@ -1866,7 +1866,15 @@ enyo.kind({
 				});
 				*/
 				window.open(FullArticelURL);
-			} else {
+			} else if (gblFirefox) {
+				var openURL = new MozActivity({
+				    name: "view",
+				    data: {
+					type: "url", // Possibly text/html in future versions
+					url: FullArticelURL
+				    }
+				});				
+			} else 	{
 				window.open(FullArticelURL);
 			}			
 			this.MarkArticleRead();

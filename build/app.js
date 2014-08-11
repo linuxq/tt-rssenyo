@@ -6101,7 +6101,14 @@ clickItem: function(e, t) {
 this.debugconsole("VIEW MODE: " + this.ViewMode), this.RecentArticleIndex = t.index;
 if (this.ViewMode == "1") {
 var n = this.ArticleURL[this.RecentArticleIndex];
-gblBB10 ? window.open(n) : window.open(n), this.MarkArticleRead();
+if (gblBB10) window.open(n); else if (gblFirefox) var r = new MozActivity({
+name: "view",
+data: {
+type: "url",
+url: n
+}
+}); else window.open(n);
+this.MarkArticleRead();
 return;
 }
 this.ViewMode == "2" ? (this.setLoadbar(!0), ttrssGetFullArticle(this.ArticleURL[this.RecentArticleIndex], enyo.bind(this, "processGetFullArticleSuccess"), enyo.bind(this, "processGetArticleError"))) : (this.setLoadbar(!0), window.innerWidth < 1024 && this.AutoLockPanels && (this.debugconsole("Meep"), this.$.viewPanels.setIndex(3), this.debugconsole("SETPANEL 9"), this.$.left2.setShowing(!1), this.$.middle.setShowing(!1), gblBB10 || gblWebos ? this.$.btnUnlockPanels.setShowing(!1) : this.$.btnUnlockPanels.setShowing(!0), this.$.btnPrevArticle.setShowing(!1), this.$.btnNextArticle.setShowing(!1), this.$.grabberArticleView.setShowing(!1), this.$.viewPanels.setDraggable(!1), this.debugconsole("Disable Panels"), this.resize()), ttrssGetArticle(this.ttrssURL, this.ttrss_SID, this.ArticleID[t.index], enyo.bind(this, "processGetArticleSuccess"), enyo.bind(this, "processGetArticleError"))), window.innerWidth < 1024 ? (this.$.viewPanels.setIndex(3), this.debugconsole("SETPANEL 10")) : (this.$.viewPanels.setIndex(2), this.debugconsole("SETPANEL 11"));
@@ -6356,22 +6363,6 @@ return t.send(), t.status >= 200 && t.status < 304 ? !0 : !1;
 } catch (i) {
 return !1;
 }
-}
-
-function ttrssCheckUrlFirefox(e, t, n) {
-var r = new XMLHttpRequest({
-mozSystem: !0
-}), i = e, s = Math.round(Math.random() * 1e4);
-r.open("HEAD", i + "?rand=" + s, !1);
-try {
-return r.send(), r.status >= 200 && r.status < 304 ? (console.log("CHKURL TRUE"), !0) : (console.log("CHKURL FALSE"), !1);
-} catch (o) {
-return console.log("CHKURL Eroor"), !1;
-}
-}
-
-function ttrssCheckUrlFirefoxResponse(e, t, n) {
-console.log("test"), console.log(e);
 }
 
 function ttrssLogin(e, t, n, r, i) {
