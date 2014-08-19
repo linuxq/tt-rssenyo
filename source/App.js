@@ -138,7 +138,7 @@ enyo.kind({
 						{name: "lblFeedTitle", content: "Feed", style: "font-size:1.4em; padding-top: 4px; color:white; height:30px; font-weight:bold; width:85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"},
 						//{fit: true},
 						{style: "width: 10px"},
-						{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", style:" position:fixed; right:5px;", value: true, src: "assets/menu-icon-bookmark.png"}
+						{kind: "onyx.ToggleIconButton", name: "toggleFeedUnread", onChange: "UpdateFeedClick", style:" position:fixed; right:5px; height: 30px", value: true, src: "assets/menu-icon-bookmark.png"}
 					]},
 					{style: "height: 4px"}
 				]},
@@ -652,9 +652,6 @@ enyo.kind({
 			};
 			startcount++;
 		};
-		var widthhelper = window.innerWidth - 100 + "px";
-		this.debugconsole("Width: " + window.innerWidth + " - " + widthhelper);
-		this.$.lblFeedTitle.applyStyle("width", widthhelper);
 		if (window.innerWidth < 1024) {
 			this.$.btnFullArticle.setShowing(false);
 			if (window.innerWidth > 400) {
@@ -669,6 +666,7 @@ enyo.kind({
 				this.$.articleViewTitle.applyStyle("font-size", "2.0em");
 				this.$.articleViewTitle2.applyStyle("font-size", "1.6em");
 				this.$.articleViewTitle3.applyStyle("font-size", "1.6em");
+				this.$.lblFeedTitle.applyStyle("width", "300px");
 			} else
 			{
 				//Bei Pre / Veer etc ArticelView vergrößern
@@ -689,8 +687,16 @@ enyo.kind({
 				this.$.btnFullArticle.setShowing(true);
 			} else {
 				this.$.btnFullArticle.setShowing(false);
-			}
-		}
+			};
+		};
+		
+		//Set FeedTitle width
+		var widthhelper = this.$.middle.hasNode( ).style.width;
+		widthhelper = widthhelper.substring(0, widthhelper.length - 2);
+		widthhelper = widthhelper - 100;
+		this.$.lblFeedTitle.applyStyle("width", widthhelper + "px");
+		this.debugconsole("Width: " + window.innerWidth + " - " + widthhelper + "px");
+		
 		//Hide arrows in Article View for LockedPanels
 		if (this.AutoLockPanels) {
 			this.$.btnNextArticle.setShowing(false);
@@ -776,9 +782,14 @@ enyo.kind({
 		this.$.left2blank.reflow();
 		this.$.feedRepeater.reflow();
 		this.$.body.reflow();
-		var widthhelper = window.innerWidth - 100 + "px";
-		this.debugconsole("Width: " + window.innerWidth + " - " + widthhelper);
-		this.$.lblFeedTitle.applyStyle("width", widthhelper);		
+		
+		//Set FeedTitle width
+		var widthhelper = this.$.middle.hasNode( ).style.width;
+		widthhelper = widthhelper.substring(0, widthhelper.length - 2);
+		widthhelper = widthhelper - 100;
+		this.debugconsole("Width: " + this.$.middle.hasNode( ).style.width + " - " + widthhelper);
+		this.$.lblFeedTitle.applyStyle("width", widthhelper + "px");
+		
 		this.resized();
 	},
 	setViewBB10: function(){
@@ -1874,7 +1885,9 @@ enyo.kind({
 					url: FullArticelURL
 				    }
 				});				
-			} else 	{
+			//} else if (gblPlaybook) {
+			} else
+			{
 				window.open(FullArticelURL);
 			}			
 			this.MarkArticleRead();
@@ -1931,8 +1944,27 @@ enyo.kind({
 			    uri: FullArticelURL
 			});
 		} else  if (gblPlaybook) {
-			var args = new blackberry.invoke.BrowserArguments(url);
-			blackberry.invoke.invoke(blackberry.invoke.APP_BROWSER, args);			
+				var encodedAddress = "";
+				// URL Encode all instances of ':' in the address
+				encodedAddress = FullArticelURL.replace(/:/g, "%3A");
+				// Leave the first instance of ':' in its normal form
+				encodedAddress = encodedAddress.replace(/%3A/, ":");
+				// Escape all instances of '&' in the address
+				encodedAddress = encodedAddress.replace(/&/g, "\&");
+				console.log("PLAYBOOK URL open " + encodedAddress);
+				if (typeof blackberry !== 'undefined') {
+					try{
+						// If I am a BlackBerry device, invoke native browser
+						var args = new blackberry.invoke.BrowserArguments(encodedAddress);
+						blackberry.invoke.invoke(blackberry.invoke.APP_BROWSER, args);
+					} catch(e) {
+						alert("Sorry, there was a problem invoking the browser");
+					}
+				} else {
+					// If I am not a BlackBerry device, open link in current browser
+					//window.location = encodedAddress;
+					alert("Sorry, there was a problem invoking the PlayBook browser");
+				};		
 		} else if (gblFirefox) {
 			var openURL = new MozActivity({
 			    name: "view",
